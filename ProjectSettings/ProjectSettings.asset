@@ -919,11 +919,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: e9585bf4-faa2-40f0-9f79-794abb86fee2
+  cloudProjectId: 7391cfa8-cc36-4398-a86a-596278f7c99f
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: 3d First Person Shooter
-  organizationId: fire-pixel8422
+  organizationId: bmtminecraft
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
