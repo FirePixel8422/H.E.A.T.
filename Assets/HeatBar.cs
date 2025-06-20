@@ -1,11 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.Burst;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
-[BurstCompile]
+
 public class HeatBar : MonoBehaviour
 {
     [SerializeField] private Image heatBar;
@@ -33,14 +30,12 @@ public class HeatBar : MonoBehaviour
     private Animator anim;
 
 
-    [BurstCompile]
     private void Start()
     {
         anim = GetComponent<Animator>();
     }
 
-
-    [BurstCompile]
+    
     private void Update()
     {
         if (overheated == false && Input.GetMouseButtonDown(0))
@@ -56,8 +51,7 @@ public class HeatBar : MonoBehaviour
         heatBar.fillAmount = heatAmount;
     }
 
-
-    [BurstCompile]
+    
     private void OverheatGun()
     {
         //disable weapon auto cooldown until not fired for heatDecayDelay amount of time
@@ -83,8 +77,7 @@ public class HeatBar : MonoBehaviour
         }
     }
 
-
-    [BurstCompile]
+    
     private void DecayHeat()
     {
         if (overheated)
@@ -112,7 +105,7 @@ public class HeatBar : MonoBehaviour
     }
 
 
-    [BurstCompile]
+    
     private IEnumerator HeatDecayDelay()
     {
         yield return new WaitForSeconds(heatDecayDelay);
@@ -120,7 +113,7 @@ public class HeatBar : MonoBehaviour
         coolingDown = true;
     }
 
-    [BurstCompile]
+    
     private IEnumerator OverheatedCooldown()
     {
         yield return new WaitForSeconds(overheatDecayDelay);
