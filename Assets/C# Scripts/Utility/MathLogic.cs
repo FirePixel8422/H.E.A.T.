@@ -24,6 +24,14 @@ public static class MathLogic
         return math.abs(value.x) + math.abs(value.y) + math.abs(value.z);
     }
 
+    /// <summary>
+    /// Clamp float to 0 or more
+    /// </summary>
+    public static float ClampMin0(float value)
+    {
+        return 0 > value ? 0 : value;
+    }
+
 
     [BurstCompile(DisableSafetyChecks = true)]
     public static float MoveTowards(float current, float target, float maxDelta)

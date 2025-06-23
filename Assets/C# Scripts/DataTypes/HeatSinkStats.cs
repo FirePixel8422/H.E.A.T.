@@ -9,9 +9,6 @@ public struct HeatSinkStats : INetworkSerializable
     [Header("Size of the heatsink")]
     public float heatSinkSize;
 
-    [Header("How much heat to add per shot")]
-    public float heatPerShot;
-
     [Header("Time before decaying heat and how fast")]
     public float heatDecayDelay;
     public float heatDecayPower;
@@ -32,11 +29,12 @@ public struct HeatSinkStats : INetworkSerializable
     public static HeatSinkStats Default => new HeatSinkStats()
     {
         heatSinkSize = 1,
-        heatPerShot = 0.1f,
         heatDecayDelay = 0.25f,
         heatDecayPower = 0.1f,
+        heatDecayPowerMultiplier = 1f,
         overheatDecayDelay = 1f,
         overheatDecayPower = 0.075f,
+        overheatDecayPowerMultiplier = 1f,
         decayMultiplierAtMaxHeat = 10f
     };
 
@@ -47,7 +45,6 @@ public struct HeatSinkStats : INetworkSerializable
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref heatSinkSize);
-        serializer.SerializeValue(ref heatPerShot);
         serializer.SerializeValue(ref heatDecayDelay);
         serializer.SerializeValue(ref heatDecayPower);
         serializer.SerializeValue(ref overheatDecayDelay);

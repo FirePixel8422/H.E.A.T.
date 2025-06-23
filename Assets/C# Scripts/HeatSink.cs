@@ -11,41 +11,31 @@ public class HeatSink : MonoBehaviour
     [SerializeField] private HeatSinkStats stats;
 
 
-    private float timeSinceLastShot;
-    [Tooltip("Whether the gun is cooling down and decaying heat. true when gun has not been shot for stats.heatDecayDelay amount of time")]
-    private bool CoolingDown => timeSinceLastShot >= stats.heatDecayDelay;
+    [Tooltip("The amount of heat the gun has accumulated, from 0 to stats.heatSinkSize. stats.heatSinkSize means the gun is overheated.")]
+    [SerializeField] private float heatAmount = 0f;
 
-    [Tooltip("The amount of heat the gun has accumulated, from 0 to 1. 1 means the gun is overheated.")]
-    private float heatAmount = 0f;
-
-    private bool overheated;
-    private bool overHeatedAnimationActive;
+    public bool Overheated { get; private set; }
+    private bool recoveringFromOverheat;
 
     private Animator anim;
 
 
     private void Start()
     {
-        anim = GetComponent<Animator>();
-        stats = heatSinkStatsSO.data;
+        anim = GetComponentInChildren<Animator>(true);
+        stats = heatSinkStatsSO.stats;
     }
 
-    private void OnEnable() => UpdateScheduler.RegisterUpdate(OnUpdate);
-    private void OnDisable() => UpdateScheduler.UnregisterUpdate(OnUpdate);
 
-
-    private void OnUpdate()
+    /// <summary>
+    /// Called by GunCore when gun is not currently firing
+    /// </summary
+    public void OnGunIdle(float timeSinceLastShot)
     {
-        if (Input.GetMouseButtonDown(0))
-        {
-            OnShoot();
-        }
-        else
-        {
-            timeSinceLastShot += Time.deltaTime;
-        }
+        //Whether the gun is cooling down and decaying heat. true when gun has not been shot for stats.heatDecayDelay amount of time
+        bool coolingDown = timeSinceLastShot >= stats.heatDecayDelay;
 
-        if (CoolingDown || (overHeatedAnimationActive == false && overheated))
+        if (coolingDown || (Overheated && recoveringFromOverheat == false))
         {
             DecayHeat();
         }
@@ -55,30 +45,22 @@ public class HeatSink : MonoBehaviour
 
 
     /// <summary>
-    /// Called when the gun shoots during this frame
+    /// called by GunCore when a shot is fired. Adds heat equivelent to coreStats.addedHeat.
     /// </summary>
-    private void OnShoot()
-    {
-        //reset time since last shot value
-        timeSinceLastShot = 0;
-
-        //add stats.heatPerShot of heat to the heatSink
-        AddHeat();
-    }
-
-    
-    private void AddHeat()
+    public void AddHeat(float addedHeat)
     {
         StopAllCoroutines();
 
-        heatAmount += stats.heatPerShot;
+        heatAmount += addedHeat;
+
+        heatBar.fillAmount = heatAmount / stats.heatSinkSize;
 
         if (heatAmount >= stats.heatSinkSize)
         {
             heatAmount = stats.heatSinkSize;
 
-            overHeatedAnimationActive = true;
-            overheated = true;
+            recoveringFromOverheat = true;
+            Overheated = true;
 
             StartCoroutine(OverheatedCooldown());
             anim.SetBool("Overheated", true);
@@ -93,10 +75,10 @@ public class HeatSink : MonoBehaviour
     {
         float decaySpeedMultiplier = stats.heatSinkSize + (stats.heatSinkSize - heatAmount) * stats.decayMultiplierAtMaxHeat;
 
-        if (overheated)
+        if (Overheated)
         {
             //while heatSink is recovering from overheat for stats.overheatDecayDelay amount of time, decay NO heat
-            if (overHeatedAnimationActive) return;
+            if (recoveringFromOverheat) return;
 
             heatAmount -= Time.deltaTime * stats.overheatDecayPower * decaySpeedMultiplier;
 
@@ -105,7 +87,7 @@ public class HeatSink : MonoBehaviour
                 heatAmount = 0;
 
                 anim.SetBool("Overheated", false);
-                overheated = false;
+                Overheated = false;
             }
         }
         else
@@ -124,6 +106,6 @@ public class HeatSink : MonoBehaviour
     {
         yield return new WaitForSeconds(stats.overheatDecayDelay);
 
-        overHeatedAnimationActive = false;
+        recoveringFromOverheat = false;
     }
 }
