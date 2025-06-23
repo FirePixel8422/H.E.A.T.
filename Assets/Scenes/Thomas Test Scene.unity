@@ -529,12 +529,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   heatBar: {fileID: 1034680424}
-  heatPerShot: 0.1
-  heatDecayDelay: 0.15
-  heatDecayPower: 0.125
-  overheatDecayDelay: 0.5
-  overheatDecayPower: 0.075
-  decayMultiplierAtMaxHeat: 6
+  heatSinkStatsSO: {fileID: 11400000, guid: bd973d451c2b61c4fb8c1d290d5d954a, type: 2}
+  stats:
+    heatSinkSize: 0
+    heatPerShot: 0
+    heatDecayDelay: 0
+    heatDecayPower: 0
+    overheatDecayDelay: 0
+    overheatDecayPower: 0
+    decayMultiplierAtMaxHeat: 0
 --- !u!1 &2028534450
 GameObject:
   m_ObjectHideFlags: 0

@@ -263,7 +263,7 @@ public static class FileManager
 }
 
 
-public struct ValueWrapper<T> where T : struct 
+public struct ValueWrapper<T>
 {
     public T value;
 
@@ -273,7 +273,7 @@ public struct ValueWrapper<T> where T : struct
     }
 }
 
-public struct ArrayWrapper<T> where T : struct
+public struct ArrayWrapper<T>
 {
     public T[] values;
 

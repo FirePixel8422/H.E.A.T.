@@ -8,7 +8,7 @@ public class HeatSink : MonoBehaviour
     [SerializeField] private Image heatBar;
 
     [SerializeField] private HeatSinkStatsSO heatSinkStatsSO;
-    private HeatSinkStats stats;
+    [SerializeField] private HeatSinkStats stats;
 
 
     private float timeSinceLastShot;
@@ -50,7 +50,7 @@ public class HeatSink : MonoBehaviour
             DecayHeat();
         }
 
-        heatBar.fillAmount = heatAmount;
+        heatBar.fillAmount = heatAmount / stats.heatSinkSize;
     }
 
 
@@ -73,9 +73,9 @@ public class HeatSink : MonoBehaviour
 
         heatAmount += stats.heatPerShot;
 
-        if (heatAmount >= 1)
+        if (heatAmount >= stats.heatSinkSize)
         {
-            heatAmount = 1;
+            heatAmount = stats.heatSinkSize;
 
             overHeatedAnimationActive = true;
             overheated = true;
@@ -91,10 +91,13 @@ public class HeatSink : MonoBehaviour
     /// </summary>
     private void DecayHeat()
     {
-        float decaySpeedMultiplier = 1 + (1 - heatAmount) * stats.decayMultiplierAtMaxHeat;
+        float decaySpeedMultiplier = stats.heatSinkSize + (stats.heatSinkSize - heatAmount) * stats.decayMultiplierAtMaxHeat;
 
         if (overheated)
         {
+            //while heatSink is recovering from overheat for stats.overheatDecayDelay amount of time, decay NO heat
+            if (overHeatedAnimationActive) return;
+
             heatAmount -= Time.deltaTime * stats.overheatDecayPower * decaySpeedMultiplier;
 
             if (heatAmount < 0)
