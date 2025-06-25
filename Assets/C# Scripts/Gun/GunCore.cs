@@ -67,7 +67,7 @@ public class GunCore : NetworkBehaviour
             //fire shots and add recoil for every timeSinceLastShot time that exceeds shootInterval (to catch up in cases with HIGH lagg)
             while (timeSinceShootButtonPress >= coreStats.ShootInterval)
             {
-                Shoot();
+                PrepareShot();
 
                 timeSinceShootButtonPress -= coreStats.ShootInterval;
                 timeSinceLastShot = 0;
@@ -99,20 +99,36 @@ public class GunCore : NetworkBehaviour
 
 
     /// <summary>
-    /// Actually firing a shot
+    /// Inbetween method for Shoot method for ServerRPC logic
     /// </summary>
-    private void Shoot()
+    private void PrepareShot()
     {
         recoilHandler.AddRecoil(coreStats.recoilPerShot);
         heatSink.AddHeat(coreStats.heatPerShot);
 
-        Shoot_ServerRPC(ClientManager.LocalClientGameId);
+        int randomAudioId = EzRandom.Range(0, coreStats.shootAudioClips.Length);
+        float randomPitch = EzRandom.Range(coreStats.minMaxPitch);
+
+        //Call shoot method on the server and all clients, except self > call shoot locally
+        Shoot_ServerRPC(ClientManager.LocalClientGameId, randomAudioId, randomPitch);
+        Shoot(randomAudioId, randomPitch);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void Shoot_ServerRPC(int clientGameId)
+    /// <summary>
+    /// Method to actually fire a shot
+    /// </summary>
+    private void Shoot(int randomAudioId, float randomPitch)
     {
-        Shoot_ClientRPC(clientGameId, EzRandom.Range(0, coreStats.shootAudioClips.Length), EzRandom.Range(coreStats.minMaxPitch));
+        gunSource.clip = coreStats.shootAudioClips[randomAudioId];
+        gunSource.pitch = randomPitch;
+        gunSource.Play();
+    }
+
+
+    [ServerRpc(RequireOwnership = false)]
+    private void Shoot_ServerRPC(int clientGameId, int randomAudioId, float randomPitch)
+    {
+        Shoot_ClientRPC(clientGameId, randomAudioId, randomPitch);
     }
 
     [ClientRpc(RequireOwnership = false)]
@@ -120,8 +136,6 @@ public class GunCore : NetworkBehaviour
     {
         if (ClientManager.LocalClientGameId == clientGameId) return;
 
-        gunSource.clip = coreStats.shootAudioClips[randomAudioId];
-        gunSource.pitch = randomPitch;
-        gunSource.Play();
+        Shoot(randomAudioId, randomPitch);
     }
 }

@@ -11,12 +11,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpForce = 5;
 
     [SerializeField] private Transform cameraTransform;
-    [SerializeField] private Transform recoilTransform;
     [SerializeField] private float maxTiltAngle = 90;
     [SerializeField] private float mouseSensitivity = 1;
 
     private Rigidbody rb;
-    private float pitch;
     private Vector2 moveDir;
 
 
@@ -27,6 +25,14 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext ctx)
     {
+        ///Use overlapSphereNonAlloc or smt else for FPS
+
+
+
+
+
+
+
         if (ctx.performed && Physics.OverlapSphere(groundCheck.position, 0.01f).Length > 1)
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -39,10 +45,16 @@ public class PlayerController : MonoBehaviour
         {
             Vector2 mouseDelta = ctx.ReadValue<Vector2>();
 
-            pitch -= mouseDelta.y * mouseSensitivity;
-            pitch = math.clamp(pitch, -maxTiltAngle, maxTiltAngle);
+            Vector3 camEuler = cameraTransform.eulerAngles;
+            camEuler.x -= mouseDelta.y * mouseSensitivity;
 
-            cameraTransform.rotation = Quaternion.Euler(pitch, 0f, 0f);
+            // Normalize angle from 0-360 to -180 to 180
+            if (camEuler.x > 180f)
+                camEuler.x -= 360f;
+
+            camEuler.x = math.clamp(camEuler.x, -maxTiltAngle, maxTiltAngle);
+
+            cameraTransform.eulerAngles = camEuler;
 
             transform.Rotate(Vector3.up, mouseDelta.x * mouseSensitivity);
         }

@@ -7,9 +7,8 @@ public class RecoilHandler : MonoBehaviour
 {
     [SerializeField] private Transform recoilTransform;
 
-    private float cRecoil;
-    private float previousVisualRecoil;
-    private float currentVisualRecoil;
+    private float toAddRecoil;
+    private float recoil;
 
     [SerializeField] private float recoilSmoothSpeed = 15f;
 
@@ -19,54 +18,64 @@ public class RecoilHandler : MonoBehaviour
 
     public void OnLook(InputAction.CallbackContext ctx)
     {
-        if (ctx.performed)
+        //if any mouseMovement is present
+        if (ctx.performed && ctx.ReadValue<Vector2>() != Vector2.zero)
         {
-            Vector2 mouseDelta = ctx.ReadValue<Vector2>();
-
-            if (mouseDelta.y < 0)
-            {
-                float diff = currentVisualRecoil - Mathf.MoveTowards(currentVisualRecoil, 0, -mouseDelta.y);
-
-                cRecoil = Mathf.MoveTowards(cRecoil, 0, diff);
-                previousVisualRecoil = Mathf.MoveTowards(previousVisualRecoil, 0, diff);
-                currentVisualRecoil = Mathf.MoveTowards(currentVisualRecoil, 0, diff);
-            }
+            recoil = 0;
         }
     }
 
 
     public void AddRecoil(float recoil)
     {
-        cRecoil += recoil;
+        toAddRecoil += recoil;
     }
 
 
     public void OnUpdate()
     {
-        currentVisualRecoil = Mathf.Lerp(currentVisualRecoil, cRecoil, recoilSmoothSpeed * Time.deltaTime);
+        if (toAddRecoil == 0) return;
 
-        float deltaRecoil = currentVisualRecoil - previousVisualRecoil;
+        float addedRecoil = toAddRecoil - Mathf.MoveTowards(toAddRecoil, 0, recoilSmoothSpeed * Time.deltaTime);
 
-        // Rotate the recoil transform around local X axis by the delta recoil
-        recoilTransform.Rotate(Vector3.left, deltaRecoil);
+        toAddRecoil -= addedRecoil;
 
-        previousVisualRecoil = currentVisualRecoil;
+        //check if remaining toAddRecoil is smaller than epsilon, if so, set it to 0 and add the difference to addedRecoil
+        if (toAddRecoil < epsilon)
+        {
+            addedRecoil += epsilon - toAddRecoil;
+
+            toAddRecoil = 0;
+        }
+
+        //apply the added recoil (up == transform.left)
+        recoilTransform.Rotate(Vector3.left, addedRecoil);
+
+        //update how much recoil has been added, for the recovery process
+        recoil += addedRecoil;
     }
 
+
+    /// <summary>
+    /// Called every frame when gun has not shot long enough, so recoil start recovering.
+    /// </summary>
     public void StabilizeRecoil(float maxRecoilRecovery)
     {
-        if (cRecoil == 0) return;
+        if (recoil == 0) return;
 
         //recover up to maxRecoilRecovery
-        float recoilRecovery = cRecoil - Mathf.MoveTowards(cRecoil, 0, maxRecoilRecovery * Time.deltaTime);
-        cRecoil -= recoilRecovery;
+        float recoilRecovery = recoil - Mathf.MoveTowards(recoil, 0, maxRecoilRecovery * Time.deltaTime);
+        recoil -= recoilRecovery;
 
         //check if remaining recoil is smaller than epsilon, if so, set it to 0 and add the difference to recoilRecovery
-        if (cRecoil < epsilon)
+        if (recoil < epsilon)
         {
-            recoilRecovery += epsilon - cRecoil;
+            recoilRecovery += epsilon - recoil;
 
-            cRecoil = 0;
+            recoil = 0;
         }
+
+        //apply the recoil recovery (down == transform.right)
+        recoilTransform.Rotate(Vector3.right, recoilRecovery);
     }
 }

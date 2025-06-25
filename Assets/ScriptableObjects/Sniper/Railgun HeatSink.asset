@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0678329264aa3b64fb2fa9f244278c41, type: 3}
-  m_Name: PF HeatSink
+  m_Name: Railgun HeatSink
   m_EditorClassIdentifier: 
-  data:
+  stats:
     heatSinkSize: 1
-    heatPerShot: 0.1
     heatDecayDelay: 0.25
     heatDecayPower: 0.1
-    overheatDecayDelay: 1
-    overheatDecayPower: 0.075
-    decayMultiplierAtMaxHeat: 10
+    heatDecayPowerMultiplier: 1
+    overheatDecayDelay: 1.25
+    overheatDecayPower: 0.065
+    overheatDecayPowerMultiplier: 1
+    decayMultiplierAtMaxHeat: 15

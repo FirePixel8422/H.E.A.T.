@@ -10,13 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b0b7c3e06db8a14b87487cb5b20ad5f, type: 3}
-  m_Name: PF Core Stats
+  m_Name: PulseRifle Core
   m_EditorClassIdentifier: 
   stats:
     damage: 10
-    heatPerShot: 0.025
-    recoilPerShot: 1
-    recoilRecoveryDelay: 0.15
+    heatPerShot: 0.075
+    recoilPerShot: 0.65
+    recoilRecoveryDelay: 0.2
     recoilRecovery: 100
-    roundsPerMinute: 750
+    roundsPerMinute: 350
     autoFire: 1
+    shootAudioClips:
+    - {fileID: 8300000, guid: 7a15fc41b1d885940a382f983eb3f01b, type: 3}
+    minMaxPitch:
+      min: 0.85
+      max: 1.15

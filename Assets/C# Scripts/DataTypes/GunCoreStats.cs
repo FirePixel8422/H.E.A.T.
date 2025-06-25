@@ -44,5 +44,7 @@ public struct GunCoreStats
 
         roundsPerMinute = 600f,
         autoFire = true,
+
+        minMaxPitch = new MinMaxFloat(0.95f, 1.05f),
     };
 }
