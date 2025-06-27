@@ -27,6 +27,7 @@ public class GunCore : NetworkBehaviour
 
     public void OnShoot(InputAction.CallbackContext ctx)
     {
+        //get the shoot button state (held true or released false)
         shootButtonHeld = ctx.ReadValueAsButton();
 
         if (shootButtonHeld)
@@ -86,7 +87,7 @@ public class GunCore : NetworkBehaviour
         }
 
         //Call Update method for recoil handler
-        recoilHandler.OnUpdate();
+        recoilHandler.OnUpdate(coreStats.recoilForce);
 
         //if autofire is disabled, auto release in script shootButton
         if (coreStats.autoFire == false)

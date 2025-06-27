@@ -10,19 +10,11 @@ public class RecoilHandler : MonoBehaviour
     private float toAddRecoil;
     private float recoil;
 
-    [SerializeField] private float recoilSmoothSpeed = 15f;
 
-    private const float epsilon = 0.001f;
-
-
-
-    public void OnLook(InputAction.CallbackContext ctx)
+    public void OnLook()
     {
         //if any mouseMovement is present
-        if (ctx.performed && ctx.ReadValue<Vector2>() != Vector2.zero)
-        {
-            recoil = 0;
-        }
+        recoil = 0;
     }
 
 
@@ -32,21 +24,14 @@ public class RecoilHandler : MonoBehaviour
     }
 
 
-    public void OnUpdate()
+    // Called after the gun executes its OnUpdate
+    public void OnUpdate(float recoilForce)
     {
         if (toAddRecoil == 0) return;
 
-        float addedRecoil = toAddRecoil - Mathf.MoveTowards(toAddRecoil, 0, recoilSmoothSpeed * Time.deltaTime);
+        float addedRecoil = toAddRecoil - Mathf.MoveTowards(toAddRecoil, 0, recoilForce * Time.deltaTime);
 
         toAddRecoil -= addedRecoil;
-
-        //check if remaining toAddRecoil is smaller than epsilon, if so, set it to 0 and add the difference to addedRecoil
-        if (toAddRecoil < epsilon)
-        {
-            addedRecoil += epsilon - toAddRecoil;
-
-            toAddRecoil = 0;
-        }
 
         //apply the added recoil (up == transform.left)
         recoilTransform.Rotate(Vector3.left, addedRecoil);
@@ -66,14 +51,6 @@ public class RecoilHandler : MonoBehaviour
         //recover up to maxRecoilRecovery
         float recoilRecovery = recoil - Mathf.MoveTowards(recoil, 0, maxRecoilRecovery * Time.deltaTime);
         recoil -= recoilRecovery;
-
-        //check if remaining recoil is smaller than epsilon, if so, set it to 0 and add the difference to recoilRecovery
-        if (recoil < epsilon)
-        {
-            recoilRecovery += epsilon - recoil;
-
-            recoil = 0;
-        }
 
         //apply the recoil recovery (down == transform.right)
         recoilTransform.Rotate(Vector3.right, recoilRecovery);

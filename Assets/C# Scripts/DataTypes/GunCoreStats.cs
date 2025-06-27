@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 
@@ -5,6 +6,7 @@ using UnityEngine;
 [System.Serializable]
 public struct GunCoreStats
 {
+    [Header("Damage per shot")]
     public float damage;
 
     [Header("How much heat to add to the heatsink per shot")]
@@ -12,6 +14,8 @@ public struct GunCoreStats
 
     [Header("How much recoil to add per shot")]
     public float recoilPerShot;
+    [Header("How Aggressive recoil is added, higher is more 'clicky' recoil")]
+    public float recoilForce;
 
     [Header("The time that needs to pass while not shooting for the recoil to stabilize")]
     public float recoilRecoveryDelay;
@@ -39,6 +43,8 @@ public struct GunCoreStats
         heatPerShot = 0.1f,
 
         recoilPerShot = 0.1f,
+        recoilForce = 15f,
+
         recoilRecoveryDelay = 0.25f,
         recoilRecovery = 0.5f,
 
