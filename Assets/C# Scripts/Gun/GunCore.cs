@@ -110,7 +110,7 @@ public class GunCore : NetworkBehaviour
         int randomAudioId = EzRandom.Range(0, coreStats.shootAudioClips.Length);
         float randomPitch = EzRandom.Range(coreStats.minMaxPitch);
 
-        //Call shoot method on the server and all clients, except self > call shoot locally
+        // Call shoot method on the server and all clients, except self > call shoot locally
         Shoot_ServerRPC(ClientManager.LocalClientGameId, randomAudioId, randomPitch);
         Shoot(randomAudioId, randomPitch);
     }
@@ -120,9 +120,7 @@ public class GunCore : NetworkBehaviour
     /// </summary>
     private void Shoot(int randomAudioId, float randomPitch)
     {
-        gunSource.clip = coreStats.shootAudioClips[randomAudioId];
-        gunSource.pitch = randomPitch;
-        gunSource.Play();
+        gunSource.PlayClipWithPitch(coreStats.shootAudioClips[randomAudioId], randomPitch);
     }
 
 

@@ -14,6 +14,7 @@ public static class UpdateScheduler
     private static void Initialize()
     {
         UpdateCallbackManager gameManager = new GameObject("UpdateCallbackManager").AddComponent<UpdateCallbackManager>();
+        gameManager.gameObject.isStatic = true;
 
         GameObject.DontDestroyOnLoad(gameManager.gameObject);
     }

@@ -157,4 +157,15 @@ public static class ExtensionMethods
         if (array.IsCreated)
             array.Dispose();
     }
+
+
+    /// <summary>
+    /// Lets AudioSource play selected clip with selected pitch
+    /// </summary>
+    public static void PlayClipWithPitch(this AudioSource source, AudioClip clip, float pitch)
+    {
+        source.clip = clip;
+        source.pitch = pitch;
+        source.Play();
+    }
 }

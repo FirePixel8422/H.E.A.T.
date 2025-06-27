@@ -96,7 +96,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 5b4da3250ebc20e4481ebd6e7a82282e,
+    type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -643,10 +644,70 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 242984742043667414, guid: 2e573a59a1a6d1547a021147606af763,
+        type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 242984742043667414, guid: 2e573a59a1a6d1547a021147606af763,
+        type: 3}
+      propertyPath: m_BounceIntensity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 242984742043667414, guid: 2e573a59a1a6d1547a021147606af763,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 586799414598327011, guid: 2e573a59a1a6d1547a021147606af763,
+        type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 586799414598327011, guid: 2e573a59a1a6d1547a021147606af763,
+        type: 3}
+      propertyPath: m_BounceIntensity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 586799414598327011, guid: 2e573a59a1a6d1547a021147606af763,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 3036531772700941079, guid: 2e573a59a1a6d1547a021147606af763,
+        type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3036531772700941079, guid: 2e573a59a1a6d1547a021147606af763,
+        type: 3}
+      propertyPath: m_BounceIntensity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3036531772700941079, guid: 2e573a59a1a6d1547a021147606af763,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 3412310322442306273, guid: 2e573a59a1a6d1547a021147606af763,
         type: 3}
       propertyPath: m_Name
       value: Room (Parent)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3416823745736593352, guid: 2e573a59a1a6d1547a021147606af763,
+        type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3416823745736593352, guid: 2e573a59a1a6d1547a021147606af763,
+        type: 3}
+      propertyPath: m_BounceIntensity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3416823745736593352, guid: 2e573a59a1a6d1547a021147606af763,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 4446011009707932268, guid: 2e573a59a1a6d1547a021147606af763,
         type: 3}
@@ -697,6 +758,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4530653314068437480, guid: 2e573a59a1a6d1547a021147606af763,
+        type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4530653314068437480, guid: 2e573a59a1a6d1547a021147606af763,
+        type: 3}
+      propertyPath: m_BounceIntensity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4530653314068437480, guid: 2e573a59a1a6d1547a021147606af763,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 5372126690198062246, guid: 2e573a59a1a6d1547a021147606af763,
+        type: 3}
+      propertyPath: m_Shadows.m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5372126690198062246, guid: 2e573a59a1a6d1547a021147606af763,
+        type: 3}
+      propertyPath: m_BounceIntensity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5372126690198062246, guid: 2e573a59a1a6d1547a021147606af763,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 4294967295
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -755,6 +846,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8084332042966875633, guid: aecb7691986b2a44ca7b5e44378938b1,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnMouseMovement
+      objectReference: {fileID: 0}
+    - target: {fileID: 8084332042966875633, guid: aecb7691986b2a44ca7b5e44378938b1,
+        type: 3}
+      propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: OnMouseMovement
       objectReference: {fileID: 0}
     - target: {fileID: 8183323876570374502, guid: aecb7691986b2a44ca7b5e44378938b1,
         type: 3}

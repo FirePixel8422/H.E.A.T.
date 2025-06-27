@@ -11,9 +11,8 @@ public class RecoilHandler : MonoBehaviour
     private float recoil;
 
 
-    public void OnLook()
+    public void OnMouseMovement()
     {
-        //if any mouseMovement is present
         recoil = 0;
     }
 
