@@ -317,6 +317,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2100304989680820782, guid: 2e573a59a1a6d1547a021147606af763,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: aef02cf7917511b4093a73befdbf13a9, type: 2}
     - target: {fileID: 3412310322442306273, guid: 2e573a59a1a6d1547a021147606af763,
         type: 3}
       propertyPath: m_Name
@@ -395,6 +400,24 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 615913309
       objectReference: {fileID: 0}
+    - target: {fileID: 7655005037721419446, guid: aecb7691986b2a44ca7b5e44378938b1,
+        type: 3}
+      propertyPath: bulletHole
+      value: 
+      objectReference: {fileID: 6765236028661416425, guid: 2cb81bfb34c309a469d8ed317ba9e0b8,
+        type: 3}
+    - target: {fileID: 7655005037721419446, guid: aecb7691986b2a44ca7b5e44378938b1,
+        type: 3}
+      propertyPath: coreStatsSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 32d506f0be6f2a64c9a137600b5378e7,
+        type: 2}
+    - target: {fileID: 7655005037721419446, guid: aecb7691986b2a44ca7b5e44378938b1,
+        type: 3}
+      propertyPath: heatSinkStatsSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 7d09a7bfaccdf614c8bba0142c8de0fd,
+        type: 2}
     - target: {fileID: 8183323876570374502, guid: aecb7691986b2a44ca7b5e44378938b1,
         type: 3}
       propertyPath: m_LocalPosition.x

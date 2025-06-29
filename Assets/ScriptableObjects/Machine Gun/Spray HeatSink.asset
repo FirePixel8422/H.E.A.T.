@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats:
     heatSinkSize: 1
-    heatDecayDelay: 0.5
-    heatDecayPower: 0.065
+    heatDecayDelay: 0.25
+    heatDecayPower: 0.06
     heatDecayPowerMultiplier: 1
     overheatDecayDelay: 1
-    overheatDecayPower: 0.05
+    overheatDecayPower: 0.0625
     overheatDecayPowerMultiplier: 1
-    decayMultiplierAtMaxHeat: 7.5
+    decayMultiplierAtMaxHeat: 6

@@ -13,8 +13,10 @@ public class GunCore : NetworkBehaviour
 
     [SerializeField] private GunCoreStats coreStats;
 
-    [SerializeField] private Transform shootPoint;
+    [SerializeField] private Transform shootPointTransform;
     [SerializeField] private AudioSource gunSource;
+
+    [SerializeField] private GameObject bulletHole;
 
     private RecoilHandler recoilHandler;
     private HeatSink heatSink;
@@ -23,7 +25,6 @@ public class GunCore : NetworkBehaviour
     private float timeSinceLastShot;
     private float timeSinceShootButtonPress;
 
-    [Tooltip("Whether the gun is allowed too shoot according to coreStats.ShootInterval")]
     private bool CanShoot => timeSinceLastShot >= coreStats.ShootInterval;
 
 
@@ -49,7 +50,7 @@ public class GunCore : NetworkBehaviour
         heatSink = GetComponent<HeatSink>();
         heatSink.Init(heatSinkStatsSO.stats);
 
-        coreStats = coreStatsSO.stats;
+        coreStats = coreStatsSO.GetStats();
 
         timeSinceLastShot = coreStats.ShootInterval;
     }
@@ -120,7 +121,23 @@ public class GunCore : NetworkBehaviour
     private void PrepareShot()
     {
         recoilHandler.AddRecoil(coreStats.recoilPerShot);
-        heatSink.AddHeat(coreStats.heatPerShot);
+        heatSink.AddHeat(coreStats.heatPerShot, out float previousHeatPercentage);
+
+        float2 spreadOffset = RandomApproxPointInCircle(coreStats.GetSpread(previousHeatPercentage));
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        float3 spreadDir = math.normalize(ray.direction + Camera.main.transform.right * spreadOffset.x + Camera.main.transform.up * spreadOffset.y);
+
+        if (Physics.SphereCast(ray.origin, coreStats.bulletSize, spreadDir, out RaycastHit hit))
+        {
+            Quaternion bulletHoleRotation = Quaternion.LookRotation(-hit.normal) * Quaternion.Euler(0, 0, EzRandom.RandomRotationAxis());
+
+            GameObject bulletHoleObj = Instantiate(bulletHole, hit.point + hit.normal * EzRandom.Range(0.0005f, 0.001f), bulletHoleRotation);
+            bulletHole.transform.localScale = Vector3.one * coreStats.bulletHoleFXSize;
+
+            Destroy(bulletHoleObj, 5);
+        }
 
         int randomAudioId = EzRandom.Range(0, coreStats.shootAudioClips.Length);
         float randomPitch = EzRandom.Range(coreStats.minMaxPitch);
@@ -130,11 +147,18 @@ public class GunCore : NetworkBehaviour
         Shoot(randomAudioId, randomPitch);
     }
 
+    private float2 RandomApproxPointInCircle(float radius)
+    {
+        float2 dir = math.normalize(new float2(EzRandom.Range01() * 2f - 1f, EzRandom.Range01() * 2f - 1f));
+        float dist = EzRandom.Range01() * radius;
+        return dir * dist;
+    }
+
     /// <summary>
     /// Method to actually fire a shot
     /// </summary>
     private void Shoot(int randomAudioId, float randomPitch)
-    {       
+    {
         gunSource.PlayClipWithPitch(coreStats.shootAudioClips[randomAudioId], randomPitch);
     }
 

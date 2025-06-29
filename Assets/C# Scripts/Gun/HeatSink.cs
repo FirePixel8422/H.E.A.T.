@@ -43,10 +43,12 @@ public class HeatSink : MonoBehaviour
 
 
     /// <summary>
-    /// called by GunCore when a shot is fired. Adds heat equivelent to coreStats.addedHeat.
+    /// Called by GunCore when a shot is fired. Adds heat equivelent to coreStats.addedHeat.
     /// </summary>
-    public void AddHeat(float addedHeat)
+    /// <returns>The heat percentage from 0-1 before adding the new heat</returns>
+    public void AddHeat(float addedHeat, out float previousHeatPercentage)
     {
+        previousHeatPercentage = heatAmount / stats.heatSinkSize;
         StopAllCoroutines();
 
         heatAmount += addedHeat;

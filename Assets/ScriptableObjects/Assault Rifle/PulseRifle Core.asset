@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: PulseRifle Core
   m_EditorClassIdentifier: 
   stats:
+    bulletSize: 0.05
+    bulletHoleFXSize: 0.275
     damage: 10
     headShotMultiplier: 1.5
     heatPerShot: 0.075
@@ -20,6 +22,21 @@ MonoBehaviour:
     recoilForce: 15
     recoilRecoveryDelay: 0.2
     recoilRecovery: 100
+    maxSpread: 0.0325
+    spreadCurveSampleCount: 12
+    bakedSpreadCurve:
+    - 0.01125
+    - 0.011242831
+    - 0.011245221
+    - 0.011746972
+    - 0.013733077
+    - 0.01729142
+    - 0.022481672
+    - 0.0293635
+    - 0.037996583
+    - 0.048440572
+    - 0.060755167
+    - 0.075
     roundsPerMinute: 300
     autoFire: 1
     inputBufferTime: 0
@@ -28,3 +45,36 @@ MonoBehaviour:
     minMaxPitch:
       min: 0.85
       max: 1.15
+  spreadCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.15
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.2
+      value: 0.15
+      inSlope: 0.0042411094
+      outSlope: 0.0042411094
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.9918181
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2.2337136
+      outSlope: 2.2337136
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.06502889
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

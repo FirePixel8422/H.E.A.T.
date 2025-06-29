@@ -111,4 +111,11 @@ public static class EzRandom
 
         return color;
     }
+
+
+    /// <returns>float between -90 and 270</returns>
+    public static float RandomRotationAxis()
+    {
+        return random.NextFloat(-90, 270);
+    }
 }

@@ -13,13 +13,30 @@ MonoBehaviour:
   m_Name: Spray Core
   m_EditorClassIdentifier: 
   stats:
+    bulletSize: 0.05
+    bulletHoleFXSize: 0.2
     damage: 2.5
     headShotMultiplier: 1.5
-    heatPerShot: 0.0325
+    heatPerShot: 0.0275
     recoilPerShot: 0.65
     recoilForce: 20
     recoilRecoveryDelay: 0.225
     recoilRecovery: 75
+    maxSpread: 0.1
+    spreadCurveSampleCount: 16
+    bakedSpreadCurve:
+    - 0.01875
+    - 0.018737726
+    - 0.02071214
+    - 0.026830453
+    - 0.036530536
+    - 0.04922927
+    - 0.064343564
+    - 0.081290305
+    - 0.09948638
+    - 0.1183487
+    - 0.125
+    - 0.125
     roundsPerMinute: 720
     autoFire: 1
     inputBufferTime: 0
@@ -28,3 +45,36 @@ MonoBehaviour:
     minMaxPitch:
       min: 1
       max: 2
+  spreadCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.15
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.1
+      value: 0.15
+      inSlope: 0.013070031
+      outSlope: 0.013070031
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.15061018
+    - serializedVersion: 3
+      time: 0.85
+      value: 1
+      inSlope: 1.6715119
+      outSlope: 1.6715119
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.09672451
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
