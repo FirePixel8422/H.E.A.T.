@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0678329264aa3b64fb2fa9f244278c41, type: 3}
-  m_Name: Railgun HeatSink
+  m_Name: PulseRifle HeatSink
   m_EditorClassIdentifier: 
   stats:
     heatSinkSize: 1
     heatDecayDelay: 0.25
-    heatDecayPower: 0.075
+    heatDecayPower: 0.1
     heatDecayPowerMultiplier: 1
     overheatDecayDelay: 1
-    overheatDecayPower: 0.085
+    overheatDecayPower: 0.075
     overheatDecayPowerMultiplier: 1
-    decayMultiplierAtMaxHeat: 15
+    decayMultiplierAtMaxHeat: 10

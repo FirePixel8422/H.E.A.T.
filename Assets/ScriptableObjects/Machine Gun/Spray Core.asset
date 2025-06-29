@@ -10,18 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b0b7c3e06db8a14b87487cb5b20ad5f, type: 3}
-  m_Name: PulseRifle Core
+  m_Name: Spray Core
   m_EditorClassIdentifier: 
   stats:
-    damage: 10
-    heatPerShot: 0.075
+    damage: 2.5
+    headShotMultiplier: 1.5
+    heatPerShot: 0.0325
     recoilPerShot: 0.65
-    recoilRecoveryDelay: 0.2
-    recoilRecovery: 100
-    roundsPerMinute: 350
+    recoilForce: 20
+    recoilRecoveryDelay: 0.225
+    recoilRecovery: 75
+    roundsPerMinute: 720
     autoFire: 1
+    inputBufferTime: 0
     shootAudioClips:
-    - {fileID: 8300000, guid: 7a15fc41b1d885940a382f983eb3f01b, type: 3}
+    - {fileID: 8300000, guid: e70eb034c8ae4fe42b00d809716998e4, type: 3}
     minMaxPitch:
-      min: 0.85
-      max: 1.15
+      min: 1
+      max: 2

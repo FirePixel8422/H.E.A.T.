@@ -9,6 +9,8 @@ using UnityEngine.InputSystem;
 public class GunCore : NetworkBehaviour
 {
     [SerializeField] private GunCoreStatsSO coreStatsSO;
+    [SerializeField] private HeatSinkStatsSO heatSinkStatsSO;
+
     [SerializeField] private GunCoreStats coreStats;
 
     [SerializeField] private Transform shootPoint;
@@ -25,6 +27,10 @@ public class GunCore : NetworkBehaviour
     private bool CanShoot => timeSinceLastShot >= coreStats.ShootInterval;
 
 
+    private float inputBufferTimer;
+    private bool ShootInputBuffered => shootButtonHeld || inputBufferTimer > 0f;
+
+
     public void OnShoot(InputAction.CallbackContext ctx)
     {
         //get the shoot button state (held true or released false)
@@ -32,11 +38,8 @@ public class GunCore : NetworkBehaviour
 
         if (shootButtonHeld)
         {
+            inputBufferTimer = coreStats.InputBufferTime;
             timeSinceShootButtonPress = math.min(timeSinceLastShot, coreStats.ShootInterval);
-        }
-        else
-        {
-            timeSinceShootButtonPress = 0;
         }
     }
 
@@ -44,6 +47,7 @@ public class GunCore : NetworkBehaviour
     {
         recoilHandler = GetComponent<RecoilHandler>();
         heatSink = GetComponent<HeatSink>();
+        heatSink.Init(heatSinkStatsSO.stats);
 
         coreStats = coreStatsSO.stats;
 
@@ -57,13 +61,21 @@ public class GunCore : NetworkBehaviour
 
     private void OnUpdate()
     {
-        if (shootButtonHeld && heatSink.Overheated == false)
+#if UNITY_EDITOR
+        if (IsOwner == false && overrideIsOwner == false) return;
+#else
+        if (IsOwner == false) return;
+#endif
+
+        float deltaTime = Time.deltaTime;
+
+        if (ShootInputBuffered && heatSink.Overheated == false)
         {
-            timeSinceShootButtonPress += Time.deltaTime;
+            timeSinceShootButtonPress += deltaTime;
         }
 
         //when shoot button is held AND gun can shoot according to shootInterval AND heatSink is not overheated,
-        if (shootButtonHeld && CanShoot && heatSink.Overheated == false)
+        if (ShootInputBuffered && CanShoot && heatSink.Overheated == false)
         {
             //fire shots and add recoil for every timeSinceLastShot time that exceeds shootInterval (to catch up in cases with HIGH lagg)
             while (timeSinceShootButtonPress >= coreStats.ShootInterval)
@@ -89,15 +101,18 @@ public class GunCore : NetworkBehaviour
         //Call Update method for recoil handler
         recoilHandler.OnUpdate(coreStats.recoilForce);
 
-        //if autofire is disabled, auto release in script shootButton
+        //if autofire is disabled, auto release in script shootButton if inputBuffer window is over
         if (coreStats.autoFire == false)
         {
             shootButtonHeld = false;
         }
 
-        timeSinceLastShot += Time.deltaTime;
+        timeSinceLastShot += deltaTime;
+        inputBufferTimer -= deltaTime;
     }
 
+
+    #region Shooting Part
 
     /// <summary>
     /// Inbetween method for Shoot method for ServerRPC logic
@@ -119,7 +134,7 @@ public class GunCore : NetworkBehaviour
     /// Method to actually fire a shot
     /// </summary>
     private void Shoot(int randomAudioId, float randomPitch)
-    {
+    {       
         gunSource.PlayClipWithPitch(coreStats.shootAudioClips[randomAudioId], randomPitch);
     }
 
@@ -137,4 +152,11 @@ public class GunCore : NetworkBehaviour
 
         Shoot(randomAudioId, randomPitch);
     }
+
+    #endregion
+
+
+#if UNITY_EDITOR
+    [SerializeField] private bool overrideIsOwner = true;
+#endif
 }

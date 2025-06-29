@@ -5,15 +5,17 @@ using UnityEngine.InputSystem;
 
 public class RecoilHandler : MonoBehaviour
 {
-    [SerializeField] private Transform recoilTransform;
+    [Header("Transform used for camera movement and now also for recoil")]
+    [SerializeField] private Transform cameraTransform;
 
     private float toAddRecoil;
     private float recoil;
 
 
-    public void OnMouseMovement()
+    public void OnMouseMovement(InputAction.CallbackContext ctx)
     {
-        recoil = 0;
+        // Ignore recoil recovery for mouse input that moved the camera down (countering the recoil)
+        recoil = Mathf.MoveTowards(recoil, 0, -Mathf.Min(ctx.ReadValue<Vector2>().y, 0));
     }
 
 
@@ -33,7 +35,7 @@ public class RecoilHandler : MonoBehaviour
         toAddRecoil -= addedRecoil;
 
         //apply the added recoil (up == transform.left)
-        recoilTransform.Rotate(Vector3.left, addedRecoil);
+        cameraTransform.Rotate(Vector3.left, addedRecoil);
 
         //update how much recoil has been added, for the recovery process
         recoil += addedRecoil;
@@ -52,6 +54,6 @@ public class RecoilHandler : MonoBehaviour
         recoil -= recoilRecovery;
 
         //apply the recoil recovery (down == transform.right)
-        recoilTransform.Rotate(Vector3.right, recoilRecovery);
+        cameraTransform.Rotate(Vector3.right, recoilRecovery);
     }
 }

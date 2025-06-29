@@ -5,12 +5,15 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float crouchSpeed = 3;
+    [SerializeField] private float crouchSpeed = 1;
     [SerializeField] private float moveSpeed = 3;
-    [SerializeField] private float sprintSpeed = 3;
+    [SerializeField] private float sprintSpeed = 4.25f;
+
+    [SerializeField] private float speedChangePower = 5;
 
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float jumpForce = 5;
+    [SerializeField] private float fallGravityMultiplier = 5;
 
     [SerializeField] private float groundDrag;
     [SerializeField] private float airDrag;
@@ -19,7 +22,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxTiltAngle = 90;
     [SerializeField] private float mouseSensitivity = 1;
 
-    private bool IsGrounded => Physics.CheckSphere(groundCheck.position, 0.01f);
+    [SerializeField] private float groundCheckRadius = 0.05f;
+    private bool IsGrounded => Physics.CheckSphere(groundCheck.position, groundCheckRadius);
 
     private Rigidbody rb;
     private Vector2 moveDir;
@@ -80,14 +84,38 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    private void OnEnable() => UpdateScheduler.RegisterUpdate(OnUpdate);
-    private void OnDisable() => UpdateScheduler.UnregisterUpdate(OnUpdate);
+    private void OnEnable() => UpdateScheduler.RegisterFixedUpdate(OnFixedUpdate);
+    private void OnDisable() => UpdateScheduler.UnregisterFixedUpdate(OnFixedUpdate);
 
-    private void OnUpdate()
+    private void OnFixedUpdate()
     {
-        // If crouching move at crouchSpeed, if not crouching and if sprinting move at sprintSpeed, otherwise move at moveSpeed
-        float targetMoveSpeed = crouching ? crouchSpeed : (sprinting ? sprintSpeed : moveSpeed);
-        
-        rb.velocity = transform.TransformDirection(new Vector3(moveDir.x * targetMoveSpeed, rb.velocity.y, moveDir.y * targetMoveSpeed));
+        float targetMoveSpeed = GetTargetMoveSpeed();
+        float rbVelocityY = rb.velocity.y;
+
+        // Calculate the target velocity based on the input direction and target speed (crouched, sprinting, or normal)
+        Vector3 targetMovementVelocity = new Vector3(moveDir.x * targetMoveSpeed, rbVelocityY, moveDir.y * targetMoveSpeed);
+
+        // Move Rigidbodys velocity to targetMovementVelocity
+        rb.velocity = VectorLogic.InstantMoveTowards(rb.velocity, transform.TransformDirection(targetMovementVelocity), speedChangePower * Time.fixedDeltaTime);
+
+        //if player is falling
+        if (rbVelocityY < 0)
+        {
+            rb.AddForce(Vector3.down * fallGravityMultiplier, ForceMode.Acceleration);
+        }
+    }
+
+    private float GetTargetMoveSpeed()
+    {
+        if (!IsGrounded)
+            return moveSpeed;
+
+        if (crouching)
+            return crouchSpeed;
+
+        if (sprinting)
+            return sprintSpeed;
+
+        return moveSpeed;
     }
 }

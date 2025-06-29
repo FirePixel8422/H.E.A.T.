@@ -6,8 +6,6 @@ using UnityEngine.UI;
 public class HeatSink : MonoBehaviour
 {
     [SerializeField] private Image heatBar;
-
-    [SerializeField] private HeatSinkStatsSO heatSinkStatsSO;
     [SerializeField] private HeatSinkStats stats;
 
 
@@ -20,10 +18,10 @@ public class HeatSink : MonoBehaviour
     private Animator anim;
 
 
-    private void Start()
+    public void Init(HeatSinkStats _stats)
     {
         anim = GetComponentInChildren<Animator>(true);
-        stats = heatSinkStatsSO.stats;
+        stats = _stats;
     }
 
 

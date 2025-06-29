@@ -40,6 +40,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Crouch",
+                    "type": "Button",
+                    "id": "585f9fcd-ee3c-41a6-b8f9-ee40ce84bd49",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Sprint",
+                    "type": "Button",
+                    "id": "6c5763ed-b306-485f-b10f-0a913ab78704",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -111,8 +129,8 @@
                 },
                 {
                     "name": "",
-                    "id": "cdbf7abd-62b5-40e2-8e96-1513ea426933",
-                    "path": "<Keyboard>/backslash",
+                    "id": "eb286871-5ccc-45fe-8691-34c2536ceda4",
+                    "path": "<Keyboard>/enter",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -141,26 +159,31 @@
                     "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c04cc181-35a6-437f-a970-ecff62436cdd",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Crouch",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "170116bc-0fa2-4ef8-aa0d-ca7db62fac4f",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Sprint",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }
     ],
-    "controlSchemes": [
-        {
-            "name": "Keyboard&Mouse",
-            "bindingGroup": "Keyboard&Mouse",
-            "devices": [
-                {
-                    "devicePath": "<Keyboard>",
-                    "isOptional": false,
-                    "isOR": false
-                },
-                {
-                    "devicePath": "<Mouse>",
-                    "isOptional": true,
-                    "isOR": false
-                }
-            ]
-        }
-    ]
+    "controlSchemes": []
 }
