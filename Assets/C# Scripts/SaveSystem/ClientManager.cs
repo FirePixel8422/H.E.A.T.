@@ -35,10 +35,14 @@ public class ClientManager : NetworkBehaviour
 
 
 
-    [Tooltip("Turn GameId into NetworkId")]
+    /// <summary>
+    /// Turn GameId into NetworkId
+    /// </summary>
     public static ulong GetClientNetworkId(int gameId) => Instance.playerIdDataArray.Value.GetPlayerNetworkId(gameId);
 
-    [Tooltip("Turn NetworkId into GameId")]
+    /// <summary>
+    /// Turn NetworkId into GameId
+    /// </summary>
     public static int GetClientGameId(ulong networkId) => Instance.playerIdDataArray.Value.GetPlayerGameId(networkId);
 
 

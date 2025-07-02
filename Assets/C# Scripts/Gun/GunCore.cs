@@ -1,5 +1,7 @@
+using System;
 using Unity.Mathematics;
 using Unity.Netcode;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -166,14 +168,12 @@ public class GunCore : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void Shoot_ServerRPC(int clientGameId, int randomAudioId, float randomPitch)
     {
-        Shoot_ClientRPC(clientGameId, randomAudioId, randomPitch);
+        Shoot_ClientRPC(randomAudioId, randomPitch, NetcodeUtility.SendToOppositeClient(clientGameId));
     }
 
     [ClientRpc(RequireOwnership = false)]
-    private void Shoot_ClientRPC(int clientGameId, int randomAudioId, float randomPitch)
+    private void Shoot_ClientRPC(int randomAudioId, float randomPitch, ClientRpcParams rpcParams)
     {
-        if (ClientManager.LocalClientGameId == clientGameId) return;
-
         Shoot(randomAudioId, randomPitch);
     }
 
