@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
-using Unity.Burst;
 using Unity.Collections;
-using Unity.Mathematics;
 using UnityEngine;
 
 public static class ExtensionMethods

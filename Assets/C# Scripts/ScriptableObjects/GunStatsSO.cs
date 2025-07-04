@@ -3,19 +3,22 @@ using UnityEngine;
 
 
 
-[CreateAssetMenu(fileName = "GunCoreStatsSO", menuName = "ScriptableObjects/GunCore Stats")]
-public class GunCoreStatsSO : ScriptableObject
+[CreateAssetMenu(fileName = "GunCoreStatsSO", menuName = "ScriptableObjects/GunData")]
+public class GunStatsSO : ScriptableObject
 {
-    [SerializeField] private GunCoreStats stats = GunCoreStats.Default;
+    [SerializeField] private GunCoreStats coreStats = GunCoreStats.Default;
 
     [Header("This AnimatioCurve is not in stats data to spare memory usage\nAt how much heat (0-1) do you have how much spread")]
     [SerializeField] private AnimationCurve spreadCurve = AnimationCurve.Linear(0, 0, 1, 1);
 
-    public GunCoreStats GetStats()
-    {
-        UpdateSpreadCurve(ref stats);
+    [SerializeField] private HeatSinkStats heatSinkStats = HeatSinkStats.Default;
 
-        return stats;
+
+    public GunCoreStats GetCoreStats()
+    {
+        UpdateSpreadCurve(ref coreStats);
+
+        return coreStats;
     }
 
     public void UpdateSpreadCurve(ref GunCoreStats stats)
@@ -29,5 +32,10 @@ public class GunCoreStatsSO : ScriptableObject
             float t = (float)i / (spreadCurveSampleCount - 1);
             stats.bakedSpreadCurve[i] = stats.maxSpread * spreadCurve.Evaluate(t);
         }
+    }
+
+    public HeatSinkStats GetHeatSinkStats()
+    {
+        return heatSinkStats;
     }
 }

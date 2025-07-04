@@ -1,7 +1,5 @@
-using System;
 using Unity.Mathematics;
 using Unity.Netcode;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,8 +8,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(RecoilHandler), typeof(HeatSink))]
 public class GunCore : NetworkBehaviour
 {
-    [SerializeField] private GunCoreStatsSO coreStatsSO;
-    [SerializeField] private HeatSinkStatsSO heatSinkStatsSO;
+    [SerializeField] private GunStatsSO gunStatsSO;
 
     [SerializeField] private GunCoreStats coreStats;
 
@@ -22,16 +19,16 @@ public class GunCore : NetworkBehaviour
 
     private RecoilHandler recoilHandler;
     private HeatSink heatSink;
+    private Camera cam;
+
+    private bool CanShoot => timeSinceLastShot >= coreStats.ShootInterval;
+
+    private float inputBufferTimer;
+    private bool ShootInputBuffered => shootButtonHeld || inputBufferTimer > 0f;
 
     private bool shootButtonHeld;
     private float timeSinceLastShot;
     private float timeSinceShootButtonPress;
-
-    private bool CanShoot => timeSinceLastShot >= coreStats.ShootInterval;
-
-
-    private float inputBufferTimer;
-    private bool ShootInputBuffered => shootButtonHeld || inputBufferTimer > 0f;
 
 
     public void OnShoot(InputAction.CallbackContext ctx)
@@ -50,9 +47,10 @@ public class GunCore : NetworkBehaviour
     {
         recoilHandler = GetComponent<RecoilHandler>();
         heatSink = GetComponent<HeatSink>();
-        heatSink.Init(heatSinkStatsSO.stats);
+        cam = GetComponentInChildren<Camera>();
 
-        coreStats = coreStatsSO.GetStats();
+        coreStats = gunStatsSO.GetCoreStats();
+        heatSink.Init(gunStatsSO.GetHeatSinkStats());
 
         timeSinceLastShot = coreStats.ShootInterval;
     }
@@ -72,6 +70,7 @@ public class GunCore : NetworkBehaviour
 
         float deltaTime = Time.deltaTime;
 
+        //count how long shoot button is held down, so we can buffer the input for a short time
         if (ShootInputBuffered && heatSink.Overheated == false)
         {
             timeSinceShootButtonPress += deltaTime;
@@ -83,7 +82,7 @@ public class GunCore : NetworkBehaviour
             //fire shots and add recoil for every timeSinceLastShot time that exceeds shootInterval (to catch up in cases with HIGH lagg)
             while (timeSinceShootButtonPress >= coreStats.ShootInterval)
             {
-                PrepareShot();
+                PrepareShot(coreStats.projectileCount, coreStats.burstShots);
 
                 timeSinceShootButtonPress -= coreStats.ShootInterval;
                 timeSinceLastShot = 0;
@@ -120,25 +119,36 @@ public class GunCore : NetworkBehaviour
     /// <summary>
     /// Inbetween method for Shoot method for ServerRPC logic
     /// </summary>
-    private void PrepareShot()
+    private void PrepareShot(int projectileCount, int burstCount)
     {
         recoilHandler.AddRecoil(coreStats.recoilPerShot);
         heatSink.AddHeat(coreStats.heatPerShot, out float previousHeatPercentage);
 
-        float2 spreadOffset = RandomApproxPointInCircle(coreStats.GetSpread(previousHeatPercentage));
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Vector3 camRight = cam.transform.right;
+        Vector3 camUp = cam.transform.up;
 
-        float3 spreadDir = math.normalize(ray.direction + Camera.main.transform.right * spreadOffset.x + Camera.main.transform.up * spreadOffset.y);
-
-        if (Physics.SphereCast(ray.origin, coreStats.bulletSize, spreadDir, out RaycastHit hit))
+        for (int i = 0; i < projectileCount; i++)
         {
-            Quaternion bulletHoleRotation = Quaternion.LookRotation(-hit.normal) * Quaternion.Euler(0, 0, EzRandom.RandomRotationAxis());
+            float2 spreadOffset = RandomApproxPointInCircle(coreStats.GetSpread(previousHeatPercentage));
 
-            GameObject bulletHoleObj = Instantiate(bulletHole, hit.point + hit.normal * EzRandom.Range(0.0005f, 0.001f), bulletHoleRotation);
-            bulletHole.transform.localScale = Vector3.one * coreStats.bulletHoleFXSize;
+            Vector3 spreadDir = math.normalize(ray.direction + camRight * spreadOffset.x + camUp * spreadOffset.y);
 
-            Destroy(bulletHoleObj, 5);
+            // Shoot an invisble sphere to detect a hit
+            if (Physics.SphereCast(ray.origin, coreStats.bulletSize, spreadDir, out RaycastHit hit))
+            {
+                // rotation for the bullet hole so it "stick" to the hit surdface, also rotate it randomly around the normal axis
+                Quaternion bulletHoleRotation = Quaternion.LookRotation(-hit.normal) * Quaternion.Euler(0, 0, EzRandom.RandomRotationAxis());
+
+                // Instantiate bullet hole at the hit point, slightly offset in the direction of the normal to avoid z-fighting
+                GameObject bulletHoleObj = Instantiate(bulletHole, hit.point + hit.normal * EzRandom.Range(0.0005f, 0.001f), bulletHoleRotation);
+                // Set scale
+                bulletHoleObj.transform.localScale = Vector3.one * coreStats.bulletHoleFXSize;
+
+                //Destroy in a bit
+                Destroy(bulletHoleObj, 5);
+            }
         }
 
         int randomAudioId = EzRandom.Range(0, coreStats.shootAudioClips.Length);

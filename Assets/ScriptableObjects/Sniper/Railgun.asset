@@ -10,31 +10,34 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b0b7c3e06db8a14b87487cb5b20ad5f, type: 3}
-  m_Name: Railgun Core
+  m_Name: Railgun
   m_EditorClassIdentifier: 
-  stats:
-    bulletSize: 0.05
-    bulletHoleFXSize: 0.4
-    damage: 70
+  coreStats:
+    damage: 10
     headShotMultiplier: 1.5
-    heatPerShot: 0.775
-    recoilPerShot: 30
-    recoilForce: 20
-    recoilRecoveryDelay: 0.2
-    recoilRecovery: 60
+    bulletSize: 0.1
+    bulletHoleFXSize: 0.35
+    projectileCount: 1
+    burstShots: 1
+    burstShotInterval: 0.1
+    heatPerShot: 0.65
+    recoilPerShot: 8
+    recoilForce: 150
+    recoilRecoveryDelay: 0.25
+    recoilRecovery: 25
     maxSpread: 0.01
     spreadCurveSampleCount: 2
     bakedSpreadCurve:
     - 0.01
     - 0.01
-    roundsPerMinute: 45
+    roundsPerMinute: 50
     autoFire: 0
-    inputBufferTime: 0.125
+    inputBufferTime: 0.15
     shootAudioClips:
     - {fileID: 8300000, guid: 9f45e6a5f5cd816458d7c9359c903f4b, type: 3}
     minMaxPitch:
-      min: 0.9
-      max: 1.1
+      min: 0.6
+      max: 0.85
   spreadCurve:
     serializedVersion: 2
     m_Curve:
@@ -59,3 +62,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  heatSinkStats:
+    heatSinkSize: 1
+    heatDecayDelay: 0.85
+    heatDecayPower: 0.1
+    heatDecayPowerMultiplier: 1
+    overheatDecayDelay: 1.25
+    overheatDecayPower: 0.075
+    overheatDecayPowerMultiplier: 1
+    decayMultiplierAtMaxHeat: 8

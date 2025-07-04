@@ -10,41 +10,42 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b0b7c3e06db8a14b87487cb5b20ad5f, type: 3}
-  m_Name: PulseRifle Core
+  m_Name: PulseRifle
   m_EditorClassIdentifier: 
-  stats:
-    bulletSize: 0.05
-    bulletHoleFXSize: 0.275
+  coreStats:
     damage: 10
     headShotMultiplier: 1.5
-    heatPerShot: 0.075
-    recoilPerShot: 0.65
-    recoilForce: 15
-    recoilRecoveryDelay: 0.2
-    recoilRecovery: 100
-    maxSpread: 0.0325
-    spreadCurveSampleCount: 12
+    bulletSize: 0.065
+    bulletHoleFXSize: 0.2
+    projectileCount: 1
+    burstShots: 1
+    burstShotInterval: 0.1
+    heatPerShot: 0.06
+    recoilPerShot: 0.75
+    recoilForce: 12
+    recoilRecoveryDelay: 0.25
+    recoilRecovery: 30
+    maxSpread: 0.075
+    spreadCurveSampleCount: 10
     bakedSpreadCurve:
     - 0.01125
-    - 0.011242831
-    - 0.011245221
-    - 0.011746972
-    - 0.013733077
-    - 0.01729142
-    - 0.022481672
-    - 0.0293635
-    - 0.037996583
-    - 0.048440572
-    - 0.060755167
+    - 0.011241275
+    - 0.011322038
+    - 0.013601176
+    - 0.018986525
+    - 0.027352573
+    - 0.038573816
+    - 0.052524734
+    - 0.069079824
     - 0.075
-    roundsPerMinute: 300
+    roundsPerMinute: 320
     autoFire: 1
     inputBufferTime: 0
     shootAudioClips:
     - {fileID: 8300000, guid: 7a15fc41b1d885940a382f983eb3f01b, type: 3}
     minMaxPitch:
-      min: 0.85
-      max: 1.15
+      min: 0.9
+      max: 1.1
   spreadCurve:
     serializedVersion: 2
     m_Curve:
@@ -67,7 +68,7 @@ MonoBehaviour:
       inWeight: 0.9918181
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 1
+      time: 0.925
       value: 1
       inSlope: 2.2337136
       outSlope: 2.2337136
@@ -78,3 +79,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  heatSinkStats:
+    heatSinkSize: 1
+    heatDecayDelay: 0.25
+    heatDecayPower: 0.1
+    heatDecayPowerMultiplier: 1
+    overheatDecayDelay: 0.65
+    overheatDecayPower: 0.075
+    overheatDecayPowerMultiplier: 1
+    decayMultiplierAtMaxHeat: 10

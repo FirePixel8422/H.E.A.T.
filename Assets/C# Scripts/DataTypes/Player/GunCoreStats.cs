@@ -1,19 +1,30 @@
+using Unity.Collections;
 using UnityEngine;
 
 
 [System.Serializable]
 public struct GunCoreStats
 {
+    [Header("Damage per bullet")]
+    public float damage;
+    [Header("When headshot damage is done, multiply by this value")]
+    public float headShotMultiplier;
+
+
     [Header("How big is the bullet (as diameter)")]
     public float bulletSize;
     [Header("How big is the bulletHole that is left from this bullet (scale)")]
     public float bulletHoleFXSize;
 
 
-    [Header("Damage per bullet")]
-    public float damage;
-    [Header("When headshot damage is done, multiply by this value")]
-    public float headShotMultiplier;
+    [Header("How much projectiles to fire per shot (e.g. shotgun pellets)")]
+    public int projectileCount;
+
+    [Header("How many projectiles to fire in sequence for one shot (1 == no burst)")]
+    [Range(1, 10)]
+    public int burstShots;
+    [Header("The time between each burst projectile")]
+    public float burstShotInterval;
 
 
     [Header("How much heat to add to the heatsink per shot")]
@@ -42,8 +53,8 @@ public struct GunCoreStats
 
     public float GetSpread(float heatPercentage)
     {
-        int index = (int)(heatPercentage * (spreadCurveSampleCount - 1));
-        index = Mathf.Clamp(index, 0, spreadCurveSampleCount - 1);
+        int index = Mathf.RoundToInt(heatPercentage * (spreadCurveSampleCount - 1));
+
         return bakedSpreadCurve[index];
     }
 
@@ -73,11 +84,16 @@ public struct GunCoreStats
     /// </summary>
     public static GunCoreStats Default => new GunCoreStats()
     {
+        damage = 10f,
+        headShotMultiplier = 1.5f,
+
         bulletSize = 0.05f,
         bulletHoleFXSize = 0.2f,
 
-        damage = 10f,
-        headShotMultiplier = 1.5f,
+        projectileCount = 1,
+
+        burstShots = 1,
+        burstShotInterval = 0.1f,
 
         heatPerShot = 0.1f,
 
@@ -94,7 +110,7 @@ public struct GunCoreStats
         inputBufferTime = 0,
 
         roundsPerMinute = 600f,
-        autoFire = true,
+        autoFire = true,    
 
         shootAudioClips = new AudioClip[1],
         minMaxPitch = new MinMaxFloat(0.95f, 1.05f),
