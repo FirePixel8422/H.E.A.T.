@@ -10,47 +10,43 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b0b7c3e06db8a14b87487cb5b20ad5f, type: 3}
-  m_Name: Machine Gun
+  m_Name: PulseRifle
   m_EditorClassIdentifier: 
   coreStats:
     damage: 10
     headShotMultiplier: 1.5
-    bulletSize: 0.05
-    bulletHoleFXSize: 0.2
+    bulletSize: 0.065
+    bulletHoleFXSize: 0.15
+    bulletHoleFXLifetime: 12.5
     projectileCount: 1
     burstShots: 1
     burstShotInterval: 0.1
-    heatPerShot: 0.035
+    heatPerShot: 0.06
     recoilPerShot: 0.75
-    recoilForce: 25
+    recoilForce: 12
     recoilRecoveryDelay: 0.25
     recoilRecovery: 30
-    maxSpread: 0.115
-    spreadCurveSampleCount: 15
+    maxSpread: 0.075
+    spreadCurveSampleCount: 10
     bakedSpreadCurve:
-    - 0.017250001
-    - 0.017228091
-    - 0.017784487
-    - 0.02065347
-    - 0.02576965
-    - 0.032872815
-    - 0.04170275
-    - 0.05199925
-    - 0.06350209
-    - 0.07595106
-    - 0.08908596
-    - 0.10264655
-    - 0.115
-    - 0.115
-    - 0.115
-    roundsPerMinute: 600
+    - 0.01125
+    - 0.011241275
+    - 0.011322038
+    - 0.013601176
+    - 0.018986525
+    - 0.027352573
+    - 0.038573816
+    - 0.052524734
+    - 0.069079824
+    - 0.075
+    roundsPerMinute: 320
     autoFire: 1
     inputBufferTime: 0
     shootAudioClips:
-    - {fileID: 8300000, guid: 17f3805d11575844d85b49435bac1572, type: 3}
+    - {fileID: 8300000, guid: 7a15fc41b1d885940a382f983eb3f01b, type: 3}
     minMaxPitch:
-      min: 0.95
-      max: 1.05
+      min: 0.9
+      max: 1.1
   spreadCurve:
     serializedVersion: 2
     m_Curve:
@@ -64,22 +60,22 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.1
+      time: 0.2
       value: 0.15
-      inSlope: 0.013070031
-      outSlope: 0.013070031
+      inSlope: 0.0042411094
+      outSlope: 0.0042411094
       tangentMode: 0
       weightedMode: 0
-      inWeight: 1
-      outWeight: 0.15061018
+      inWeight: 0.9918181
+      outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.85
+      time: 0.925
       value: 1
-      inSlope: 1.6715119
-      outSlope: 1.6715119
+      inSlope: 2.2337136
+      outSlope: 2.2337136
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.09672451
+      inWeight: 0.06502889
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -87,9 +83,9 @@ MonoBehaviour:
   heatSinkStats:
     heatSinkSize: 1
     heatDecayDelay: 0.25
-    heatDecayPower: 0.085
+    heatDecayPower: 0.1
     heatDecayPowerMultiplier: 1
-    overheatDecayDelay: 0.75
-    overheatDecayPower: 0.065
+    overheatDecayDelay: 0.65
+    overheatDecayPower: 0.075
     overheatDecayPowerMultiplier: 1
-    decayMultiplierAtMaxHeat: 8
+    decayMultiplierAtMaxHeat: 10

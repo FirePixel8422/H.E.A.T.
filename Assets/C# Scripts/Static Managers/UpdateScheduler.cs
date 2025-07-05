@@ -1,7 +1,10 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
+
+/// <summary>
+/// Uitlity class to have an optimized easy acces to Updte Callbacks by using an Action based callback system
+/// </summary>
 public static class UpdateScheduler
 {
 #pragma warning disable UDR0002

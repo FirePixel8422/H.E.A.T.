@@ -15,7 +15,7 @@ public class GunCore : NetworkBehaviour
     [SerializeField] private Transform shootPointTransform;
     [SerializeField] private AudioSource gunSource;
 
-    [SerializeField] private GameObject bulletHole;
+    [SerializeField] private GameObject bulletHolePrefab;
 
     private RecoilHandler recoilHandler;
     private HeatSink heatSink;
@@ -133,21 +133,38 @@ public class GunCore : NetworkBehaviour
         {
             float2 spreadOffset = RandomApproxPointInCircle(coreStats.GetSpread(previousHeatPercentage));
 
-            Vector3 spreadDir = math.normalize(ray.direction + camRight * spreadOffset.x + camUp * spreadOffset.y);
+            Vector3 rayDirWithSpread = math.normalize(ray.direction + camRight * spreadOffset.x + camUp * spreadOffset.y);
 
             // Shoot an invisble sphere to detect a hit
-            if (Physics.SphereCast(ray.origin, coreStats.bulletSize, spreadDir, out RaycastHit hit))
+            if (Physics.SphereCast(ray.origin, coreStats.bulletSize, rayDirWithSpread, out RaycastHit hit))
             {
+                //Deal damage to hit player
+
+
+
+
+                #region BulletHole FX
+
+                Vector3 bulletHolePos = hit.point;
+
+                //if rayCast can hit a surface, use raycast hitPoint for bulletHole position, otherwise fallback to sphereCast hitPoin
+                if (Physics.Raycast(ray.origin, rayDirWithSpread, out hit))
+                {
+                    bulletHolePos = hit.point;
+                }
+
                 // rotation for the bullet hole so it "stick" to the hit surdface, also rotate it randomly around the normal axis
-                Quaternion bulletHoleRotation = Quaternion.LookRotation(-hit.normal) * Quaternion.Euler(0, 0, EzRandom.RandomRotationAxis());
+                Quaternion bulletHoleRotation = Quaternion.LookRotation(rayDirWithSpread) * Quaternion.Euler(0, 0, EzRandom.RandomRotationAxis());
 
                 // Instantiate bullet hole at the hit point, slightly offset in the direction of the normal to avoid z-fighting
-                GameObject bulletHoleObj = Instantiate(bulletHole, hit.point + hit.normal * EzRandom.Range(0.0005f, 0.001f), bulletHoleRotation);
+                GameObject bulletHoleObj = Instantiate(bulletHolePrefab, bulletHolePos + rayDirWithSpread * 0.0125f, bulletHoleRotation);
                 // Set scale
                 bulletHoleObj.transform.localScale = Vector3.one * coreStats.bulletHoleFXSize;
 
-                //Destroy in a bit
-                Destroy(bulletHoleObj, 5);
+                // Register bullet hole for destruction after a certain time through BulletHoleManager
+                BulletHoleManager.Instance.RegisterBulletHole(bulletHoleObj, coreStats.bulletHoleFXLifetime);
+
+                #endregion
             }
         }
 

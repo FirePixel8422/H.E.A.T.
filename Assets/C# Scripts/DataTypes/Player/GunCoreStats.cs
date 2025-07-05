@@ -15,6 +15,8 @@ public struct GunCoreStats
     public float bulletSize;
     [Header("How big is the bulletHole that is left from this bullet (scale)")]
     public float bulletHoleFXSize;
+    [Header("How long the bullet hole FX stays before despawning")]
+    public float bulletHoleFXLifetime;
 
 
     [Header("How much projectiles to fire per shot (e.g. shotgun pellets)")]
@@ -89,6 +91,7 @@ public struct GunCoreStats
 
         bulletSize = 0.05f,
         bulletHoleFXSize = 0.2f,
+        bulletHoleFXLifetime = 10f,
 
         projectileCount = 1,
 

@@ -16,7 +16,8 @@ MonoBehaviour:
     damage: 10
     headShotMultiplier: 1.5
     bulletSize: 0.065
-    bulletHoleFXSize: 0.125
+    bulletHoleFXSize: 0.15
+    bulletHoleFXLifetime: 12.5
     projectileCount: 8
     burstShots: 1
     burstShotInterval: 0.1
@@ -65,9 +66,9 @@ MonoBehaviour:
   heatSinkStats:
     heatSinkSize: 1
     heatDecayDelay: 0.25
-    heatDecayPower: 0.035
+    heatDecayPower: 0.0325
     heatDecayPowerMultiplier: 1
     overheatDecayDelay: 1
-    overheatDecayPower: 0.05
+    overheatDecayPower: 0.055
     overheatDecayPowerMultiplier: 1
     decayMultiplierAtMaxHeat: 15

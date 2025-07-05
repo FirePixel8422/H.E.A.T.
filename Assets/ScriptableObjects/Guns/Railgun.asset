@@ -16,7 +16,8 @@ MonoBehaviour:
     damage: 10
     headShotMultiplier: 1.5
     bulletSize: 0.1
-    bulletHoleFXSize: 0.35
+    bulletHoleFXSize: 0.3
+    bulletHoleFXLifetime: 25
     projectileCount: 1
     burstShots: 1
     burstShotInterval: 0.1
