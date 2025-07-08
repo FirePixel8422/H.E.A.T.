@@ -1,4 +1,3 @@
-using Unity.Mathematics;
 using UnityEngine;
 
 
@@ -25,13 +24,7 @@ public class GunStatsSO : ScriptableObject
     {
         int spreadCurveSampleCount = stats.spreadCurveSampleCount;
 
-        stats.bakedSpreadCurve = new float[spreadCurveSampleCount];
-
-        for (int i = 0; i < spreadCurveSampleCount; i++)
-        {
-            float t = (float)i / (spreadCurveSampleCount - 1);
-            stats.bakedSpreadCurve[i] = stats.maxSpread * spreadCurve.Evaluate(t);
-        }
+        stats.bakedSpreadCurve = MathLogic.BakeCurveToArray(spreadCurve, spreadCurveSampleCount, stats.maxSpread);
     }
 
     public HeatSinkStats GetHeatSinkStats()

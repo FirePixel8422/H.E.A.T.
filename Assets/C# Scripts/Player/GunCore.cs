@@ -30,6 +30,9 @@ public class GunCore : NetworkBehaviour
     private float timeSinceLastShot;
     private float timeSinceShootButtonPress;
 
+    private int burstShotsLeft = 0;
+    private float burstShotTimer = 0f;
+
 
     public void OnShoot(InputAction.CallbackContext ctx)
     {
@@ -43,7 +46,25 @@ public class GunCore : NetworkBehaviour
         }
     }
 
+
+
+
+
+    // REMOVETHIS LATER, EDITOR DEBUUGGGG
+    // REMOVETHIS LATER, EDITOR DEBUUGGGG
+    // REMOVETHIS LATER, EDITOR DEBUUGGGG
+    // REMOVETHIS LATER, EDITOR DEBUUGGGG
+    // REMOVETHIS LATER, EDITOR DEBUUGGGG
+    // REMOVETHIS LATER, EDITOR DEBUUGGGG
+    // REMOVETHIS LATER, EDITOR DEBUUGGGG
+    // REMOVETHIS LATER, EDITOR DEBUUGGGG
+    // REMOVETHIS LATER, EDITOR DEBUUGGGG
     private void Start()
+    {
+        OnNetworkSpawn();
+    }
+
+    public override void OnNetworkSpawn()
     {
         recoilHandler = GetComponent<RecoilHandler>();
         heatSink = GetComponent<HeatSink>();
@@ -53,6 +74,9 @@ public class GunCore : NetworkBehaviour
         heatSink.Init(gunStatsSO.GetHeatSinkStats());
 
         timeSinceLastShot = coreStats.ShootInterval;
+        burstShotTimer = coreStats.burstShotInterval;
+
+        DecalVfxManager.Instance.Initialize(cam);
     }
 
 
@@ -65,45 +89,31 @@ public class GunCore : NetworkBehaviour
 #if UNITY_EDITOR
         if (IsOwner == false && overrideIsOwner == false) return;
 #else
-        if (IsOwner == false) return;
+    if (IsOwner == false) return;
 #endif
 
         float deltaTime = Time.deltaTime;
 
-        //count how long shoot button is held down, so we can buffer the input for a short time
-        if (ShootInputBuffered && heatSink.Overheated == false)
+        if (heatSink.Overheated)
         {
-            timeSinceShootButtonPress += deltaTime;
-        }
-
-        //when shoot button is held AND gun can shoot according to shootInterval AND heatSink is not overheated,
-        if (ShootInputBuffered && CanShoot && heatSink.Overheated == false)
-        {
-            //fire shots and add recoil for every timeSinceLastShot time that exceeds shootInterval (to catch up in cases with HIGH lagg)
-            while (timeSinceShootButtonPress >= coreStats.ShootInterval)
-            {
-                PrepareShot(coreStats.projectileCount, coreStats.burstShots);
-
-                timeSinceShootButtonPress -= coreStats.ShootInterval;
-                timeSinceLastShot = 0;
-            }
+            // Reset burst shots immediately when overheated
+            burstShotsLeft = 0;
         }
         else
         {
-            //start recoil recovery if enough time has passed since last shot
-            if (timeSinceLastShot > coreStats.recoilRecoveryDelay)
+            if (ShootInputBuffered)
             {
-                recoilHandler.StabilizeRecoil(coreStats.recoilRecovery);
+                timeSinceShootButtonPress += deltaTime;
             }
 
-            //mark heatsink for idle, heatSink executes the rest of its functionality itself;
-            heatSink.OnGunIdle(timeSinceLastShot);
+            ProcessBurstShots(deltaTime);
         }
 
-        //Call Update method for recoil handler
+        ProcessShooting();
+        ProcessRecoilAndHeat();
+
         recoilHandler.OnUpdate(coreStats.recoilForce);
 
-        //if autofire is disabled, auto release in script shootButton if inputBuffer window is over
         if (coreStats.autoFire == false)
         {
             shootButtonHeld = false;
@@ -114,12 +124,65 @@ public class GunCore : NetworkBehaviour
     }
 
 
+    #region Process Shots, Burst Shots And Recoil + Heat
+
+    private void ProcessBurstShots(float deltaTime)
+    {
+        if (burstShotsLeft <= 0) return;
+
+        burstShotTimer -= deltaTime;
+
+        // Burst shots fire at fixed intervals; this loop handles multiple shots if lagged behind
+        while (burstShotTimer <= 0 && burstShotsLeft > 0)
+        {
+            PrepareShot(coreStats.projectileCount);
+            burstShotsLeft--;
+            burstShotTimer += coreStats.burstShotInterval;
+        }
+
+        if (burstShotsLeft == 0)
+        {
+            burstShotTimer = coreStats.burstShotInterval; // Reset timer for next burst
+        }
+    }
+
+    private void ProcessShooting()
+    {
+        if (ShootInputBuffered && CanShoot && !heatSink.Overheated)
+        {
+            // Handles catch-up shots if input was buffered longer than shoot interval
+            while (timeSinceShootButtonPress >= coreStats.ShootInterval)
+            {
+                PrepareShot(coreStats.projectileCount);
+                timeSinceShootButtonPress -= coreStats.ShootInterval;
+                timeSinceLastShot = 0;
+
+                burstShotsLeft += coreStats.burstShots; // Queue burst shots for each fired shot
+            }
+        }
+    }
+
+    private void ProcessRecoilAndHeat()
+    {
+        // Only stabilize recoil if no burst is currently firing
+        if (timeSinceLastShot > coreStats.recoilRecoveryDelay && burstShotsLeft == 0)
+        {
+            recoilHandler.StabilizeRecoil(coreStats.recoilRecovery);
+        }
+
+        // Send -1 to heatSink if burst is ongoing to indicate gun isn't idle yet, otherwise send timeSinceLastShot
+        heatSink.OnGunIdle(burstShotsLeft == 0 ? timeSinceLastShot : -1);
+    }
+
+    #endregion
+
+
     #region Shooting Part
 
     /// <summary>
     /// Inbetween method for Shoot method for ServerRPC logic
     /// </summary>
-    private void PrepareShot(int projectileCount, int burstCount)
+    private void PrepareShot(int projectileCount)
     {
         recoilHandler.AddRecoil(coreStats.recoilPerShot);
         heatSink.AddHeat(coreStats.heatPerShot, out float previousHeatPercentage);
@@ -138,12 +201,13 @@ public class GunCore : NetworkBehaviour
             // Shoot an invisble sphere to detect a hit
             if (Physics.SphereCast(ray.origin, coreStats.bulletSize, rayDirWithSpread, out RaycastHit hit))
             {
-                //Deal damage to hit player
-
+                // Deal damage to hit player
 
 
 
                 #region BulletHole FX
+
+                SurfaceType hitSurfaceType = hit.collider.GetSurfaceType();
 
                 Vector3 bulletHolePos = hit.point;
 
@@ -153,16 +217,16 @@ public class GunCore : NetworkBehaviour
                     bulletHolePos = hit.point;
                 }
 
-                // rotation for the bullet hole so it "stick" to the hit surdface, also rotate it randomly around the normal axis
+                //add spread to bullet hole position
+                bulletHolePos += rayDirWithSpread * 0.0125f;
+
+                // rotation for the bullet hole so it "sticks" to the hit surface, also rotate it randomly around the normal axis
                 Quaternion bulletHoleRotation = Quaternion.LookRotation(rayDirWithSpread) * Quaternion.Euler(0, 0, EzRandom.RandomRotationAxis());
-
-                // Instantiate bullet hole at the hit point, slightly offset in the direction of the normal to avoid z-fighting
-                GameObject bulletHoleObj = Instantiate(bulletHolePrefab, bulletHolePos + rayDirWithSpread * 0.0125f, bulletHoleRotation);
                 // Set scale
-                bulletHoleObj.transform.localScale = Vector3.one * coreStats.bulletHoleFXSize;
+                Vector3 bulletHoleScale = Vector3.one * EzRandom.Range(coreStats.bulletHoleFXSize);
 
-                // Register bullet hole for destruction after a certain time through BulletHoleManager
-                BulletHoleManager.Instance.RegisterBulletHole(bulletHoleObj, coreStats.bulletHoleFXLifetime);
+                // Create Decal trhough DecalVfxManager
+                DecalVfxManager.Instance.RegisterDecal(bulletHolePos, bulletHoleRotation, bulletHoleScale, hitSurfaceType, coreStats.bulletHoleFXLifetime);
 
                 #endregion
             }

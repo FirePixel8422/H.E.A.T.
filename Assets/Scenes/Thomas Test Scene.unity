@@ -378,9 +378,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e856d108638eaa4195814d4786f3959, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletHoleCap: 100
+  decalPrefab: {fileID: 2201957933643261960, guid: 2cb81bfb34c309a469d8ed317ba9e0b8,
+    type: 3}
+  decalMaterials:
+  - {fileID: 2100000, guid: f138d9d4124b75e45b520d19d8300e0d, type: 2}
+  decalCap: 250
   onCapReachCleanupCount: 10
-  bulletHoleEntries: []
+  decalEntries: []
 --- !u!4 &1426142958
 Transform:
   m_ObjectHideFlags: 0
@@ -648,7 +652,7 @@ PrefabInstance:
         type: 3}
       propertyPath: gunStatsSO
       value: 
-      objectReference: {fileID: 11400000, guid: 518d03d1b3accf542ac1f9ac07310f10,
+      objectReference: {fileID: 11400000, guid: 2465038b3a176354f8547fc688f03f34,
         type: 2}
     - target: {fileID: 7655005037721419446, guid: aecb7691986b2a44ca7b5e44378938b1,
         type: 3}

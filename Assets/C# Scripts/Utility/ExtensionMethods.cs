@@ -86,12 +86,18 @@ public static class ExtensionMethods
 
     #region TryGetComponent(s)
 
+    public static bool TryGetComponents<T>(this Transform trans, out T[] components) where T : Component
+    {
+        components = trans.GetComponents<T>();
+
+        return components.Length > 0;
+    }
+
     public static bool TryGetComponentInChildren<T>(this Transform trans, out T component, bool includeInactive = false) where T : Component
     {
         component = trans.GetComponentInChildren<T>(includeInactive);
         return component != null;
     }
-
     public static bool TryGetComponentsInChildren<T>(this Transform trans, out T[] components, bool includeInactive = false) where T : Component
     {
         components = trans.GetComponentsInChildren<T>(includeInactive);
@@ -104,7 +110,6 @@ public static class ExtensionMethods
         component = trans.GetComponentInParent<T>();
         return component != null;
     }
-
     public static bool TryGetComponentsInParent<T>(this Transform trans, out T[] component) where T : Component
     {
         component = trans.GetComponentsInParent<T>();
@@ -116,7 +121,6 @@ public static class ExtensionMethods
         component = UnityEngine.Object.FindObjectOfType<T>(includeInactive);
         return component != null;
     }
-
     public static bool TryFindObjectsOfType<T>(this UnityEngine.Object obj, out T[] component, bool includeInactive = false) where T : Component
     {
         component = UnityEngine.Object.FindObjectsOfType<T>(includeInactive);
@@ -165,5 +169,17 @@ public static class ExtensionMethods
         source.clip = clip;
         source.pitch = pitch;
         source.Play();
+    }
+
+
+    /// <returns>SurfaceType enum of the target collider, returns SurfaceType.None if there is no <see cref="SurfaceTypeIdentifier"/> attached to targetr collider</returns>
+    public static SurfaceType GetSurfaceType(this Collider collider)
+    {
+        if (collider.TryGetComponent(out SurfaceTypeIdentifier identifier))
+        {
+            return identifier.SurfaceType;
+        }
+
+        return SurfaceType.None;
     }
 }

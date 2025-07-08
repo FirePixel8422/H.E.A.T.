@@ -3,12 +3,12 @@
 
 
 [System.Serializable]
-public class BulletHoleEntry
+public struct DecalEntry
 {
     public DecalProjector decalProjector;
     public float deathTime;
 
-    public BulletHoleEntry(DecalProjector decalProjector, float deathTime)
+    public DecalEntry(DecalProjector decalProjector, float deathTime)
     {
         this.decalProjector = decalProjector;
         this.deathTime = deathTime;

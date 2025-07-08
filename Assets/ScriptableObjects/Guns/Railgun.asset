@@ -16,10 +16,12 @@ MonoBehaviour:
     damage: 10
     headShotMultiplier: 1.5
     bulletSize: 0.1
-    bulletHoleFXSize: 0.3
+    bulletHoleFXSize:
+      min: 0.2
+      max: 0.225
     bulletHoleFXLifetime: 25
     projectileCount: 1
-    burstShots: 1
+    burstShots: 0
     burstShotInterval: 0.1
     heatPerShot: 0.65
     recoilPerShot: 8
@@ -32,7 +34,7 @@ MonoBehaviour:
     - 0.01
     - 0.01
     roundsPerMinute: 50
-    autoFire: 0
+    autoFire: 1
     inputBufferTime: 0.15
     shootAudioClips:
     - {fileID: 8300000, guid: 9f45e6a5f5cd816458d7c9359c903f4b, type: 3}

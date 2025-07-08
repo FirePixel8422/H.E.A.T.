@@ -14,7 +14,7 @@ public struct GunCoreStats
     [Header("How big is the bullet (as diameter)")]
     public float bulletSize;
     [Header("How big is the bulletHole that is left from this bullet (scale)")]
-    public float bulletHoleFXSize;
+    public MinMaxFloat bulletHoleFXSize;
     [Header("How long the bullet hole FX stays before despawning")]
     public float bulletHoleFXLifetime;
 
@@ -22,8 +22,8 @@ public struct GunCoreStats
     [Header("How much projectiles to fire per shot (e.g. shotgun pellets)")]
     public int projectileCount;
 
-    [Header("How many projectiles to fire in sequence for one shot (1 == no burst)")]
-    [Range(1, 10)]
+    [Header("How many additonal shots to fire in sequence after shooting (0 == no burst)")]
+    [Range(0, 9)]
     public int burstShots;
     [Header("The time between each burst projectile")]
     public float burstShotInterval;
@@ -90,12 +90,12 @@ public struct GunCoreStats
         headShotMultiplier = 1.5f,
 
         bulletSize = 0.05f,
-        bulletHoleFXSize = 0.2f,
+        bulletHoleFXSize = new MinMaxFloat(0.15f, 0.2f),
         bulletHoleFXLifetime = 10f,
 
         projectileCount = 1,
 
-        burstShots = 1,
+        burstShots = 0,
         burstShotInterval = 0.1f,
 
         heatPerShot = 0.1f,

@@ -16,16 +16,18 @@ MonoBehaviour:
     damage: 10
     headShotMultiplier: 1.5
     bulletSize: 0.05
-    bulletHoleFXSize: 0.125
+    bulletHoleFXSize:
+      min: 0.125
+      max: 0.15
     bulletHoleFXLifetime: 7.5
     projectileCount: 1
-    burstShots: 1
+    burstShots: 0
     burstShotInterval: 0.1
     heatPerShot: 0.035
     recoilPerShot: 0.75
     recoilForce: 25
-    recoilRecoveryDelay: 0.25
-    recoilRecovery: 30
+    recoilRecoveryDelay: 0.15
+    recoilRecovery: 80
     maxSpread: 0.115
     spreadCurveSampleCount: 15
     bakedSpreadCurve:
