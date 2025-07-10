@@ -1,4 +1,3 @@
-using Unity.Collections;
 using UnityEngine;
 
 
@@ -6,9 +5,36 @@ using UnityEngine;
 public struct GunCoreStats
 {
     [Header("Damage per bullet")]
+    [Tooltip("Use GetDamageOutput() for true damage. Raw damage dealt per bullet, before falloff and headshot multiplier")]
     public float damage;
     [Header("When headshot damage is done, multiply by this value")]
-    public float headShotMultiplier;
+    private float headShotMultiplier;
+
+    [Header("The maximum distance this weapon can shoot from until damage fully falls off")]
+    [SerializeField] private float maxEffectiveRange;
+    [Header("How many sample to give the damage falloff curve, more samples, higher accuracy percentages")]
+    [Range(2, 50)]
+    public int damageFallOffSampleCount;
+    [Header(">>DEBUG<<, the baked damage, used for final damageOutput, accounts for damage falloff")]
+    public float[] bakedDamageCurve;
+
+    public float GetDamageOutput(float distance, bool headShot)
+    {
+        if (distance < maxEffectiveRange)
+        {
+            // Get index based on distance and maxEffectiveRange
+            int index = Mathf.FloorToInt(distance / maxEffectiveRange * (damageFallOffSampleCount - 1));
+
+            // Get DamageOutput from bakedDamageCurve and multiply with headShotMultipier IF there was a headshot
+            return headShot ? bakedDamageCurve[index] * headShotMultiplier : bakedDamageCurve[index];
+        }
+        else
+        {
+            // Distance is past MaxEffectiveRange so get last entry of the curve, which is the damage at maxEffectiveRange
+            // Get DamageOutput from bakedDamageCurve and multiply with headShotMultipier IF there was a headshot
+            return headShot ? bakedDamageCurve[^1] * headShotMultiplier : bakedDamageCurve[^1];
+        }
+    }
 
 
     [Header("How big is the bullet (as diameter)")]
@@ -49,13 +75,13 @@ public struct GunCoreStats
 
     [Header("How many sample to give the spread curve, more samples, higher accuracy spread curve")]
     [Range(2, 50)]
-    public int spreadCurveSampleCount;
+    public int spreadSampleCount;
     [Header(">>DEBUG<<, the baked spread curve, used for the actual spread calculation instead of the animation curve")]
     public float[] bakedSpreadCurve;
 
     public float GetSpread(float heatPercentage)
     {
-        int index = Mathf.RoundToInt(heatPercentage * (spreadCurveSampleCount - 1));
+        int index = Mathf.RoundToInt(heatPercentage * (spreadSampleCount - 1));
 
         return bakedSpreadCurve[index];
     }
@@ -89,6 +115,10 @@ public struct GunCoreStats
         damage = 10f,
         headShotMultiplier = 1.5f,
 
+        maxEffectiveRange = 25,
+        damageFallOffSampleCount = 12,
+        bakedDamageCurve = new float[0],
+
         bulletSize = 0.05f,
         bulletHoleFXSize = new MinMaxFloat(0.15f, 0.2f),
         bulletHoleFXLifetime = 10f,
@@ -107,7 +137,7 @@ public struct GunCoreStats
         recoilRecovery = 0.5f,
 
         maxSpread = 0.25f,
-        spreadCurveSampleCount = 12,
+        spreadSampleCount = 12,
         bakedSpreadCurve = new float[0],
 
         inputBufferTime = 0,

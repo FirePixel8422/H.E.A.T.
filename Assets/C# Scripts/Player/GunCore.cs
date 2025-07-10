@@ -33,6 +33,9 @@ public class GunCore : NetworkBehaviour
     private int burstShotsLeft = 0;
     private float burstShotTimer = 0f;
 
+    [Tooltip("multiplier to counter the offset of the DecalProjector Component's pivot, so the decal still sticks to the surface correctly")]
+    public const float DecalProjectorPivotMultiplier = 0.0125f;
+
 
     public void OnShoot(InputAction.CallbackContext ctx)
     {
@@ -192,6 +195,8 @@ public class GunCore : NetworkBehaviour
         Vector3 camRight = cam.transform.right;
         Vector3 camUp = cam.transform.up;
 
+        float DEBUG_damageThisShot = 0;
+
         for (int i = 0; i < projectileCount; i++)
         {
             float2 spreadOffset = RandomApproxPointInCircle(coreStats.GetSpread(previousHeatPercentage));
@@ -201,7 +206,10 @@ public class GunCore : NetworkBehaviour
             // Shoot an invisble sphere to detect a hit
             if (Physics.SphereCast(ray.origin, coreStats.bulletSize, rayDirWithSpread, out RaycastHit hit))
             {
+                Vector3 hitNormal = hit.normal;
                 // Deal damage to hit player
+
+                DEBUG_damageThisShot += coreStats.GetDamageOutput(hit.distance, false);
 
 
 
@@ -211,17 +219,24 @@ public class GunCore : NetworkBehaviour
 
                 Vector3 bulletHolePos = hit.point;
 
-                //if rayCast can hit a surface, use raycast hitPoint for bulletHole position, otherwise fallback to sphereCast hitPoin
+                // If rayCast can hit a surface, use raycast hitPoint for bulletHole position, otherwise fallback to sphereCast hitPoin
                 if (Physics.Raycast(ray.origin, rayDirWithSpread, out hit))
                 {
+                    hitNormal = hit.normal;
                     bulletHolePos = hit.point;
                 }
 
-                //add spread to bullet hole position
-                bulletHolePos += rayDirWithSpread * 0.0125f;
+                // Add spread to bullet hole position
+                bulletHolePos += rayDirWithSpread * DecalProjectorPivotMultiplier;
 
-                // rotation for the bullet hole so it "sticks" to the hit surface, also rotate it randomly around the normal axis
-                Quaternion bulletHoleRotation = Quaternion.LookRotation(rayDirWithSpread) * Quaternion.Euler(0, 0, EzRandom.RandomRotationAxis());
+                // Rotation for the bullet hole so it "sticks" to the hit surface, also rotate it randomly around the normal axis
+                Quaternion directionRotation = Quaternion.LookRotation(rayDirWithSpread);
+                // Rotation based on surface normal
+                Quaternion normalRotation = Quaternion.LookRotation(-hitNormal);
+
+                // Blend rotation between direction and normal, and add a random rotation around the Z-axis
+                Quaternion bulletHoleRotation = Quaternion.Slerp(directionRotation, normalRotation, 0.5f) * Quaternion.Euler(0, 0, EzRandom.RandomRotationAxis());
+
                 // Set scale
                 Vector3 bulletHoleScale = Vector3.one * EzRandom.Range(coreStats.bulletHoleFXSize);
 
@@ -231,6 +246,8 @@ public class GunCore : NetworkBehaviour
                 #endregion
             }
         }
+
+        print("Shot hit for " + DEBUG_damageThisShot + " damage!");
 
         int randomAudioId = EzRandom.Range(0, coreStats.shootAudioClips.Length);
         float randomPitch = EzRandom.Range(coreStats.minMaxPitch);

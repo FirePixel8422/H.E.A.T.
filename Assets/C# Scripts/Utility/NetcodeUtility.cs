@@ -23,7 +23,7 @@ public static class NetcodeUtility
     }
 
     /// <summary>
-    /// Send RPC to enemy of clientGameId
+    /// Send RPC to enemy of clientGameId (Only works in 1v1 situations)
     /// </summary>
     public static ClientRpcParams SendToOppositeClient(int clientGameId)
     {

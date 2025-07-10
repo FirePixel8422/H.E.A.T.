@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Unity.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -34,7 +35,11 @@ public class DecalVfxManager : MonoBehaviour
     [Header(">>DEBUG<<, List of all bullet holes in the scene, and lifeTimers")]
     [SerializeField] private List<DecalEntry> decalEntries;
 
+    private NativeArray<Plane> cameraPlanes;
     private Camera mainCam;
+
+    public const float MaxExpectedDecalSize = 0.25f;
+
 
 
     public void Initialize(Camera targetCam)
@@ -53,6 +58,8 @@ public class DecalVfxManager : MonoBehaviour
         }
 
         decalEntries = new List<DecalEntry>(decalCap);
+
+        cameraPlanes = new NativeArray<Plane>(6, Allocator.Persistent);
         mainCam = targetCam;
 
         UpdateScheduler.RegisterUpdate(OnUpdate);
@@ -95,40 +102,43 @@ public class DecalVfxManager : MonoBehaviour
         if (decalCount == 0) return;
 
         float time = Time.time;
-        Plane[] planes = GeometryUtility.CalculateFrustumPlanes(mainCam);
 
-        DecalEntry targetDecal;
-        Bounds bounds = new Bounds(Vector3.zero, Vector3.one * 0.5f);
+        CullingUtility.ExtractFrustumPlanes(ref cameraPlanes, mainCam.worldToCameraMatrix, mainCam.projectionMatrix);
+
+        DecalProjector targetDecalProjector;
+
+        float3 boundsCenter;
+        float3 boundsExtents = new float3(MaxExpectedDecalSize * 0.5f); // Half size to get extents
 
         for (int i = 0; i < decalCount; i++)
         {
-            targetDecal = decalEntries[i];
+            targetDecalProjector = decalEntries[i].decalProjector;
 
-            bounds.center = targetDecal.decalProjector.transform.position;
+            boundsCenter = targetDecalProjector.transform.position;
 
             // If decal is in camera frustum eg, visible
-            if (GeometryUtility.TestPlanesAABB(planes, bounds))
+            if (CullingUtility.TestPlanesAABB(cameraPlanes, boundsCenter, boundsExtents))
             {
                 // If decal is in frustum and disabled, enable it
-                if (targetDecal.decalProjector.enabled == false)
+                if (targetDecalProjector.enabled == false)
                 {
-                    targetDecal.decalProjector.enabled = true;
+                    targetDecalProjector.enabled = true;
                 }
             }
             else
             {
                 // If decal is allowed to expire, pool it and remove it
-                if (time >= targetDecal.deathTime)
+                if (time >= decalEntries[i].deathTime)
                 {
-                    AddDecalToPool(targetDecal.decalProjector);
+                    AddDecalToPool(targetDecalProjector);
                     decalEntries.RemoveAtSwapBack(i);
                     i--;
                     decalCount--;
                 }
                 // If decal is still alive but out of view, disable its renderer
-                else if (targetDecal.decalProjector.enabled)
+                else if (targetDecalProjector.enabled)
                 {
-                    targetDecal.decalProjector.enabled = false;
+                    targetDecalProjector.enabled = false;
                 }
             }
         }
@@ -165,5 +175,6 @@ public class DecalVfxManager : MonoBehaviour
     private void OnDestroy()
     {
         UpdateScheduler.UnregisterUpdate(OnUpdate);
+        cameraPlanes.DisposeIfCreated();
     }
 }

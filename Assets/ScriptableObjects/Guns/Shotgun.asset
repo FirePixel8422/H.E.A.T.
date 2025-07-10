@@ -14,7 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coreStats:
     damage: 10
-    headShotMultiplier: 1.5
+    maxEffectiveRange: 10
+    damageFallOffSampleCount: 15
+    bakedDamageCurve:
+    - 10
+    - 9.5366745
+    - 8.004822
+    - 5.2205586
+    - 1
     bulletSize: 0.065
     bulletHoleFXSize:
       min: 0.2
@@ -29,8 +36,18 @@ MonoBehaviour:
     recoilRecoveryDelay: 0.25
     recoilRecovery: 40
     maxSpread: 0.15
-    spreadCurveSampleCount: 2
+    spreadSampleCount: 12
     bakedSpreadCurve:
+    - 0.15
+    - 0.15
+    - 0.15
+    - 0.15
+    - 0.15
+    - 0.15
+    - 0.15
+    - 0.15
+    - 0.15
+    - 0.15
     - 0.15
     - 0.15
     roundsPerMinute: 75
@@ -41,6 +58,30 @@ MonoBehaviour:
     minMaxPitch:
       min: 0.6
       max: 1
+  damageFallOffCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0.0038570776
+      outSlope: 0.0038570776
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.49855494
+    - serializedVersion: 3
+      time: 1
+      value: 0.1
+      inSlope: -2.0000002
+      outSlope: -2.0000002
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.49999994
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   spreadCurve:
     serializedVersion: 2
     m_Curve:

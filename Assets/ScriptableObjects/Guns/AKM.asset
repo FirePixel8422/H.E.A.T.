@@ -14,32 +14,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coreStats:
     damage: 15
-    headShotMultiplier: 1.5
-    bulletSize: 0.065
+    maxEffectiveRange: 22.5
+    damageFallOffSampleCount: 12
+    bakedDamageCurve: []
+    bulletSize: 0.05
     bulletHoleFXSize:
-      min: 0.15
-      max: 0.175
+      min: 0.175
+      max: 0.2
     bulletHoleFXLifetime: 12.5
     projectileCount: 1
     burstShots: 2
     burstShotInterval: 0.115
-    heatPerShot: 0.1
+    heatPerShot: 0.09
     recoilPerShot: 1.15
     recoilForce: 17.5
     recoilRecoveryDelay: 0.125
     recoilRecovery: 30
     maxSpread: 0.05
-    spreadCurveSampleCount: 10
+    spreadSampleCount: 12
     bakedSpreadCurve:
     - 0.0075000003
-    - 0.007494183
-    - 0.0075480253
-    - 0.009067451
-    - 0.012657682
-    - 0.018235048
-    - 0.025715876
-    - 0.03501649
-    - 0.046053212
+    - 0.0074952208
+    - 0.007496814
+    - 0.007976619
+    - 0.009844757
+    - 0.013083859
+    - 0.017648105
+    - 0.023491653
+    - 0.030568687
+    - 0.03883337
+    - 0.048239883
     - 0.05
     roundsPerMinute: 110
     autoFire: 0
@@ -49,6 +53,39 @@ MonoBehaviour:
     minMaxPitch:
       min: 0.9
       max: 1.1
+  damageFallOffCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0.00000023841855
+      outSlope: 0.00000023841855
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 1
+    - serializedVersion: 3
+      time: 0.33
+      value: 1
+      inSlope: -0.00000023841858
+      outSlope: -0.00000023841858
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.1
+      inSlope: -2.4150937
+      outSlope: -2.4150937
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.08843061
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   spreadCurve:
     serializedVersion: 2
     m_Curve:

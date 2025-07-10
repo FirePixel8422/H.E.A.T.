@@ -182,4 +182,15 @@ public static class ExtensionMethods
 
         return SurfaceType.None;
     }
+
+    /// <summary>
+    /// Set the active state of a Behaviour component only if the state is different from the current state.
+    /// </summary>
+    public static void SetActiveStateSmart(this Behaviour comp, bool state)
+    {
+        if (comp.enabled != state)
+        {
+            comp.enabled = state;
+        }
+    }
 }
