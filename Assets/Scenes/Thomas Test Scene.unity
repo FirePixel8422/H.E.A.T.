@@ -450,7 +450,7 @@ PrefabInstance:
         type: 3}
       propertyPath: gunStatsSO
       value: 
-      objectReference: {fileID: 11400000, guid: 518d03d1b3accf542ac1f9ac07310f10,
+      objectReference: {fileID: 11400000, guid: 11a8c72d97e11e74d88b292fa769a67c,
         type: 2}
     - target: {fileID: 8183323876570374502, guid: aecb7691986b2a44ca7b5e44378938b1,
         type: 3}

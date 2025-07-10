@@ -14,9 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coreStats:
     damage: 10
-    maxEffectiveRange: 25
+    maxEffectiveRange: 22.5
     damageFallOffSampleCount: 12
-    bakedDamageCurve: []
+    bakedDamageCurve:
+    - 10
+    - 10
+    - 10
+    - 10
+    - 9.972962
+    - 9.637841
+    - 8.941707
+    - 7.9118223
+    - 6.575447
+    - 4.9598455
+    - 3.0922759
+    - 1
     bulletSize: 0.065
     bulletHoleFXSize:
       min: 0.15
@@ -34,14 +46,16 @@ MonoBehaviour:
     spreadSampleCount: 12
     bakedSpreadCurve:
     - 0.01125
-    - 0.011241275
-    - 0.011322038
-    - 0.013601176
-    - 0.018986525
-    - 0.027352573
-    - 0.038573816
-    - 0.052524734
-    - 0.069079824
+    - 0.011242831
+    - 0.011245221
+    - 0.011964928
+    - 0.014767135
+    - 0.019625789
+    - 0.026472157
+    - 0.03523748
+    - 0.04585303
+    - 0.058250055
+    - 0.07235982
     - 0.075
     roundsPerMinute: 320
     autoFire: 1
@@ -97,7 +111,7 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 0.2
+      time: 0.25
       value: 0.15
       inSlope: 0.0042411094
       outSlope: 0.0042411094

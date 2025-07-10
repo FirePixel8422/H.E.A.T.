@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coreStats:
     damage: 10
-    maxEffectiveRange: 40
+    maxEffectiveRange: 50
     damageFallOffSampleCount: 12
     bakedDamageCurve: []
     bulletSize: 0.1
