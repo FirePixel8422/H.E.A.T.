@@ -15,20 +15,41 @@ MonoBehaviour:
   coreStats:
     damage: 10
     maxEffectiveRange: 22.5
-    damageFallOffSampleCount: 12
-    bakedDamageCurve:
-    - 10
-    - 10
-    - 10
-    - 10
-    - 9.972962
-    - 9.637841
-    - 8.941707
-    - 7.9118223
-    - 6.575447
-    - 4.9598455
-    - 3.0922759
-    - 1
+    damageFallOffCurve:
+      curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0.00000023841855
+          outSlope: 0.00000023841855
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 1
+        - serializedVersion: 3
+          time: 0.33
+          value: 1
+          inSlope: -0.00000023841858
+          outSlope: -0.00000023841858
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 1
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 0.1
+          inSlope: -2.4150937
+          outSlope: -2.4150937
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.08843061
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      sampleCount: 75
     bulletSize: 0.065
     bulletHoleFXSize:
       min: 0.15
@@ -43,20 +64,41 @@ MonoBehaviour:
     recoilRecoveryDelay: 0.25
     recoilRecovery: 50
     maxSpread: 0.075
-    spreadSampleCount: 12
-    bakedSpreadCurve:
-    - 0.01125
-    - 0.011242831
-    - 0.011245221
-    - 0.011964928
-    - 0.014767135
-    - 0.019625789
-    - 0.026472157
-    - 0.03523748
-    - 0.04585303
-    - 0.058250055
-    - 0.07235982
-    - 0.075
+    spreadCurve:
+      curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0.15
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 0.2
+          value: 0.15
+          inSlope: 0.0042411094
+          outSlope: 0.0042411094
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.9918181
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.925
+          value: 1
+          inSlope: 2.2337136
+          outSlope: 2.2337136
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.06502889
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      sampleCount: 75
     roundsPerMinute: 320
     autoFire: 1
     inputBufferTime: 0
@@ -65,72 +107,6 @@ MonoBehaviour:
     minMaxPitch:
       min: 0.9
       max: 1.1
-  damageFallOffCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0.00000023841855
-      outSlope: 0.00000023841855
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 1
-    - serializedVersion: 3
-      time: 0.33
-      value: 1
-      inSlope: -0.00000023841858
-      outSlope: -0.00000023841858
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 1
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0.1
-      inSlope: -2.4150937
-      outSlope: -2.4150937
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.08843061
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0.15
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.25
-      value: 0.15
-      inSlope: 0.0042411094
-      outSlope: 0.0042411094
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.9918181
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 0.925
-      value: 1
-      inSlope: 2.2337136
-      outSlope: 2.2337136
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.06502889
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
   heatSinkStats:
     heatSinkSize: 1
     heatDecayDelay: 0.25

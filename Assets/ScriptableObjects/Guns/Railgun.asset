@@ -15,8 +15,41 @@ MonoBehaviour:
   coreStats:
     damage: 10
     maxEffectiveRange: 50
-    damageFallOffSampleCount: 12
-    bakedDamageCurve: []
+    damageFallOffCurve:
+      curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0.00000023841855
+          outSlope: 0.00000023841855
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 1
+        - serializedVersion: 3
+          time: 0.33
+          value: 1
+          inSlope: -0.00000023841858
+          outSlope: -0.00000023841858
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 1
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 0.1
+          inSlope: -2.4150937
+          outSlope: -2.4150937
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.08843061
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      sampleCount: 75
     bulletSize: 0.1
     bulletHoleFXSize:
       min: 0.2
@@ -31,10 +64,32 @@ MonoBehaviour:
     recoilRecoveryDelay: 0.25
     recoilRecovery: 25
     maxSpread: 0.01
-    spreadSampleCount: 12
-    bakedSpreadCurve:
-    - 0.01
-    - 0.01
+    spreadCurve:
+      curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      sampleCount: 2
     roundsPerMinute: 50
     autoFire: 1
     inputBufferTime: 0.15
@@ -43,63 +98,6 @@ MonoBehaviour:
     minMaxPitch:
       min: 0.6
       max: 0.85
-  damageFallOffCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0.00000023841855
-      outSlope: 0.00000023841855
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 1
-    - serializedVersion: 3
-      time: 0.33
-      value: 1
-      inSlope: -0.00000023841858
-      outSlope: -0.00000023841858
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 1
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0.1
-      inSlope: -2.4150937
-      outSlope: -2.4150937
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.08843061
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
   heatSinkStats:
     heatSinkSize: 1
     heatDecayDelay: 0.85

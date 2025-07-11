@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 
 
@@ -10,30 +11,22 @@ public struct GunCoreStats
     [Header("When headshot damage is done, multiply by this value")]
     private float headShotMultiplier;
 
+
     [Header("The maximum distance this weapon can shoot from until damage fully falls off")]
     [SerializeField] private float maxEffectiveRange;
+
     [Header("How many sample to give the damage falloff curve, more samples, higher accuracy percentages")]
-    [Range(2, 50)]
-    public int damageFallOffSampleCount;
-    [Header(">>DEBUG<<, the baked damage, used for final damageOutput, accounts for damage falloff")]
-    public float[] bakedDamageCurve;
+    [SerializeField] private SampledAnimationCurve damageFallOffCurve;
 
-    public float GetDamageOutput(float distance, bool headShot)
+    /// <summary>
+    /// Get damage output and account for headShot and damage falloff
+    /// </summary>
+    public float GetDamageOutput(float distance, bool isHeadshot)
     {
-        if (distance < maxEffectiveRange)
-        {
-            // Get index based on distance and maxEffectiveRange
-            int index = Mathf.FloorToInt(distance / maxEffectiveRange * (damageFallOffSampleCount - 1));
+        float fallOffMultiplier = damageFallOffCurve.Evaluate(distance / maxEffectiveRange);
+        float critMultiplier = isHeadshot ? headShotMultiplier : 1f;
 
-            // Get DamageOutput from bakedDamageCurve and multiply with headShotMultipier IF there was a headshot
-            return headShot ? bakedDamageCurve[index] * headShotMultiplier : bakedDamageCurve[index];
-        }
-        else
-        {
-            // Distance is past MaxEffectiveRange so get last entry of the curve, which is the damage at maxEffectiveRange
-            // Get DamageOutput from bakedDamageCurve and multiply with headShotMultipier IF there was a headshot
-            return headShot ? bakedDamageCurve[^1] * headShotMultiplier : bakedDamageCurve[^1];
-        }
+        return damage * fallOffMultiplier * critMultiplier;
     }
 
 
@@ -73,17 +66,15 @@ public struct GunCoreStats
     [Header("How much the bullet can maximally offset from actual shot point")]
     public float maxSpread;
 
-    [Header("How many sample to give the spread curve, more samples, higher accuracy spread curve")]
-    [Range(2, 50)]
-    public int spreadSampleCount;
     [Header(">>DEBUG<<, the baked spread curve, used for the actual spread calculation instead of the animation curve")]
-    public float[] bakedSpreadCurve;
+    [SerializeField] private SampledAnimationCurve spreadCurve;
 
+    /// <summary>
+    /// Get weapon spread
+    /// </summary>
     public float GetSpread(float heatPercentage)
     {
-        int index = Mathf.RoundToInt(heatPercentage * (spreadSampleCount - 1));
-
-        return bakedSpreadCurve[index];
+        return spreadCurve.Evaluate(heatPercentage) * maxSpread;
     }
 
 
@@ -108,6 +99,24 @@ public struct GunCoreStats
 
 
     /// <summary>
+    /// Bake all curves from the editor AnimationCurve to the internal float array.
+    /// </summary>
+    public void ReBakeAllCurves()
+    {
+        damageFallOffCurve.Bake();
+        spreadCurve.Bake();
+    }
+
+    /// <summary>
+    /// Free all allocated native mmemory underlying in this struct
+    /// </summary>
+    public void Dispose()
+    {
+        damageFallOffCurve.Dispose();
+        spreadCurve.Dispose();
+    }
+
+    /// <summary>
     /// Default values for the gun.
     /// </summary>
     public static GunCoreStats Default => new GunCoreStats()
@@ -116,8 +125,7 @@ public struct GunCoreStats
         headShotMultiplier = 1.5f,
 
         maxEffectiveRange = 25,
-        damageFallOffSampleCount = 12,
-        bakedDamageCurve = new float[0],
+        damageFallOffCurve = SampledAnimationCurve.Default(),
 
         bulletSize = 0.05f,
         bulletHoleFXSize = new MinMaxFloat(0.15f, 0.2f),
@@ -137,13 +145,12 @@ public struct GunCoreStats
         recoilRecovery = 0.5f,
 
         maxSpread = 0.25f,
-        spreadSampleCount = 12,
-        bakedSpreadCurve = new float[0],
+        spreadCurve = SampledAnimationCurve.Default(),
 
         inputBufferTime = 0,
 
         roundsPerMinute = 600f,
-        autoFire = true,    
+        autoFire = true,
 
         shootAudioClips = new AudioClip[1],
         minMaxPitch = new MinMaxFloat(0.95f, 1.05f),

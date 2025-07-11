@@ -50,42 +50,4 @@ public static class MathLogic
         if (input == 2) return 2;
         return 1 << (input - 1); // 2^(input-1)
     }
-
-    /// <summary>
-    /// Convert AnimationCurve to float array with a certain sample count.
-    /// </summary>
-    public static float[] BakeCurveToArray(AnimationCurve curve, int sampleCount)
-    {
-        if (sampleCount <= 1)
-            sampleCount = 2;
-
-        float[] values = new float[sampleCount];
-
-        for (int i = 0; i < sampleCount; i++)
-        {
-            float t = (float)i / (sampleCount - 1);
-            values[i] = curve.Evaluate(t);
-        }
-
-        return values;
-    }
-
-    /// <summary>
-    /// Convert AnimationCurve to float array with a certain sample count. Multiply each entry by the given multiplier.
-    /// </summary>
-    public static float[] BakeCurveToArray(AnimationCurve curve, int sampleCount, float perEntryMultiplier)
-    {
-        if (sampleCount <= 1)
-            sampleCount = 2;
-
-        float[] values = new float[sampleCount];
-
-        for (int i = 0; i < sampleCount; i++)
-        {
-            float t = (float)i / (sampleCount - 1);
-            values[i] = curve.Evaluate(t) * perEntryMultiplier;
-        }
-
-        return values;
-    }
 }

@@ -47,8 +47,10 @@ public struct HeatSinkStats : INetworkSerializable
         serializer.SerializeValue(ref heatSinkSize);
         serializer.SerializeValue(ref heatDecayDelay);
         serializer.SerializeValue(ref heatDecayPower);
+        serializer.SerializeValue(ref heatDecayPowerMultiplier);
         serializer.SerializeValue(ref overheatDecayDelay);
         serializer.SerializeValue(ref overheatDecayPower);
+        serializer.SerializeValue(ref overheatDecayPowerMultiplier);
         serializer.SerializeValue(ref decayMultiplierAtMaxHeat);
     }
 }
