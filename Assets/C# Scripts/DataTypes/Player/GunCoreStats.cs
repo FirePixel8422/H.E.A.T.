@@ -1,4 +1,3 @@
-using Unity.Netcode;
 using UnityEngine;
 
 
@@ -9,13 +8,13 @@ public struct GunCoreStats
     [Tooltip("Use GetDamageOutput() for true damage. Raw damage dealt per bullet, before falloff and headshot multiplier")]
     public float damage;
     [Header("When headshot damage is done, multiply by this value")]
-    private float headShotMultiplier;
+    [SerializeField] private float headShotMultiplier;
 
 
     [Header("The maximum distance this weapon can shoot from until damage fully falls off")]
     [SerializeField] private float maxEffectiveRange;
 
-    [Header("How many sample to give the damage falloff curve, more samples, higher accuracy percentages")]
+    [Header("How many sample to give the damage falloff curve")]
     [SerializeField] private SampledAnimationCurve damageFallOffCurve;
 
     /// <summary>
@@ -53,9 +52,20 @@ public struct GunCoreStats
 
 
     [Header("How much recoil to add per shot")]
-    public float recoilPerShot;
+    [SerializeField] private float recoilPerShot;
+    [Header("Time shooting to reach the last value of the recoilMultiplierCurve")]
+    [SerializeField] private float timeToMinRecoil;
+
     [Header("How Aggressive recoil is added, higher is more 'clicky' recoil")]
     public float recoilForce;
+
+    [Header("How many sample to give the recoil multiplier curve")]
+    [SerializeField] private SampledAnimationCurve recoilMultiplierCurve;
+
+    public float GetRecoil(float stabilityModifier)
+    {
+        return recoilMultiplierCurve.Evaluate(Mathf.Clamp(stabilityModifier, 0.001f, timeToMinRecoil) / timeToMinRecoil) * recoilPerShot;
+    }
 
     [Header("The time that needs to pass while not shooting for the recoil to stabilize")]
     public float recoilRecoveryDelay;
@@ -72,9 +82,9 @@ public struct GunCoreStats
     /// <summary>
     /// Get weapon spread
     /// </summary>
-    public float GetSpread(float heatPercentage)
+    public float GetSpread(float stabilityModifier)
     {
-        return spreadCurve.Evaluate(heatPercentage) * maxSpread;
+        return spreadCurve.Evaluate(stabilityModifier) * maxSpread;
     }
 
 
@@ -104,6 +114,7 @@ public struct GunCoreStats
     public void ReBakeAllCurves()
     {
         damageFallOffCurve.Bake();
+        recoilMultiplierCurve.Bake();
         spreadCurve.Bake();
     }
 
@@ -113,6 +124,7 @@ public struct GunCoreStats
     public void Dispose()
     {
         damageFallOffCurve.Dispose();
+        recoilMultiplierCurve.Dispose();
         spreadCurve.Dispose();
     }
 
@@ -139,7 +151,9 @@ public struct GunCoreStats
         heatPerShot = 0.1f,
 
         recoilPerShot = 0.1f,
+        recoilMultiplierCurve = SampledAnimationCurve.Default(),
         recoilForce = 15f,
+        timeToMinRecoil = 7.5f,
 
         recoilRecoveryDelay = 0.25f,
         recoilRecovery = 0.5f,

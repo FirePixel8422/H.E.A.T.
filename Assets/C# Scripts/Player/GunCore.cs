@@ -29,6 +29,7 @@ public class GunCore : NetworkBehaviour
     private bool shootButtonHeld;
     private float timeSinceLastShot;
     private float timeSinceShootButtonPress;
+    [SerializeField] private float stabilityModifier;
 
     private int burstShotsLeft = 0;
     private float burstShotTimer = 0f;
@@ -171,6 +172,12 @@ public class GunCore : NetworkBehaviour
         if (timeSinceLastShot > coreStats.recoilRecoveryDelay && burstShotsLeft == 0)
         {
             recoilHandler.StabilizeRecoil(coreStats.recoilRecovery);
+
+            stabilityModifier -= coreStats.recoilRecovery * Time.deltaTime;
+            if (stabilityModifier < 0f)
+            {
+                stabilityModifier = 0f;
+            }
         }
 
         // Send -1 to heatSink if burst is ongoing to indicate gun isn't idle yet, otherwise send timeSinceLastShot
@@ -187,7 +194,11 @@ public class GunCore : NetworkBehaviour
     /// </summary>
     private void PrepareShot(int projectileCount)
     {
-        recoilHandler.AddRecoil(coreStats.recoilPerShot);
+        stabilityModifier += coreStats.ShootInterval;
+
+        float recoil = coreStats.GetRecoil(stabilityModifier);
+        recoilHandler.AddRecoil(recoil);
+
         heatSink.AddHeat(coreStats.heatPerShot, out float previousHeatPercentage);
 
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);

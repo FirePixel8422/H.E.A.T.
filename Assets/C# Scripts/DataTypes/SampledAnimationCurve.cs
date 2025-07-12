@@ -73,7 +73,6 @@ public struct SampledAnimationCurve
             curve = AnimationCurve.Linear(1, 1, 0, 0),
             sampleCount = 50,
         };
-        curve.Bake();
         return curve;
     }
 

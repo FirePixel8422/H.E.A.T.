@@ -193,4 +193,15 @@ public static class ExtensionMethods
             comp.enabled = state;
         }
     }
+
+    /// <summary>
+    /// Set the active state of a GameObject only if the state is different from the current state.
+    /// </summary>
+    public static void SetActiveSmart(this GameObject obj, bool state)
+    {
+        if (obj.activeInHierarchy != state)
+        {
+            obj.SetActive(state);
+        }
+    }
 }

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coreStats:
     damage: 10
+    headShotMultiplier: 1.5
     maxEffectiveRange: 10
     damageFallOffCurve:
       curve:
@@ -51,7 +52,52 @@ MonoBehaviour:
     burstShotInterval: 0.1
     heatPerShot: 0.35
     recoilPerShot: 3
+    timeToMinRecoil: 2.5
     recoilForce: 15
+    recoilMultiplierCurve:
+      curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0.002976069
+          outSlope: 0.002976069
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 1
+        - serializedVersion: 3
+          time: 0.43030235
+          value: 0.88103753
+          inSlope: -0.49055716
+          outSlope: -0.49055716
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.21195424
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.6441272
+          value: 0.5595804
+          inSlope: -1.4350376
+          outSlope: -1.4350376
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.32717654
+          outWeight: 0.08958072
+        - serializedVersion: 3
+          time: 0.99853516
+          value: 0.15
+          inSlope: 0.028201737
+          outSlope: 0.028201737
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.27929753
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      sampleCount: 75
     recoilRecoveryDelay: 0.25
     recoilRecovery: 40
     maxSpread: 0.15

@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coreStats:
     damage: 10
+    headShotMultiplier: 1.5
     maxEffectiveRange: 15
     damageFallOffCurve:
       curve:
@@ -50,8 +51,44 @@ MonoBehaviour:
     burstShots: 0
     burstShotInterval: 0.1
     heatPerShot: 0.035
-    recoilPerShot: 0.75
+    recoilPerShot: 1
+    timeToMinRecoil: 3
     recoilForce: 25
+    recoilMultiplierCurve:
+      curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0.5
+          inSlope: -0.11417425
+          outSlope: -0.11417425
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.08526013
+        - serializedVersion: 3
+          time: 0.225
+          value: 1
+          inSlope: -0.08621316
+          outSlope: -0.08621316
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 0.15
+          inSlope: -1.5984807
+          outSlope: -1.5984807
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.09248549
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      sampleCount: 75
     recoilRecoveryDelay: 0.15
     recoilRecovery: 80
     maxSpread: 0.115
@@ -101,9 +138,9 @@ MonoBehaviour:
   heatSinkStats:
     heatSinkSize: 1
     heatDecayDelay: 0.25
-    heatDecayPower: 0.085
+    heatDecayPower: 0.1
     heatDecayPowerMultiplier: 1
-    overheatDecayDelay: 0.75
-    overheatDecayPower: 0.065
+    overheatDecayDelay: 0.5
+    overheatDecayPower: 0.085
     overheatDecayPowerMultiplier: 1
     decayMultiplierAtMaxHeat: 8
