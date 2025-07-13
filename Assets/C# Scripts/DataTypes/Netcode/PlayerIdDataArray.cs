@@ -10,8 +10,6 @@ public struct PlayerIdDataArray : INetworkSerializable
     [Header("[0] = 2? client with networkId 2 is client 0")]
     [SerializeField] private ulong[] networkIds;
 
-
-
     [Header("Total clients in server that are setup by game/team id system")]
     [SerializeField] private int playerCount;
 

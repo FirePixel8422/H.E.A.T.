@@ -170,6 +170,14 @@ public static class ExtensionMethods
         source.pitch = pitch;
         source.Play();
     }
+    /// <summary>
+    /// Lets AudioSource play with selected pitch
+    /// </summary>
+    public static void PlayWithPitch(this AudioSource source, float pitch)
+    {
+        source.pitch = pitch;
+        source.Play();
+    }
 
 
     /// <returns>SurfaceType enum of the target collider, returns SurfaceType.None if there is no <see cref="SurfaceTypeIdentifier"/> attached to targetr collider</returns>

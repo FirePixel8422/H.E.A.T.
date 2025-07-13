@@ -144,6 +144,10 @@ MonoBehaviour:
     minMaxPitch:
       min: 0.6
       max: 0.85
+    overHeatAudioClip: {fileID: 8300000, guid: b3c4117d9d2775948b26557916a1468a, type: 3}
+    overHeatMinMaxPitch:
+      min: 0.65
+      max: 0.8
   heatSinkStats:
     heatSinkSize: 1
     heatDecayDelay: 0.85

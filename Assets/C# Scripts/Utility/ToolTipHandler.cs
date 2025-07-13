@@ -17,7 +17,7 @@ public class TooltipManager : MonoBehaviour
 
     private Dictionary<string, string> wordToTooltip;
     private TextMeshProUGUI[] registeredTextGuis;
-    private Animator activeTooltip;
+    private GameObject activeTooltip;
 
     private string lastTooltipText;
     private TextMeshProUGUI lastTextObject;
@@ -48,8 +48,8 @@ public class TooltipManager : MonoBehaviour
             textGui.text = newText;
         }
 
-        activeTooltip = Instantiate(tooltipPrefab, transform.root).GetComponent<Animator>();
-        activeTooltip.gameObject.SetActive(false);
+        activeTooltip = Instantiate(tooltipPrefab, transform.root);
+        activeTooltip.SetActive(false);
     }
 
     private void OnUpdate()
@@ -121,19 +121,18 @@ public class TooltipManager : MonoBehaviour
                 Vector3 finalPos = screenPos + offset;
 
                 // Clamp X within screen
-                finalPos.x = Mathf.Clamp(finalPos.x, actualWidth * 0.5f, screenSize.x - actualWidth * 0.5f);
+                finalPos.x = Mathf.Clamp(finalPos.x, actualWidth * 0.5f + 15, screenSize.x - actualWidth * 0.5f - 15);
                 // Clamp Y within screen
                 finalPos.y = Mathf.Clamp(finalPos.y, toolTipHeight * 0.5f, screenSize.y - toolTipHeight * 0.5f);
 
                 activeTooltip.transform.position = finalPos;
-                activeTooltip.SetBool("FadeIn", true);
-                activeTooltip.gameObject.SetActiveSmart(true);
+                activeTooltip.SetActiveSmart(true);
                 return;
             }
         }
 
         // No word hovered — hide tooltip
-        activeTooltip.gameObject.SetActiveSmart(false);
+        activeTooltip.SetActiveSmart(false);
         lastTooltipText = null;
         lastTextObject = null;
     }

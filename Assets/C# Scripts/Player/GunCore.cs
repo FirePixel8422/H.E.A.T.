@@ -13,7 +13,8 @@ public class GunCore : NetworkBehaviour
     [SerializeField] private GunCoreStats coreStats;
 
     [SerializeField] private Transform shootPointTransform;
-    [SerializeField] private AudioSource gunSource;
+    [SerializeField] private AudioSource gunShotSource;
+    [SerializeField] private AudioSource gunOverheatSource;
 
     [SerializeField] private GameObject bulletHolePrefab;
 
@@ -260,6 +261,11 @@ public class GunCore : NetworkBehaviour
 
         print("Shot hit for " + DEBUG_damageThisShot + " damage!");
 
+        if (heatSink.Overheated)
+        {
+            gunOverheatSource.PlayClipWithPitch(coreStats.overHeatAudioClip, EzRandom.Range(coreStats.overHeatMinMaxPitch));
+        }
+
         int randomAudioId = EzRandom.Range(0, coreStats.shootAudioClips.Length);
         float randomPitch = EzRandom.Range(coreStats.minMaxPitch);
 
@@ -280,7 +286,7 @@ public class GunCore : NetworkBehaviour
     /// </summary>
     private void Shoot(int randomAudioId, float randomPitch)
     {
-        gunSource.PlayClipWithPitch(coreStats.shootAudioClips[randomAudioId], randomPitch);
+        gunShotSource.PlayClipWithPitch(coreStats.shootAudioClips[randomAudioId], randomPitch);
     }
 
 

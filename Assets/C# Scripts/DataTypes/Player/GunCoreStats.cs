@@ -107,6 +107,10 @@ public struct GunCoreStats
     public AudioClip[] shootAudioClips;
     public MinMaxFloat minMaxPitch;
 
+    [Header("Audio clip to play when gun overheats")]
+    public AudioClip overHeatAudioClip;
+    public MinMaxFloat overHeatMinMaxPitch;
+
 
     /// <summary>
     /// Bake all curves from the editor AnimationCurve to the internal float array.
@@ -168,5 +172,8 @@ public struct GunCoreStats
 
         shootAudioClips = new AudioClip[1],
         minMaxPitch = new MinMaxFloat(0.95f, 1.05f),
+
+        overHeatAudioClip = null,
+        overHeatMinMaxPitch = new MinMaxFloat(0.95f, 1.05f),
     };
 }
