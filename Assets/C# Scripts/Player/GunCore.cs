@@ -305,6 +305,14 @@ public class GunCore : NetworkBehaviour
     #endregion
 
 
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        coreStats.Dispose();
+    }
+
+
 #if UNITY_EDITOR
     [SerializeField] private bool overrideIsOwner = true;
 #endif
