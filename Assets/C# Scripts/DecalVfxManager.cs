@@ -42,7 +42,7 @@ public class DecalVfxManager : MonoBehaviour
 
 
 
-    public void Initialize(Camera targetCam)
+    public void Init(Camera targetCam)
     {
         // Set capacity and Camera
         decalPool = new Queue<DecalProjector>(decalCap);

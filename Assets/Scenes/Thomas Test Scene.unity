@@ -757,12 +757,6 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 615913309
       objectReference: {fileID: 0}
-    - target: {fileID: 7655005037721419446, guid: aecb7691986b2a44ca7b5e44378938b1,
-        type: 3}
-      propertyPath: gunStatsSO
-      value: 
-      objectReference: {fileID: 11400000, guid: 518d03d1b3accf542ac1f9ac07310f10,
-        type: 2}
     - target: {fileID: 8183323876570374502, guid: aecb7691986b2a44ca7b5e44378938b1,
         type: 3}
       propertyPath: m_LocalPosition.x

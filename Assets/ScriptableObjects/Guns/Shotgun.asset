@@ -100,7 +100,7 @@ MonoBehaviour:
       sampleCount: 75
     recoilRecoveryDelay: 0.25
     recoilRecovery: 40
-    maxSpread: 0.15
+    maxSpread: 0.1
     spreadCurve:
       curve:
         serializedVersion: 2

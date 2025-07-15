@@ -1,5 +1,5 @@
 ﻿using Unity.Netcode;
-
+using UnityEngine;
 
 /// <summary>
 /// Utility class for handling Netcode operations, such as sending RPCs to clients.
@@ -12,7 +12,6 @@ public static class NetcodeUtility
     public static ClientRpcParams SendToClient(int clientGameId)
     {
         ulong clientNetworkId = ClientManager.GetClientNetworkId(clientGameId);
-
         return new ClientRpcParams
         {
             Send = new ClientRpcSendParams
@@ -29,12 +28,35 @@ public static class NetcodeUtility
     {
         int opponentGameId = (clientGameId == 0) ? 1 : 0;
         ulong opponentNetworkId = ClientManager.GetClientNetworkId(opponentGameId);
-
         return new ClientRpcParams
         {
             Send = new ClientRpcSendParams
             {
                 TargetClientIds = new ulong[] { opponentNetworkId }
+            }
+        };
+    }
+
+    /// <summary>
+    /// Send RPC to all clients except the one with clientGameId
+    /// </summary>
+    public static ClientRpcParams SendToAllButClient(int clientGameId)
+    {
+        int playerCount = ClientManager.PlayerCount;
+        ulong[] targetClientIds = new ulong[playerCount - 1];
+
+        int arrayIndex = 0;
+        for (int i = 0; i < playerCount; i++)
+        {
+            if (i == clientGameId) continue; // Skip the client we don't want to send to
+            targetClientIds[arrayIndex++] = ClientManager.GetClientNetworkId(i);
+        }
+
+        return new ClientRpcParams
+        {
+            Send = new ClientRpcSendParams
+            {
+                TargetClientIds = targetClientIds
             }
         };
     }

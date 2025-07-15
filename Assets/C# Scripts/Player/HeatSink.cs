@@ -3,42 +3,25 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class HeatSink : MonoBehaviour
+[System.Serializable]
+public class HeatSink
 {
     [SerializeField] private Image heatBar;
+    [SerializeField] private Animator anim;
     [SerializeField] private HeatSinkStats stats;
 
 
     [Tooltip("The amount of heat the gun has accumulated, from 0 to stats.heatSinkSize. stats.heatSinkSize means the gun is overheated.")]
     [SerializeField] private float heatAmount = 0f;
 
+    private float overheatCooldownTimer = 0f;
     public bool Overheated { get; private set; }
     private bool recoveringFromOverheat;
-
-    private Animator anim;
 
 
     public void Init(HeatSinkStats _stats)
     {
-        anim = GetComponentInChildren<Animator>(true);
         stats = _stats;
-    }
-
-
-    /// <summary>
-    /// Called by GunCore when gun is not currently firing
-    /// </summary
-    public void OnGunIdle(float timeSinceLastShot)
-    {
-        //Whether the gun is cooling down and decaying heat. true when gun has not been shot for stats.heatDecayDelay amount of time
-        bool coolingDown = timeSinceLastShot >= stats.heatDecayDelay;
-
-        if (coolingDown || (Overheated && recoveringFromOverheat == false))
-        {
-            DecayHeat();
-        }
-
-        heatBar.fillAmount = heatAmount / stats.heatSinkSize;
     }
 
 
@@ -49,7 +32,7 @@ public class HeatSink : MonoBehaviour
     public void AddHeat(float addedHeat, out float previousHeatPercentage)
     {
         previousHeatPercentage = heatAmount / stats.heatSinkSize;
-        StopAllCoroutines();
+        // StopAllCoroutines(); // Remove this coroutine call
 
         heatAmount += addedHeat;
 
@@ -62,16 +45,41 @@ public class HeatSink : MonoBehaviour
             recoveringFromOverheat = true;
             Overheated = true;
 
-            StartCoroutine(OverheatedCooldown());
+            overheatCooldownTimer = stats.overheatDecayDelay; // Set timer
             anim.SetBool("Overheated", true);
         }
     }
+
+    /// <summary>
+    /// Called by GunCore, gives timeSinceLastShot as to check if heatsink may cool down.
+    /// </summary
+    public void UpdateHeatSink(float timeSinceLastShot, float deltaTime)
+    {
+        //Whether the gun is cooling down and decaying heat. true when gun has not been shot for stats.heatDecayDelay amount of time
+        bool coolingDown = timeSinceLastShot >= stats.heatDecayDelay;
+
+        if (recoveringFromOverheat)
+        {
+            overheatCooldownTimer -= deltaTime;
+            if (overheatCooldownTimer <= 0f)
+            {
+                recoveringFromOverheat = false;
+            }
+        }
+        else if (coolingDown || Overheated)
+        {
+            DecayHeat(deltaTime);
+        }
+
+        heatBar.fillAmount = heatAmount / stats.heatSinkSize;
+    }
+
 
 
     /// <summary>
     /// Decay the heat of the heatsink over time (Called every frame if gun has not been shot for long enough).
     /// </summary>
-    private void DecayHeat()
+    private void DecayHeat(float deltaTime)
     {
         float decaySpeedMultiplier = stats.heatSinkSize + (stats.heatSinkSize - heatAmount) * stats.decayMultiplierAtMaxHeat;
 
@@ -80,7 +88,7 @@ public class HeatSink : MonoBehaviour
             //while heatSink is recovering from overheat for stats.overheatDecayDelay amount of time, decay NO heat
             if (recoveringFromOverheat) return;
 
-            heatAmount -= Time.deltaTime * stats.overheatDecayPower * decaySpeedMultiplier;
+            heatAmount -= deltaTime * stats.overheatDecayPower * decaySpeedMultiplier;
 
             if (heatAmount < 0)
             {
@@ -92,20 +100,12 @@ public class HeatSink : MonoBehaviour
         }
         else
         {
-            heatAmount -= Time.deltaTime * stats.heatDecayPower * decaySpeedMultiplier;
+            heatAmount -= deltaTime * stats.heatDecayPower * decaySpeedMultiplier;
 
             if (heatAmount < 0)
             {
                 heatAmount = 0;
             }
         }
-    }
-
-    
-    private IEnumerator OverheatedCooldown()
-    {
-        yield return new WaitForSeconds(stats.overheatDecayDelay);
-
-        recoveringFromOverheat = false;
     }
 }

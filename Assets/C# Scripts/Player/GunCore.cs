@@ -5,21 +5,18 @@ using UnityEngine.InputSystem;
 
 
 
-[RequireComponent(typeof(RecoilHandler), typeof(HeatSink))]
 public class GunCore : NetworkBehaviour
 {
     [SerializeField] private GunStatsSO gunStatsSO;
-
     [SerializeField] private GunCoreStats coreStats;
+
+    [SerializeField] private RecoilHandler recoilHandler;
+    [SerializeField] private HeatSink heatSink;
 
     [SerializeField] private Transform shootPointTransform;
     [SerializeField] private AudioSource gunShotSource;
     [SerializeField] private AudioSource gunOverheatSource;
 
-    [SerializeField] private GameObject bulletHolePrefab;
-
-    private RecoilHandler recoilHandler;
-    private HeatSink heatSink;
     private Camera cam;
 
     private bool CanShoot => timeSinceLastShot >= coreStats.ShootInterval;
@@ -30,7 +27,7 @@ public class GunCore : NetworkBehaviour
     private bool shootButtonHeld;
     private float timeSinceLastShot;
     private float timeSinceShootButtonPress;
-    [SerializeField] private float stabilityModifier;
+    private float stabilityModifier;
 
     private int burstShotsLeft = 0;
     private float burstShotTimer = 0f;
@@ -51,6 +48,10 @@ public class GunCore : NetworkBehaviour
         }
     }
 
+    public void OnMouseMovement(InputAction.CallbackContext ctx)
+    {
+        recoilHandler.OnMouseMovement(ctx.ReadValue<Vector2>().y);
+    }
 
 
 
@@ -71,8 +72,6 @@ public class GunCore : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        recoilHandler = GetComponent<RecoilHandler>();
-        heatSink = GetComponent<HeatSink>();
         cam = GetComponentInChildren<Camera>();
 
         coreStats = gunStatsSO.GetCoreStats();
@@ -81,7 +80,7 @@ public class GunCore : NetworkBehaviour
         timeSinceLastShot = coreStats.ShootInterval;
         burstShotTimer = coreStats.burstShotInterval;
 
-        DecalVfxManager.Instance.Initialize(cam);
+        DecalVfxManager.Instance.Init(cam);
     }
 
 
@@ -115,7 +114,7 @@ public class GunCore : NetworkBehaviour
         }
 
         ProcessShooting();
-        ProcessRecoilAndHeat();
+        ProcessRecoilAndHeat(deltaTime);
 
         recoilHandler.OnUpdate(coreStats.recoilForce);
 
@@ -167,14 +166,14 @@ public class GunCore : NetworkBehaviour
         }
     }
 
-    private void ProcessRecoilAndHeat()
+    private void ProcessRecoilAndHeat(float deltaTime)
     {
         // Only stabilize recoil if no burst is currently firing
         if (timeSinceLastShot > coreStats.recoilRecoveryDelay && burstShotsLeft == 0)
         {
             recoilHandler.StabilizeRecoil(coreStats.recoilRecovery);
 
-            stabilityModifier -= coreStats.recoilRecovery * Time.deltaTime;
+            stabilityModifier -= coreStats.recoilRecovery * deltaTime;
             if (stabilityModifier < 0f)
             {
                 stabilityModifier = 0f;
@@ -182,7 +181,7 @@ public class GunCore : NetworkBehaviour
         }
 
         // Send -1 to heatSink if burst is ongoing to indicate gun isn't idle yet, otherwise send timeSinceLastShot
-        heatSink.OnGunIdle(burstShotsLeft == 0 ? timeSinceLastShot : -1);
+        heatSink.UpdateHeatSink(burstShotsLeft == 0 ? timeSinceLastShot : -1, deltaTime);
     }
 
     #endregion

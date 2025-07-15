@@ -1,9 +1,9 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 
 
-public class RecoilHandler : MonoBehaviour
+[System.Serializable]
+public class RecoilHandler
 {
     [Header("Transform used for camera movement and now also for recoil")]
     [SerializeField] private Transform cameraTransform;
@@ -12,18 +12,22 @@ public class RecoilHandler : MonoBehaviour
     private float recoil;
 
 
-    public void OnMouseMovement(InputAction.CallbackContext ctx)
+    /// <summary>
+    /// Ignore recoil recovery for mouse input that moved the camera down (countering the recoil)
+    /// </summary>
+    public void OnMouseMovement(float verticalMouseMovement)
     {
-        // Ignore recoil recovery for mouse input that moved the camera down (countering the recoil)
-        recoil = Mathf.MoveTowards(recoil, 0, -Mathf.Min(ctx.ReadValue<Vector2>().y, 0));
+        recoil = Mathf.MoveTowards(recoil, 0, -Mathf.Min(verticalMouseMovement, 0));
     }
 
 
+    /// <summary>
+    /// Ready recoil to be added to the camera transform.
+    /// </summary>
     public void AddRecoil(float recoil)
     {
         toAddRecoil += recoil;
     }
-
 
     // Called after the gun executes its OnUpdate
     public void OnUpdate(float recoilForce)
