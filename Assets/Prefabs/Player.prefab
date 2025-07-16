@@ -331,6 +331,8 @@ GameObject:
   - component: {fileID: 7258601484508408586}
   - component: {fileID: 7655005037721419446}
   - component: {fileID: 6829219136680250846}
+  - component: {fileID: 7952861885439663320}
+  - component: {fileID: 142522545318499200}
   - component: {fileID: 5049168299905142815}
   - component: {fileID: 4844815309922621150}
   - component: {fileID: 5837324410720302518}
@@ -631,6 +633,47 @@ MonoBehaviour:
   maxTiltAngle: 90
   mouseSensitivity: 0.2
   groundCheckRadius: 0.05
+--- !u!114 &7952861885439663320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3487219833232609719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4088eb8e43070941841f9449ed3f3d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentAnimation: Idle
+  idleAnimation: Idle
+  crouchAnimation: Crouch
+  crouchWalkAnimation: CrouchWalk
+  walkAnimation: Walk
+  sprintAnimation: Sprint
+  hurtAnimation: Hurt
+  dead: 0
+--- !u!114 &142522545318499200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3487219833232609719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a2f26040fb3140428b31ec20e5acd7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bones: []
+  ragDollStrength: 10
+  ragDollImpactStrength: 0.5
+  ragDollImpactRadius: 2
+  ragDollImpactUpMod: 1
+  mainColliders:
+  - {fileID: 4844815309922621150}
+  ragDollImpactPoint: {fileID: 0}
+  ragDollDirection: {x: 0, y: 0, z: 0}
 --- !u!54 &5049168299905142815
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -934,7 +977,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: f7fde6d0ae9657246b68f59563a3ab72, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

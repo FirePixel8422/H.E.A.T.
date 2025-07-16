@@ -8,6 +8,8 @@ public class RecoilHandler
     [Header("Transform used for camera movement and now also for recoil")]
     [SerializeField] private Transform cameraTransform;
 
+    [Space(10)]
+
     private float toAddRecoil;
     private float recoil;
 

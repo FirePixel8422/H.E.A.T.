@@ -26,6 +26,8 @@ public class PlayerController : MonoBehaviour
     private bool IsGrounded => Physics.CheckSphere(groundCheck.position, groundCheckRadius);
 
     private Rigidbody rb;
+    private NetworkStateMachine stateMachine;
+
     private Vector2 moveDir;
 
     private bool crouching;
@@ -107,7 +109,7 @@ public class PlayerController : MonoBehaviour
 
     private float GetTargetMoveSpeed()
     {
-        if (!IsGrounded)
+        if (IsGrounded == false)
             return moveSpeed;
 
         if (crouching)

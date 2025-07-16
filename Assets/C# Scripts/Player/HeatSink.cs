@@ -10,9 +10,10 @@ public class HeatSink
     [SerializeField] private Animator anim;
     [SerializeField] private HeatSinkStats stats;
 
-
     [Tooltip("The amount of heat the gun has accumulated, from 0 to stats.heatSinkSize. stats.heatSinkSize means the gun is overheated.")]
     [SerializeField] private float heatAmount = 0f;
+
+    [Space(10)]
 
     private float overheatCooldownTimer = 0f;
     public bool Overheated { get; private set; }
