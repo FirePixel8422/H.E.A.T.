@@ -12,18 +12,14 @@ public class MatchManager : NetworkBehaviour
     }
 
 
-#pragma warning disable UDR0001
     [Tooltip("Retrieve MatchData")]
-    public static MatchSettings settings;
-#pragma warning restore UDR0001
+    public MatchSettings settings;
 
-
-    [Header("Where is UI Parent")]
-    [SerializeField] private RectTransform UITransform;
-
-    //default values
+    [Tooltip("Default Match Settings, used when no saved settings are found")]
     [SerializeField] private MatchSettings defaultMatchSettings;
-    public MatchSettings GetDefaultMatchSettings() => defaultMatchSettings;
+
+    [Header("Where is UI Parent for all UI that holds components for settings")]
+    [SerializeField] private RectTransform UITransform;
 
 
 
@@ -93,7 +89,7 @@ public class MatchManager : NetworkBehaviour
         }
         else
         {
-            return GetDefaultMatchSettings();
+            return defaultMatchSettings;
         }
     }
 
@@ -104,19 +100,4 @@ public class MatchManager : NetworkBehaviour
     {
         await FileManager.SaveInfo(data, "SaveData/CreateLobbySettings.fpx", false);
     }
-
-
-
-
-
-#if UNITY_EDITOR
-
-    [SerializeField] private MatchSettings DEBUG_matchSettings;
-
-    private void Update()
-    {
-        DEBUG_matchSettings = settings;
-    }
-
-#endif
 }

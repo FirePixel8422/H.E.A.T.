@@ -13,25 +13,10 @@ using UnityEngine;
 /// <summary>
 /// Responsible for creating and joining lobbies
 /// </summary>
-public class LobbyMaker : NetworkBehaviour
+public class LobbyMaker : MonoBehaviour
 {
+    [SerializeField] private string nextSceneName = "Pre-MainGame";
     [SerializeField] private GameObject invisibleScreenCover;
-    //[SerializeField] private Button rejoinButton;
-
-
-    private async void Start()
-    {
-        (bool fileExists, ValueWrapper<string> lastJoinedLobbyId) = await FileManager.LoadInfo<ValueWrapper<string>>("RejoinData.json");
-
-        if (fileExists)
-        {
-            //turn button gameobject visible
-            //rejoinButton.gameObject.SetActive(true);
-
-            //setup button to call method
-            //rejoinButton.onClick.AddListener(() => RejoinLobbyAsync(lastJoinedLobbyId.value));
-        }
-    }
 
 
     public async void CreateLobbyAsync()
@@ -57,7 +42,7 @@ public class LobbyMaker : NetworkBehaviour
 
             CreateLobbyOptions options = new CreateLobbyOptions
             {
-                IsPrivate = MatchManager.settings.privateLobby,
+                IsPrivate = MatchManager.Instance.settings.privateLobby,
                 IsLocked = false,
 
                 Data = new Dictionary<string, DataObject>()
@@ -72,7 +57,7 @@ public class LobbyMaker : NetworkBehaviour
 
             Lobby lobby = await Lobbies.Instance.CreateLobbyAsync("Unnamed Lobby", maxPlayers, options);
 
-            await LobbyManager.SetLobbyData(lobby, true);
+            await LobbyManager.SetLobbyData_OnServer(lobby, true);
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(
                 _hostData.IPv4Address,
@@ -81,10 +66,10 @@ public class LobbyMaker : NetworkBehaviour
                 _hostData.Key,
                 _hostData.ConnectionData);
 
-            NetworkManager.StartHost();
+            NetworkManager.Singleton.StartHost();
 
             //load next scene
-            SceneManager.LoadSceneOnNetwork("Pre-Main Game 1");
+            SceneManager.LoadSceneOnNetwork_OnServer(nextSceneName);
         }
         catch (LobbyServiceException e)
         {
@@ -110,9 +95,9 @@ public class LobbyMaker : NetworkBehaviour
                 return;
             }
 
-            //join oldest joinable lobby
+            // Join oldest joinable lobby
             Lobby lobby = lobbies[0];
-            await LobbyManager.SetLobbyData(lobby, false);
+            await LobbyManager.SetLobbyData_OnServer(lobby, false);
 
             string joinCode = lobby.Data["joinCode"].Value;
             JoinAllocation allocation = await Relay.Instance.JoinAllocationAsync(joinCode);
@@ -129,7 +114,7 @@ public class LobbyMaker : NetworkBehaviour
                 IPv4Address = allocation.RelayServer.IpV4
             };
 
-            NetworkManager.GetComponent<UnityTransport>().SetRelayServerData(
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(
                 _joinData.IPv4Address,
                 _joinData.Port,
                 _joinData.AllocationIDBytes,
@@ -137,7 +122,7 @@ public class LobbyMaker : NetworkBehaviour
                 _joinData.ConnectionData,
                 _joinData.HostConnectionData);
 
-            NetworkManager.StartClient();
+            NetworkManager.Singleton.StartClient();
 
             SceneManager.LoadScene("Pre-Main Game 1");
         }
@@ -230,7 +215,7 @@ public class LobbyMaker : NetworkBehaviour
                 IPv4Address = allocation.RelayServer.IpV4
             };
 
-            NetworkManager.GetComponent<UnityTransport>().SetRelayServerData(
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(
                 _joinData.IPv4Address,
                 _joinData.Port,
                 _joinData.AllocationIDBytes,
@@ -238,7 +223,7 @@ public class LobbyMaker : NetworkBehaviour
                 _joinData.ConnectionData,
                 _joinData.HostConnectionData);
 
-            NetworkManager.StartClient();
+            NetworkManager.Singleton.StartClient();
 
             SceneManager.LoadScene("Pre-Main Game 1");
         }

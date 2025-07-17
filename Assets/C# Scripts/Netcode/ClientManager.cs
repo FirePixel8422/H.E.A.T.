@@ -1,6 +1,5 @@
 using System;
 using Unity.Netcode;
-using Unity.Services.Authentication;
 using UnityEngine;
 
 
@@ -13,12 +12,13 @@ public class ClientManager : NetworkBehaviour
     }
 
 
-    private NetworkVariable<PlayerIdDataArray> playerIdDataArray = new NetworkVariable<PlayerIdDataArray>();
+    #region PlayerIdDataArray var get, set and sync methods
+
+    [SerializeField] private NetworkStruct<PlayerIdDataArray> playerIdDataArray = new NetworkStruct<PlayerIdDataArray>();
 
     /// <summary>
-    /// Get PlayerIdDataArray Copy (changes on copy wont sync back to clientManager and wont cause a networkSync)
+    /// Get PlayerIdDataArray Copy (changes on copy wont sync back to clientManager and wont cause a networkSync unless sent back with  <see cref="SetPlayerIdDataArray_OnServer"/>")
     /// </summary>
-    /// <returns>Copy Of PlayerIdDataArray</returns>
     public static PlayerIdDataArray GetPlayerIdDataArray()
     {
         return Instance.playerIdDataArray.Value;
@@ -27,12 +27,37 @@ public class ClientManager : NetworkBehaviour
     /// <summary>
     /// Set Value Of PlayerIdDataArray, Must be called from server (Will trigger networkSync)
     /// </summary>
-    public static void UpdatePlayerIdDataArray_OnServer(PlayerIdDataArray newValue)
+    public static void SetPlayerIdDataArray_OnServer(PlayerIdDataArray newValue)
     {
+#if UNITY_EDITOR
+        if (Instance.IsServer == false)
+        {
+            Debug.LogError("UpdatePlayerIdDataArray_OnServer called on non server Client, this should only be called from the server!");
+        }
+#endif
+
         Instance.playerIdDataArray.Value = newValue;
-        Instance.playerIdDataArray.SetDirty(true);
     }
 
+
+    private void SendPlayerIdDataArrayChange_OnServer()
+    {
+        ReceivePlayerIdDataArray_ClientRPC(playerIdDataArray.Value, NetcodeUtility.SendToAllButHost());
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void RequestPlayerIdDataArray_ServerRPC(ulong clientNetworkId)
+    {
+        ReceivePlayerIdDataArray_ClientRPC(playerIdDataArray.Value, NetcodeUtility.SendToClient(clientNetworkId));
+    }
+
+    [ClientRpc(RequireOwnership = false)]
+    private void ReceivePlayerIdDataArray_ClientRPC(PlayerIdDataArray newValue, ClientRpcParams rpcParams = new ClientRpcParams())
+    {
+        playerIdDataArray.Value = newValue;
+    }
+
+    #endregion
 
 
     /// <summary>
@@ -46,7 +71,7 @@ public class ClientManager : NetworkBehaviour
     public static int GetClientGameId(ulong networkId) => Instance.playerIdDataArray.Value.GetPlayerGameId(networkId);
 
 
-    #region OnConnect and OnDisconnect Callbacks
+    #region OnConnect, OnDisconnect and OnKicked Callbacks
 
 #pragma warning disable UDR0001
     [Tooltip("Invoked after NetworkManager.OnClientConnected, before updating ClientManager gameId logic. \nreturns: \nulong clientId, \nint clientGamId, \nint clientInLobbyCount")]
@@ -54,13 +79,15 @@ public class ClientManager : NetworkBehaviour
 
     [Tooltip("Invoked after NetworkManager.OnClientDisconnected, before updating ClientManager gameId logic. \nreturns: \nulong clientId, \nint clientGamId, \nint clientInLobbyCount")]
     public static Action<ulong, int, int> OnClientDisconnectedCallback;
+
+    [Tooltip("Invoked when a client is kicked from the server, before destroying the ClientManager gameObject. \nreturns: \nnone")]
+    public static Action OnKicked;
 #pragma warning restore UDR0001
 
     #endregion
 
 
-
-    #region Initialization
+    #region Initialization Callback
 
 #pragma warning disable UDR0001
     [Tooltip("Invoked after this scripts OnNetworkSpawn is fully executed")]
@@ -93,8 +120,7 @@ public class ClientManager : NetworkBehaviour
     #endregion
 
 
-
-    #region Usefull LocalClient and Global Lobby Data
+    #region Usefull Data and LocalClient Data
 
     [Tooltip("Local Client gameId, the number equal to the clientCount when this client joined the lobby")]
     public static int LocalClientGameId { get; private set; }
@@ -112,88 +138,61 @@ public class ClientManager : NetworkBehaviour
 
     private void CreateLocalUsername()
     {
-        string userName = AuthenticationService.Instance.PlayerInfo.Username;
-
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        if (string.IsNullOrEmpty(userName))
-        {
-            string[] funnyNames = new string[]
-            {
-                "JohnDoe",
-                "WillowWilson",
-                "BijnaMichael",
-                "Yi-Long-Ma",
-                "Loading4Ever",
-                "DickSniffer",
-                "CraniumSnuiver",
-                "Moe-Lester",
-                "HonkiePlonkie",
-                "WhyIsThisHere",
-                "TheFrenchLikeBaguette",
-            };
-
-            int r = UnityEngine.Random.Range(0, funnyNames.Length);
-
-            userName = funnyNames[r] + LocalClientGameId.ToString();
-        }
-#endif
-
-        LocalUserName = userName;
+        LocalUserName = PlayerNameHandler.playerName;
     }
 
     #endregion
 
 
-
-
     public override void OnNetworkSpawn()
     {
+        playerIdDataArray = new NetworkStruct<PlayerIdDataArray>();
+
         if (IsServer)
         {
-            playerIdDataArray.Value = new PlayerIdDataArray(GlobalGameSettings.MaxPlayers);
+            // On value changed event of playerIdDataArray
+            playerIdDataArray.OnValueChanged += (PlayerIdDataArray newValue) =>
+            {
+                LocalClientGameId = newValue.GetPlayerGameId(NetworkManager.LocalClientId);
+                SendPlayerIdDataArrayChange_OnServer();
+            };
 
-            //call manually for the server, since its only triggers for each joining client.
+            // Call manually for the server, since its only triggers for each joining client.
             OnClientConnected_OnServer(0);
 
-            //setup server only events
+            // Setup server only events
             NetworkManager.OnClientConnectedCallback += OnClientConnected_OnServer;
             NetworkManager.OnClientDisconnectCallback += OnClientDisconnected_OnServer;
         }
-
-        //setup server and client event
-        NetworkManager.OnClientDisconnectCallback += OnClientDisconnected_OnClient;
-
-        //on value changed event of playerIdDataArray
-        playerIdDataArray.OnValueChanged += (PlayerIdDataArray oldValue, PlayerIdDataArray newValue) =>
+        else
         {
-            LocalClientGameId = newValue.GetPlayerGameId(NetworkManager.LocalClientId);
-        };
+            // Catches up late joining clients with newest value
+            RequestPlayerIdDataArray_ServerRPC(NetworkManager.LocalClientId);
+
+            // On value changed event of playerIdDataArray
+            playerIdDataArray.OnValueChanged += (PlayerIdDataArray newValue) =>
+            {
+                LocalClientGameId = newValue.GetPlayerGameId(NetworkManager.LocalClientId);
+            };
+        }
+
+        // Setup server and client event
+        NetworkManager.OnClientDisconnectCallback += OnClientDisconnected_OnClient;
 
         DontDestroyOnLoad(gameObject);
         CreateLocalUsername();
 
-        //Invoke OnInitialized event after OnNetworkSpawn is fully executed, also Set initialized to true and clear OnInitialized Action
+        // Invoke OnInitialized event after OnNetworkSpawn is fully executed, also Set initialized to true and clear OnInitialized Action
         OnInitialized?.Invoke();
         OnInitialized = null;
         Initialized = true;
     }
 
 
-    public override void OnDestroy()
-    {
-        base.OnDestroy();
-
-        OnClientConnectedCallback = null;
-        OnClientDisconnectedCallback = null;
-        OnInitialized = null;
-    }
-
-
-
     #region Join and Leave Callbacks
 
     /// <summary>
-    /// when a clients joins the lobby, called on the server only
+    /// When a clients joins the lobby, called on the server only
     /// </summary>
     private void OnClientConnected_OnServer(ulong clientId)
     {
@@ -203,19 +202,19 @@ public class ClientManager : NetworkBehaviour
 
         playerIdDataArray.Value = updatedDataArray;
 
-        OnClientConnectedCallback?.Invoke(clientId, playerIdDataArray.Value.GetPlayerGameId(clientId), NetworkManager.ConnectedClientsIds.Count);
+        OnClientConnectedCallback?.Invoke(clientId, playerIdDataArray.Value.GetPlayerGameId(clientId), NetworkManager.ConnectedClients.Count);
     }
 
 
     /// <summary>
-    /// when a client leaves the lobby, called on the server only
+    /// When a client leaves the lobby, called on the server only
     /// </summary>
     private void OnClientDisconnected_OnServer(ulong clientId)
     {
-        //if the diconnecting client is the server dont update data, the server is shut down anyways.
+        // If the diconnecting client is the server dont update data, the server is shut down anyways.
         if (clientId == 0) return;
 
-        PlayerIdDataArray updatedDataArray = playerIdDataArray.Value;
+        PlayerIdDataArray updatedDataArray = GetPlayerIdDataArray();
 
         updatedDataArray.RemovePlayer(clientId);
 
@@ -226,19 +225,17 @@ public class ClientManager : NetworkBehaviour
 
 
     /// <summary>
-    /// when a client leaves the lobby, called only on disconnecting client
+    /// When a client leaves the lobby, called only on disconnecting client
     /// </summary>
     private void OnClientDisconnected_OnClient(ulong clientId)
     {
-        //call function only on client who disconnected
+        // Call function only on client who disconnected
         if (clientId != NetworkManager.LocalClientId)
         {
             return;
         }
 
-
         Destroy(gameObject);
-
 
         if (IsServer)
         {
@@ -263,7 +260,7 @@ public class ClientManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void DisconnectClient_ServerRPC(ulong clientNetworkId)
     {
-        GetKicked_ClientRPC(clientNetworkId);
+        GetKicked_ClientRPC(NetcodeUtility.SendToClient(clientNetworkId));
 
         NetworkManager.DisconnectClient(clientNetworkId);
     }
@@ -273,7 +270,7 @@ public class ClientManager : NetworkBehaviour
     {
         ulong clientNetworkId = GetClientNetworkId(clientGameId);
 
-        GetKicked_ClientRPC(clientNetworkId);
+        GetKicked_ClientRPC(NetcodeUtility.SendToClient(clientNetworkId));
 
         NetworkManager.DisconnectClient(clientNetworkId);
     }
@@ -281,40 +278,29 @@ public class ClientManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void DisconnectAllClients_ServerRPC()
     {
-        KickAllClients_ClientRPC();
-    }
-
-
-    [ClientRpc(RequireOwnership = false)]
-    private void GetKicked_ClientRPC(ulong clientNetworkId)
-    {
-        //destroy the rejoin reference on the kicked client
-        if (clientNetworkId == NetworkManager.LocalClientId)
-        {
-            FileManager.DeleteFile("RejoinData.json");
-        }
+        GetKicked_ClientRPC();
     }
 
     [ClientRpc(RequireOwnership = false)]
-    private void KickAllClients_ClientRPC()
+    private void GetKicked_ClientRPC(ClientRpcParams rpcParams = new ClientRpcParams())
     {
-        //destroy the rejoin reference on the kicked client
-        FileManager.DeleteFile("RejoinData.json");
+        OnKicked?.Invoke();
+
+        // Destroy the rejoin reference on the kicked client
+        FileManager.TryDeleteFile("RejoinData.json");
     }
 
     #endregion
 
 
-
-#if UNITY_EDITOR
-
-    [SerializeField] private PlayerIdDataArray debugClientDataArray;
-    private void Update()
+    public override void OnDestroy()
     {
-        if (playerIdDataArray != null)
-        {
-            debugClientDataArray = playerIdDataArray.Value;
-        }
+        base.OnDestroy();
+
+        playerIdDataArray.OnValueChanged = null;
+        OnClientConnectedCallback = null;
+        OnClientDisconnectedCallback = null;
+        OnKicked = null;
+        OnInitialized = null;
     }
-#endif
 }

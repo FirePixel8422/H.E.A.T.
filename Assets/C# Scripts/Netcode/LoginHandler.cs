@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Threading.Tasks;
-using TMPro;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using UnityEngine;
@@ -10,16 +6,19 @@ using UnityEngine.SceneManagement;
 
 public class LoginHandler : MonoBehaviour
 {
+    [SerializeField] private string StartScreenSceneName = "StartScreen";
+    [SerializeField] private string mainMenuSceneName = "MainMenu";
+
     private AsyncOperation mainSceneLoadOperation;
 
 
     private async void Start()
     {
-        mainSceneLoadOperation = SceneManager.LoadSceneAsync("Main Scene", LoadSceneMode.Additive, false);
+        mainSceneLoadOperation = SceneManager.LoadSceneAsync(mainMenuSceneName, LoadSceneMode.Additive, false);
 
         mainSceneLoadOperation.completed += (_) =>
         {
-            SceneManager.UnLoadSceneAsync("Login Screen");
+            SceneManager.UnLoadSceneAsync(StartScreenSceneName);
         };
 
         await UnityServices.InitializeAsync();

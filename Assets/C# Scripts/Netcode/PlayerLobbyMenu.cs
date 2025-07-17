@@ -34,9 +34,9 @@ public class ClientLobbyMenu : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        _savedFixedClientNames = new FixedString64Bytes[4];
+        _savedFixedClientNames = new FixedString64Bytes[GlobalGameSettings.MaxPlayers];
 
-        Invoke(nameof(RecieveLocalClientGameId), 0.1f);
+        RecieveLocalClientGameId();
     }
 
 
@@ -44,44 +44,44 @@ public class ClientLobbyMenu : NetworkBehaviour
     {
         string userName = ClientManager.LocalUserName;
 
+        int localClientGameId = ClientManager.GetClientGameId(NetworkManager.LocalClientId);
+
+        AddClient_ServerRPC(new FixedString64Bytes(userName), localClientGameId);
+
         if (IsServer)
         {
             startGameButton.SetActive(true);
         }
-
-        ///ClientManager.SetLocalUserName(userName);
-
-        int localClientGameId = ClientManager.GetClientGameId(NetworkManager.LocalClientId);
-
-        AddClient_ServerRPC(new FixedString64Bytes(userName), localClientGameId);
     }
 
 
 
 
-    public async void KickClientOrLeaveAsync(int clientGameId)
+    public async void KickClientOrLeaveAsync(int toKickClientNetworkId)
     {
         if (IsServer)
         {
-            if (clientGameId == 0)
+            // If the client to kick is the host, disconnect all clients and shutdown the network.
+            if (toKickClientNetworkId == 0)
             {
                 ClientManager.Instance.DisconnectAllClients_ServerRPC();
 
-                //terminate lobby and shutdown network.
-                await LobbyManager.DeleteLobbyAsync();
+                // Terminate lobby and shutdown network.
+                await LobbyManager.DeleteLobbyAsync_OnServer();
 
                 NetworkManager.Shutdown();
             }
+            // If the client to kick is not the host, just disconnect that client.
             else
             {
-                //disconect client
-                ClientManager.Instance.DisconnectClient_ServerRPC(clientGameId);
+                // Disconect client
+                ClientManager.Instance.DisconnectClient_ServerRPC(toKickClientNetworkId);
             }
         }
         else
         {
-            //diconnect self
-            ClientManager.Instance.DisconnectClient_ServerRPC(clientGameId);
+            // Diconnect self
+            ClientManager.Instance.DisconnectClient_ServerRPC(toKickClientNetworkId);
         }
     }
 
@@ -89,9 +89,9 @@ public class ClientLobbyMenu : NetworkBehaviour
     {
         invisibleScreenCover.SetActive(true);
 
-        await LobbyManager.SetLobbyLockStateAsync(true);
+        await LobbyManager.SetLobbyLockStateAsync_OnServer(true);
 
-        SceneManager.LoadSceneOnNetwork("Patrick");
+        SceneManager.LoadSceneOnNetwork_OnServer("Patrick");
     }
 
 
@@ -116,7 +116,6 @@ public class ClientLobbyMenu : NetworkBehaviour
         clientNameField[clientGameId].text = fixedClientName.ToString();
 
         _savedFixedClientNames[clientGameId] = fixedClientName;
-
 
         int clientCount = NetworkManager.ConnectedClientsIds.Count;
 

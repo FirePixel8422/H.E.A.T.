@@ -11,8 +11,10 @@ public static class LobbyManager
 
 
 
-    //Set the lobby reference for host and clients here and start heartbeat coroutine if called from the host
-    public static async Task SetLobbyData(Lobby lobby, bool calledFromHost = false)
+    /// <summary>
+    /// MUST be called on server. Set the lobby reference for host and clients here and start heartbeat coroutine if called from the host
+    /// </summary>
+    public static async Task SetLobbyData_OnServer(Lobby lobby, bool calledFromHost = false)
     {
         CurrentLobby = lobby;
 
@@ -27,12 +29,18 @@ public static class LobbyManager
     }
 
 
-    public async static Task DeleteLobbyAsync()
+    /// <summary>
+    /// MUST be called on server. Deletes Lobby
+    /// </summary>
+    public async static Task DeleteLobbyAsync_OnServer()
     {
         await Lobbies.Instance.DeleteLobbyAsync(LobbyId);
     }
 
-    public static async Task SetLobbyLockStateAsync(bool isLocked)
+    /// <summary>
+    /// MUST be called on server. Sets Lobby.IsLocked state
+    /// </summary>
+    public static async Task SetLobbyLockStateAsync_OnServer(bool isLocked)
     {
         UpdateLobbyOptions updateLobbyOptions = new UpdateLobbyOptions()
         {
@@ -51,7 +59,9 @@ public static class LobbyManager
     }
 
 
-
+    /// <summary>
+    /// Send ping to server every "pingDelayTicks" so it doesnt auto delete itself.
+    /// </summary>
     private static async Task HeartbeatLobbyTask(string lobbyId, int pingDelayTicks)
     {
         while (true)

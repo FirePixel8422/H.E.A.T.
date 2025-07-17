@@ -171,7 +171,8 @@ public static class FileManager
     /// <summary>
     /// Delete a File
     /// </summary>
-    public static bool DeleteFile(string path)
+    /// <returns>Whether the deletion was succesfull</returns>
+    public static bool TryDeleteFile(string path)
     {
         path = EnsurePersistentDataPath(path);
         path = EnsureFileExtension(path);
@@ -200,7 +201,8 @@ public static class FileManager
     /// <summary>
     /// Delete a Directory (Folder)
     /// </summary>
-    public static bool DeleteDirectory(string directoryPath)
+    /// /// <returns>Whether the deletion was succesfull</returns>
+    public static bool TryDeleteDirectory(string directoryPath)
     {
         directoryPath = EnsurePersistentDataPath(directoryPath);
 
@@ -265,20 +267,20 @@ public static class FileManager
 
 public struct ValueWrapper<T>
 {
-    public T value;
+    public T Value;
 
     public ValueWrapper(T _value)
     {
-        value = _value;
+        Value = _value;
     }
 }
 
 public struct ArrayWrapper<T>
 {
-    public T[] values;
+    public T[] Value;
 
     public ArrayWrapper(T[] _values)
     {
-        values = _values;
+        Value = _values;
     }
 }

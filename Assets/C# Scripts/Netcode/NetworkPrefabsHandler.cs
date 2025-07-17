@@ -7,8 +7,6 @@ public class NetworkPrefabsHandler : MonoBehaviour
 {
     [SerializeField] private NetworkPrefabsList[] networkPrefabsList;
 
-    [SerializeField] private List<string> prefabsStrings;
-
 
 
     private void Start()
@@ -49,21 +47,4 @@ public class NetworkPrefabsHandler : MonoBehaviour
 
         Destroy(this);
     }
-
-#if UNITY_EDITOR
-    private void Update()
-    {
-        prefabsStrings.Clear();
-
-        int listCount = NetworkManager.Singleton.NetworkConfig.Prefabs.NetworkPrefabsLists.Count;
-        for (int i = 0; i < listCount; i++)
-        {
-            int targetListPrefabCount = NetworkManager.Singleton.NetworkConfig.Prefabs.NetworkPrefabsLists[i].PrefabList.Count;
-            for (int i2 = 0; i2 < targetListPrefabCount; i2++)
-            {
-                prefabsStrings.Add(NetworkManager.Singleton.NetworkConfig.Prefabs.NetworkPrefabsLists[i].PrefabList[i2].Prefab.name);
-            }
-        }
-    }
-#endif
 }
