@@ -52,7 +52,7 @@ public class ClientManager : NetworkBehaviour
     }
 
     [ClientRpc(RequireOwnership = false)]
-    private void ReceivePlayerIdDataArray_ClientRPC(PlayerIdDataArray newValue, ClientRpcParams rpcParams = new ClientRpcParams())
+    private void ReceivePlayerIdDataArray_ClientRPC(PlayerIdDataArray newValue, ClientRpcParams rpcParams)
     {
         playerIdDataArray.Value = newValue;
     }
