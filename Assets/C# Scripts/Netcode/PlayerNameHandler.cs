@@ -42,7 +42,6 @@ public class PlayerNameHandler : MonoBehaviour
         {
             string funnyName = GetRandomFunnyName();
 
-            nameInputField.text = funnyName;
             previewTextField.text = funnyName;
             playerName = funnyName;
         }
@@ -55,8 +54,10 @@ public class PlayerNameHandler : MonoBehaviour
         {
             string funnyName = GetRandomFunnyName();
 
-            playerName = funnyName;
             previewTextField.text = funnyName;
+            playerName = funnyName;
+
+            FileManager.TryDeleteFile("PlayerName.fpx");
 
             return;
         }

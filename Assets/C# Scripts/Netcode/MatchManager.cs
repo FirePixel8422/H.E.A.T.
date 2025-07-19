@@ -9,6 +9,7 @@ public class MatchManager : NetworkBehaviour
     private void Awake()
     {
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
 
@@ -21,7 +22,7 @@ public class MatchManager : NetworkBehaviour
     [Header("Where is UI Parent for all UI that holds components for settings")]
     [SerializeField] private RectTransform UITransform;
 
-
+    private const string SaveDataPath = "SaveData/CreateLobbySettings.fpx";
 
 
 
@@ -40,8 +41,6 @@ public class MatchManager : NetworkBehaviour
 
             UIInputHandlers[i].OnValueChanged += (value) => UpdateMatchSettingsData(dataIndex, value);
         }
-
-        DontDestroyOnLoad(gameObject);
     }
 
     private void UpdateMatchSettingsData(int sliderId, int value)
@@ -61,19 +60,21 @@ public class MatchManager : NetworkBehaviour
         }
         else
         {
-            RequestSyncMatchSettings_ServerRPC();
+            RequestSyncMatchSettings_ServerRPC(NetworkManager.LocalClientId);
         }
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void RequestSyncMatchSettings_ServerRPC()
+    private void RequestSyncMatchSettings_ServerRPC(ulong clientNetworkId)
     {
-        SyncMatchSettings_ClientRPC(settings);
+        SyncMatchSettings_ClientRPC(settings, NetworkIdRPCTargets.SendToTargetClient(clientNetworkId));
     }
 
     [ClientRpc(RequireOwnership = false)]
-    private void SyncMatchSettings_ClientRPC(MatchSettings _settings)
+    private void SyncMatchSettings_ClientRPC(MatchSettings _settings, NetworkIdRPCTargets rpcTargets)
     {
+        if (rpcTargets.IsTarget == false) return;
+
         settings = _settings;
     }
 
@@ -81,16 +82,9 @@ public class MatchManager : NetworkBehaviour
 
     private async Task<MatchSettings> LoadSettingsFromFileAsync()
     {
-        (bool succes, MatchSettings loadedMatchSettings) = await FileManager.LoadInfo<MatchSettings>("SaveData/CreateLobbySettings.fpx", false);
+        (bool succes, MatchSettings loadedMatchSettings) = await FileManager.LoadInfo<MatchSettings>(SaveDataPath);
 
-        if (succes)
-        {
-            return loadedMatchSettings;
-        }
-        else
-        {
-            return defaultMatchSettings;
-        }
+        return succes ? loadedMatchSettings : defaultMatchSettings;
     }
 
     /// <summary>
@@ -98,6 +92,6 @@ public class MatchManager : NetworkBehaviour
     /// </summary>
     private async Task SaveSettingsAsync(MatchSettings data)
     {
-        await FileManager.SaveInfo(data, "SaveData/CreateLobbySettings.fpx", false);
+        await FileManager.SaveInfo(data, SaveDataPath);
     }
 }

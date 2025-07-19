@@ -69,12 +69,14 @@ public class NetworkStateMachine : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void SyncAnimation_ServerRPC(int fromClientGameId, string animationString, float transitionDuration, float speed = 1, int layer = 0)
     {
-        SyncAnimation_ClientRPC(animationString, transitionDuration, speed, layer, NetcodeUtility.SendToOppositeClient(fromClientGameId));
+        SyncAnimation_ClientRPC(animationString, transitionDuration, speed, layer, GameIdRPCTargets.SendToOppositeClient(fromClientGameId));
     }
 
     [ClientRpc(RequireOwnership = false)]
-    private void SyncAnimation_ClientRPC(string animationString, float transitionDuration, float speed = 1, int layer = 0, ClientRpcParams rpcTargets = new ClientRpcParams())
+    private void SyncAnimation_ClientRPC(string animationString, float transitionDuration, float speed = 1, int layer = 0, GameIdRPCTargets rpcTargets = default)
     {
+        if (rpcTargets.IsTarget == false) return;
+
         anim.speed = speed;
         anim.CrossFade(animationString, transitionDuration, layer);
     }

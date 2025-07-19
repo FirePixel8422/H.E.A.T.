@@ -30,7 +30,9 @@ public static class FileManager
         }
         else
         {
+#if UNITY_EDITOR
             Debug.LogWarning("Directory does not exist: " + directoryPath);
+#endif
             return (false, new string[0]); // Returns false and an empty array if the directory doesn't exist
         }
     }
@@ -65,7 +67,9 @@ public static class FileManager
                 }
                 else
                 {
+#if UNITY_EDITOR
                     Debug.LogWarning($"Failed to load or deserialize file: {fileNames[i]}");
+#endif
                 }
             }
 
@@ -80,7 +84,9 @@ public static class FileManager
         //no files found in directory with correct fileExtension
         else
         {
+#if UNITY_EDITOR
             Debug.LogWarning($"No files with extension '{fileExtension}' found in directory: {directoryPath}");
+#endif
             return (false, new T[0]);
         }
     }
@@ -156,13 +162,17 @@ public static class FileManager
             }
             catch (Exception ex)
             {
+#if UNITY_EDITOR
                 Debug.LogError("Failed to load game data: " + ex.Message);
+#endif
                 return (false, default);
             }
         }
         else
         {
+#if UNITY_EDITOR
             Debug.LogWarning("No save file found at: " + pathPlusFileName);
+#endif
             return (false, default);
         }
     }
@@ -186,13 +196,17 @@ public static class FileManager
             }
             else
             {
+#if UNITY_EDITOR
                 Debug.LogWarning($"File not found: {path}");
+#endif
                 return false;
             }
         }
         catch (IOException ex)
         {
+#if UNITY_EDITOR
             Debug.LogError($"Failed to delete file {path}: {ex.Message}");
+#endif
             return false;
         }
     }
@@ -212,18 +226,24 @@ public static class FileManager
             {
                 Directory.Delete(directoryPath); // Deletes the directory
 
+#if UNITY_EDITOR
                 Debug.Log($"Directory deleted: {directoryPath}");
+#endif
                 return true;
             }
             else
             {
+#if UNITY_EDITOR
                 Debug.LogWarning($"Directory not found: {directoryPath}");
+#endif
                 return false;
             }
         }
         catch (IOException ex)
         {
+#if UNITY_EDITOR
             Debug.LogError($"Failed to delete directory {directoryPath}: {ex.Message}");
+#endif
             return false;
         }
     }

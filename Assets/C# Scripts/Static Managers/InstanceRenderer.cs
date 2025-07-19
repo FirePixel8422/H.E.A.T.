@@ -101,6 +101,7 @@ public class InstanceRenderer
     private Quaternion lastCamRot;
 
     private NativeArray<FastFrustumPlane> frustumPlanes;
+    private Plane[] frusumPlanesArray;
 
 
     private void OnUpdate()
@@ -113,10 +114,10 @@ public class InstanceRenderer
             lastCamPos = cam.transform.position;
             lastCamRot = cam.transform.rotation;
 
-            Plane[] newplanes = GeometryUtility.CalculateFrustumPlanes(cam);
+            GeometryUtility.CalculateFrustumPlanes(cam, frusumPlanesArray);
             for (int i = 0; i < 6; i++)
             {
-                frustumPlanes[i] = new FastFrustumPlane(newplanes[i].normal, newplanes[i].distance);
+                frustumPlanes[i] = new FastFrustumPlane(frusumPlanesArray[i].normal, frusumPlanesArray[i].distance);
             }
         }
 

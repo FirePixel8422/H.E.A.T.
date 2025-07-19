@@ -24,6 +24,11 @@ public class NetworkStruct<T> where T : INetworkSerializable
         }
     }
 
+    public NetworkStruct(T initialValue = default(T))
+    {
+        value = initialValue;
+    }
+
     public void SetDirty()
     {
         OnValueChanged?.Invoke(value);

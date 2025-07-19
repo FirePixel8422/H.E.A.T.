@@ -27,7 +27,7 @@ public class GunCore : NetworkBehaviour
     private bool shootButtonHeld;
     private float timeSinceLastShot;
     private float timeSinceShootButtonPress;
-    private float stabilityModifier;
+    private float stabilityPower;
 
     private int burstShotsLeft = 0;
     private float burstShotTimer = 0f;
@@ -173,10 +173,10 @@ public class GunCore : NetworkBehaviour
         {
             recoilHandler.StabilizeRecoil(coreStats.recoilRecovery);
 
-            stabilityModifier -= coreStats.recoilRecovery * deltaTime;
-            if (stabilityModifier < 0f)
+            stabilityPower -= coreStats.recoilRecovery * deltaTime;
+            if (stabilityPower < 0f)
             {
-                stabilityModifier = 0f;
+                stabilityPower = 0f;
             }
         }
 
@@ -194,9 +194,9 @@ public class GunCore : NetworkBehaviour
     /// </summary>
     private void PrepareShot(int projectileCount)
     {
-        stabilityModifier += coreStats.ShootInterval;
+        stabilityPower += coreStats.ShootInterval;
 
-        float recoil = coreStats.GetRecoil(stabilityModifier);
+        float recoil = coreStats.GetRecoil(stabilityPower);
         recoilHandler.AddRecoil(recoil);
 
         heatSink.AddHeat(coreStats.heatPerShot, out float previousHeatPercentage);
@@ -218,8 +218,8 @@ public class GunCore : NetworkBehaviour
             if (Physics.SphereCast(ray.origin, coreStats.bulletSize, rayDirWithSpread, out RaycastHit hit))
             {
                 Vector3 hitNormal = hit.normal;
-                // Deal damage to hit player
 
+                // Deal damage to hit player
                 DEBUG_damageThisShot += coreStats.GetDamageOutput(hit.distance, false);
 
 
@@ -292,12 +292,14 @@ public class GunCore : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void Shoot_ServerRPC(int clientGameId, int randomAudioId, float randomPitch)
     {
-        Shoot_ClientRPC(randomAudioId, randomPitch, NetcodeUtility.SendToOppositeClient(clientGameId));
+        Shoot_ClientRPC(randomAudioId, randomPitch, GameIdRPCTargets.SendToOppositeClient(clientGameId));
     }
 
     [ClientRpc(RequireOwnership = false)]
-    private void Shoot_ClientRPC(int randomAudioId, float randomPitch, ClientRpcParams rpcParams)
+    private void Shoot_ClientRPC(int randomAudioId, float randomPitch, GameIdRPCTargets rpcTargets)
     {
+        if (rpcTargets.IsTarget == false) return;
+
         Shoot(randomAudioId, randomPitch);
     }
 

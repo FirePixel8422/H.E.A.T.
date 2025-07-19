@@ -7,17 +7,38 @@ using Unity.Services.Lobbies.Models;
 using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 
 /// <summary>
-/// Responsible for creating and joining lobbies
+/// MB class responsible for creating and joining lobbies
 /// </summary>
 public class LobbyMaker : MonoBehaviour
 {
+    public static LobbyMaker Instance { get; private set; }
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+
     [SerializeField] private string nextSceneName = "Pre-MainGame";
     [SerializeField] private GameObject invisibleScreenCover;
+    [SerializeField] private GameObject rejoinMenu;
 
+
+    private async void Start()
+    {
+        (bool fileExists, ValueWrapper<string> lastJoinedLobbyId) = await FileManager.LoadInfo<ValueWrapper<string>>("RejoinData.json");
+
+        if (fileExists)
+        {
+            // Turn rejoin menu visible and setup rejoin button to call method
+            rejoinMenu.SetActive(true);
+            rejoinMenu.GetComponentInChildren<Button>().onClick.AddListener(() => RejoinLobbyAsync(lastJoinedLobbyId.Value));
+        }
+    }
 
     public async void CreateLobbyAsync()
     {
@@ -55,9 +76,9 @@ public class LobbyMaker : MonoBehaviour
                 },
             };
 
-            Lobby lobby = await Lobbies.Instance.CreateLobbyAsync("Unnamed Lobby", maxPlayers, options);
+            Lobby lobby = await Lobbies.Instance.CreateLobbyAsync(PlayerNameHandler.playerName + "'s Lobby", maxPlayers, options);
 
-            await LobbyManager.SetLobbyData_OnServer(lobby, true);
+            await LobbyManager.SetLobbyData(lobby, true);
 
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(
                 _hostData.IPv4Address,
@@ -68,7 +89,7 @@ public class LobbyMaker : MonoBehaviour
 
             NetworkManager.Singleton.StartHost();
 
-            //load next scene
+            // Load next scene through network, so all joining clients will also load it automatically
             SceneManager.LoadSceneOnNetwork_OnServer(nextSceneName);
         }
         catch (LobbyServiceException e)
@@ -78,7 +99,6 @@ public class LobbyMaker : MonoBehaviour
             invisibleScreenCover.SetActive(false);
         }
     }
-
 
     public async void AutoJoinLobbyAsync()
     {
@@ -97,7 +117,7 @@ public class LobbyMaker : MonoBehaviour
 
             // Join oldest joinable lobby
             Lobby lobby = lobbies[0];
-            await LobbyManager.SetLobbyData_OnServer(lobby, false);
+            await LobbyManager.SetLobbyData(lobby, false);
 
             string joinCode = lobby.Data["joinCode"].Value;
             JoinAllocation allocation = await Relay.Instance.JoinAllocationAsync(joinCode);
@@ -123,8 +143,6 @@ public class LobbyMaker : MonoBehaviour
                 _joinData.HostConnectionData);
 
             NetworkManager.Singleton.StartClient();
-
-            SceneManager.LoadScene("Pre-Main Game 1");
         }
         catch (LobbyServiceException e)
         {
@@ -134,21 +152,7 @@ public class LobbyMaker : MonoBehaviour
         }
     }
 
-
-    public async void RejoinLobbyAsync(string lobbyId)
-    {
-        try
-        {
-            Lobby lobby = await LobbyService.Instance.ReconnectToLobbyAsync(lobbyId);
-        }
-        catch (LobbyServiceException e)
-        {
-            Debug.LogError(e);
-        }
-    }
-
-
-    public async Task<(bool, List<Lobby>)> FindLobbiesAsync()
+    private async Task<(bool, List<Lobby>)> FindLobbiesAsync()
     {
         try
         {
@@ -190,7 +194,6 @@ public class LobbyMaker : MonoBehaviour
         }
     }
 
-
     public async void JoinLobbyByIdAsync(string lobbyId)
     {
         if (lobbyId.Length != 22) return;
@@ -224,8 +227,6 @@ public class LobbyMaker : MonoBehaviour
                 _joinData.HostConnectionData);
 
             NetworkManager.Singleton.StartClient();
-
-            SceneManager.LoadScene("Pre-Main Game 1");
         }
         catch (LobbyServiceException e)
         {
@@ -233,6 +234,42 @@ public class LobbyMaker : MonoBehaviour
 
             print(e);
             throw;
+        }
+    }
+
+    public async void RejoinLobbyAsync(string lobbyId)
+    {
+        try
+        {
+            Lobby lobby = await LobbyService.Instance.ReconnectToLobbyAsync(lobbyId);
+
+            string joinCode = lobby.Data["joinCode"].Value;
+            JoinAllocation allocation = await Relay.Instance.JoinAllocationAsync(joinCode);
+
+            RelayJoinData _joinData = new RelayJoinData
+            {
+                Key = allocation.Key,
+                Port = (ushort)allocation.RelayServer.Port,
+                AllocationID = allocation.AllocationId,
+                AllocationIDBytes = allocation.AllocationIdBytes,
+                ConnectionData = allocation.ConnectionData,
+                HostConnectionData = allocation.HostConnectionData,
+                IPv4Address = allocation.RelayServer.IpV4
+            };
+
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(
+                _joinData.IPv4Address,
+                _joinData.Port,
+                _joinData.AllocationIDBytes,
+                _joinData.Key,
+                _joinData.ConnectionData,
+                _joinData.HostConnectionData);
+
+            NetworkManager.Singleton.StartClient();
+        }
+        catch (LobbyServiceException e)
+        {
+            Debug.LogError(e);
         }
     }
 }

@@ -12,9 +12,9 @@ public static class LobbyManager
 
 
     /// <summary>
-    /// MUST be called on server. Set the lobby reference for host and clients here and start heartbeat coroutine if called from the host
+    /// Set the lobby reference for host and clients here and start heartbeat coroutine if called from the server (or host)
     /// </summary>
-    public static async Task SetLobbyData_OnServer(Lobby lobby, bool calledFromHost = false)
+    public static async Task SetLobbyData(Lobby lobby, bool calledFromHost = false)
     {
         CurrentLobby = lobby;
 

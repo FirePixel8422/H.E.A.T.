@@ -44,7 +44,9 @@ public static class ExtensionMethods
     {
         if (parent == null)
         {
+#if UNITY_EDITOR
             Debug.LogWarning("You are trying to set a transform to a parent that doesnt exist, this is not allowed");
+#endif
             return;
         }
 
@@ -62,7 +64,9 @@ public static class ExtensionMethods
     {
         if (parent == null)
         {
+#if UNITY_EDITOR
             Debug.LogWarning("You are trying to set a transform to a parent that doesnt exist, this is not allowed");
+#endif
             return;
         }
 
@@ -81,7 +85,7 @@ public static class ExtensionMethods
         }
     }
 
-    #endregion
+#endregion
 
 
     #region TryGetComponent(s)

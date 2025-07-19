@@ -29,18 +29,18 @@ public class NetworkValue<T> where T : struct
         OnValueChanged?.Invoke(value);
     }
 
-
-
     /// <summary>
     /// Filter for what types are supported by NetworkValue.
     /// </summary>
-    public NetworkValue()
+    public NetworkValue(T initialValue = default(T))
     {
         Type t = typeof(T);
         if (IsSupportedType(t) == false)
         {
             throw new InvalidOperationException($"{t.Name} is not supported by NetworkValue");
         }
+
+        value = initialValue;
     }
     private static bool IsSupportedType(Type t)
     {
