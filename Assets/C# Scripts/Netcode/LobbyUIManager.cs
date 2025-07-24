@@ -2,34 +2,44 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Services.Lobbies.Models;
 
-public class LobbyUIMananager : MonoBehaviour
+
+namespace FirePixel.Networking
 {
-    public LobbyUIPanel[] lobbyUISlots;
-    public int activeLobbyUISlots;
-
-
-    public void CreateLobbyUI(List<Lobby> lobbies)
+    public class LobbyUIMananager : MonoBehaviour
     {
-        for (int i = 0; i < activeLobbyUISlots; i++)
+        public static LobbyUIMananager Instance { get; private set; }
+        private void Awake()
         {
-            lobbyUISlots[i].mainUI.SetActive(false);
+            Instance = this;
         }
 
-        activeLobbyUISlots = lobbies.Count;
-        for (int i = 0; i < lobbies.Count; i++)
+
+        public LobbyUIPanel[] lobbyUISlots;
+        public int activeLobbyUISlots;
+
+
+        public void CreateLobbyUI(List<Lobby> lobbies)
         {
-            lobbyUISlots[i].mainUI.SetActive(true);
-            lobbyUISlots[i].lobbyName.text = lobbies[i].Name;
-            lobbyUISlots[i].lobbyId = lobbies[i].Id;
+            for (int i = 0; i < activeLobbyUISlots; i++)
+            {
+                lobbyUISlots[i].mainUI.SetActive(false);
+            }
 
-            int maxPlayers = lobbies[i].MaxPlayers;
-            bool full = lobbies[i].AvailableSlots == 0;
+            activeLobbyUISlots = lobbies.Count;
+            for (int i = 0; i < lobbies.Count; i++)
+            {
+                lobbyUISlots[i].mainUI.SetActive(true);
+                lobbyUISlots[i].lobbyName.text = lobbies[i].Name;
+                lobbyUISlots[i].lobbyId = lobbies[i].Id;
 
-            lobbyUISlots[i].amountOfPlayersInLobby.text = (maxPlayers - lobbies[i].AvailableSlots).ToString() + "/" + maxPlayers.ToString() + (full ? "Full!" : "");
-            lobbyUISlots[i].Full = full;
+                int maxPlayers = lobbies[i].MaxPlayers;
+                bool full = lobbies[i].AvailableSlots == 0;
+
+                lobbyUISlots[i].amountOfPlayersInLobby.text = (maxPlayers - lobbies[i].AvailableSlots).ToString() + "/" + maxPlayers.ToString() + (full ? "Full!" : "");
+                lobbyUISlots[i].Full = full;
+            }
         }
     }
 }
-
 
 

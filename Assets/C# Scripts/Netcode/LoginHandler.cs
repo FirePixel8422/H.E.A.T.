@@ -4,29 +4,32 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
-public class LoginHandler : MonoBehaviour
+namespace FirePixel.Networking
 {
-    [SerializeField] private string StartScreenSceneName = "StartScreen";
-    [SerializeField] private string mainMenuSceneName = "MainMenu";
-
-    private AsyncOperation mainSceneLoadOperation;
-
-
-    private async void Start()
+    public class LoginHandler : MonoBehaviour
     {
-        mainSceneLoadOperation = SceneManager.LoadSceneAsync(mainMenuSceneName, LoadSceneMode.Additive, false);
+        [SerializeField] private string StartScreenSceneName = "StartScreen";
+        [SerializeField] private string mainMenuSceneName = "MainMenu";
 
-        mainSceneLoadOperation.completed += (_) =>
+        private AsyncOperation mainSceneLoadOperation;
+
+
+        private async void Awake()
         {
-            SceneManager.UnLoadSceneAsync(StartScreenSceneName);
-        };
+            mainSceneLoadOperation = SceneManager.LoadSceneAsync(mainMenuSceneName, LoadSceneMode.Additive, false);
 
-        await UnityServices.InitializeAsync();
+            mainSceneLoadOperation.completed += (_) =>
+            {
+                SceneManager.UnLoadSceneAsync(StartScreenSceneName);
+            };
 
-        AuthenticationService.Instance.SignOut();
+            await UnityServices.InitializeAsync();
 
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
+            AuthenticationService.Instance.SignOut();
 
-        mainSceneLoadOperation.allowSceneActivation = true;
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+
+            mainSceneLoadOperation.allowSceneActivation = true;
+        }
     }
 }

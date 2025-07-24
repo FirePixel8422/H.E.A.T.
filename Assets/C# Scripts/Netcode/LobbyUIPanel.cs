@@ -2,45 +2,49 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LobbyUIPanel : MonoBehaviour
+
+namespace FirePixel.Networking
 {
-    public GameObject mainUI;
-
-    public Button button;
-
-    public TextMeshProUGUI lobbyName;
-    public TextMeshProUGUI amountOfPlayersInLobby;
-    public string lobbyId;
-
-
-    public bool full;
-    public bool Full
+    public class LobbyUIPanel : MonoBehaviour
     {
-        get
+        public GameObject mainUI;
+
+        public Button button;
+
+        public TextMeshProUGUI lobbyName;
+        public TextMeshProUGUI amountOfPlayersInLobby;
+        public string lobbyId;
+
+
+        public bool full;
+        public bool Full
         {
-            return full;
+            get
+            {
+                return full;
+            }
+            set
+            {
+                button.enabled = !value;
+                full = value;
+            }
         }
-        set
+
+
+        private void Start()
         {
-            button.enabled = !value;
-            full = value;
+            mainUI = transform.GetChild(0).gameObject;
+
+            button = GetComponentInChildren<Button>(true);
+
+            TextMeshProUGUI[] textFields = GetComponentsInChildren<TextMeshProUGUI>(true);
+            lobbyName = textFields[1];
+            amountOfPlayersInLobby = textFields[0];
         }
-    }
 
-
-    private void Start()
-    {
-        mainUI = transform.GetChild(0).gameObject;
-
-        button = GetComponentInChildren<Button>(true);
-
-        TextMeshProUGUI[] textFields = GetComponentsInChildren<TextMeshProUGUI>(true);
-        lobbyName = textFields[1];
-        amountOfPlayersInLobby = textFields[0];
-    }
-
-    public void JoinLobby()
-    {
-        LobbyMaker.Instance.JoinLobbyByIdAsync(lobbyId);
+        public void JoinLobby()
+        {
+            LobbyMaker.Instance.JoinLobbyByIdAsync(lobbyId);
+        }
     }
 }

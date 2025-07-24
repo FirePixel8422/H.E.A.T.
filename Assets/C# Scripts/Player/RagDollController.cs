@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using FirePixel.Networking;
 
 
 public class RagDollController : NetworkBehaviour

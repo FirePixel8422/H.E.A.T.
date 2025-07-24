@@ -99,7 +99,7 @@ public class DecalVfxManager : MonoBehaviour
         int decalCount = decalEntries.Count;
 
         // If there are no decals, skip 
-        if (decalCount == 0) return;
+        if (decalCount == 0 || mainCam == null) return;
 
         float time = Time.time;
 

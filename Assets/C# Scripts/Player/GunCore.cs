@@ -2,6 +2,7 @@ using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using FirePixel.Networking;
 
 
 
@@ -54,38 +55,28 @@ public class GunCore : NetworkBehaviour
     }
 
 
-
-
-    // REMOVETHIS LATER, EDITOR DEBUUGGGG
-    // REMOVETHIS LATER, EDITOR DEBUUGGGG
-    // REMOVETHIS LATER, EDITOR DEBUUGGGG
-    // REMOVETHIS LATER, EDITOR DEBUUGGGG
-    // REMOVETHIS LATER, EDITOR DEBUUGGGG
-    // REMOVETHIS LATER, EDITOR DEBUUGGGG
-    // REMOVETHIS LATER, EDITOR DEBUUGGGG
-    // REMOVETHIS LATER, EDITOR DEBUUGGGG
-    // REMOVETHIS LATER, EDITOR DEBUUGGGG
-    private void Start()
-    {
-        OnNetworkSpawn();
-    }
+    private void OnEnable() => UpdateScheduler.RegisterUpdate(OnUpdate);
+    private void OnDisable() => UpdateScheduler.UnregisterUpdate(OnUpdate);
 
     public override void OnNetworkSpawn()
     {
-        cam = GetComponentInChildren<Camera>();
+        if (IsOwner)
+        {
+            cam = GetComponentInChildren<Camera>();
 
-        coreStats = gunStatsSO.GetCoreStats();
-        heatSink.Init(gunStatsSO.GetHeatSinkStats());
+            DecalVfxManager.Instance.Init(cam);
+        }
+
+        SwapGun(0);
+    }
+
+    private void SwapGun(int gunId)
+    {
+        GunManager.Instance.GetGunStats(gunId, out coreStats, out heatSink.stats);
 
         timeSinceLastShot = coreStats.ShootInterval;
         burstShotTimer = coreStats.burstShotInterval;
-
-        DecalVfxManager.Instance.Init(cam);
     }
-
-
-    private void OnEnable() => UpdateScheduler.RegisterUpdate(OnUpdate);
-    private void OnDisable() => UpdateScheduler.UnregisterUpdate(OnUpdate);
 
 
     private void OnUpdate()
@@ -93,7 +84,7 @@ public class GunCore : NetworkBehaviour
 #if UNITY_EDITOR
         if (IsOwner == false && overrideIsOwner == false) return;
 #else
-    if (IsOwner == false) return;
+        if (IsOwner == false) return;
 #endif
 
         float deltaTime = Time.deltaTime;

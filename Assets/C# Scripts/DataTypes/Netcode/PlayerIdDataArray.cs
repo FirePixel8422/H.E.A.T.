@@ -3,100 +3,102 @@ using UnityEngine;
 
 
 
-[System.Serializable]
-[Tooltip("Netcode friendly array to store client data (clientId (also called networkId), gameId (the Xth client this is in the lobby -1))")]
-public struct PlayerIdDataArray : INetworkSerializable
+namespace FirePixel.Networking
 {
-    [Header("[0] = 2? client with networkId 2 is client 0")]
-    [SerializeField] private ulong[] networkIds;
-
-    [Header("Total clients in server that are setup by game/team id system")]
-    [SerializeField] private int playerCount;
-
-    [Tooltip("Total clients in server that are setup by game/team id system")]
-    public readonly int PlayerCount => playerCount;
-
-
-
-    public PlayerIdDataArray(int maxPlayerCount)
+    [System.Serializable]
+    [Tooltip("Netcode friendly array to store client data (clientId (also called networkId), gameId (the Xth client this is in the lobby -1))")]
+    public struct PlayerIdDataArray : INetworkSerializable
     {
-        networkIds = new ulong[maxPlayerCount];
+        [Header("[0] = 2? client with networkId 2 is client 0")]
+        [SerializeField] private ulong[] networkIds;
 
-        playerCount = 0;
-    }
+        [Header("Total clients in server that are setup by game/team id system")]
+        [SerializeField] private int playerCount;
 
-
-    #region Update Data
-
-    public void AddPlayer(ulong addedNetworkId)
-    {
-        networkIds[playerCount] = addedNetworkId;
-
-        playerCount += 1;
-    }
+        [Tooltip("Total clients in server that are setup by game/team id system")]
+        public readonly int PlayerCount => playerCount;
 
 
-    public void RemovePlayer(ulong removedNetworkId)
-    {
-        int removedGameId = GetPlayerGameId(removedNetworkId);
 
-        playerCount -= 1;
-
-        for (int i = removedGameId; i < playerCount; i++)
+        public PlayerIdDataArray(int maxPlayerCount)
         {
-            //move down all the networkIds in the array by 1.
-            networkIds[i] = networkIds[i + 1];
+            networkIds = new ulong[maxPlayerCount];
+
+            playerCount = 0;
         }
-    }
-
-    #endregion
 
 
-    #region Retrieve Data
+        #region Update Data
 
-    /// <summary>
-    /// Get client gameId by converting that clients networkId (localPlayerId)
-    /// </summary>
-    /// <returns>The clients gameId</returns>
-    public int GetPlayerGameId(ulong toConvertNetworkId)
-    {
-        //since dictionaries are not netcode friendly, there is just an networkId array, and the place in the array of the value "toConvertNetworkId" is the equivelent gameId
-        for (int i = 0; i < playerCount; i++)
+        public void AddPlayer(ulong addedNetworkId)
         {
-            if (networkIds[i] == toConvertNetworkId)
+            networkIds[playerCount] = addedNetworkId;
+
+            playerCount += 1;
+        }
+
+
+        public void RemovePlayer(ulong removedNetworkId)
+        {
+            int removedGameId = GetPlayerGameId(removedNetworkId);
+
+            playerCount -= 1;
+
+            for (int i = removedGameId; i < playerCount; i++)
             {
-                return i;
+                //move down all the networkIds in the array by 1.
+                networkIds[i] = networkIds[i + 1];
             }
         }
 
+        #endregion
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-        string errorString = "Cant Convert Id: " + toConvertNetworkId + ", networkIds are: ";
-        for (int i = 0; i < playerCount; i++)
+
+        #region Retrieve Data
+
+        /// <summary>
+        /// Get client gameId by converting that clients networkId (localPlayerId)
+        /// </summary>
+        /// <returns>The clients gameId</returns>
+        public int GetPlayerGameId(ulong toConvertNetworkId)
         {
-            errorString += networkIds[i] + ", ";
-        }
+            //since dictionaries are not netcode friendly, there is just an networkId array, and the place in the array of the value "toConvertNetworkId" is the equivelent gameId
+            for (int i = 0; i < playerCount; i++)
+            {
+                if (networkIds[i] == toConvertNetworkId)
+                {
+                    return i;
+                }
+            }
 
-        Debug.LogError(errorString);
+
+#if UNITY_EDITOR
+            string errorString = "Cant Convert Id: " + toConvertNetworkId + ", networkIds are: ";
+            for (int i = 0; i < playerCount; i++)
+            {
+                errorString += networkIds[i] + ", ";
+            }
+
+            Debug.LogError(errorString);
 #endif
 
-        return -1;
-    }
+            return -1;
+        }
 
-    public ulong GetPlayerNetworkId(int toConvertGameId)
-    {
-        return networkIds[toConvertGameId];
-    }
+        public ulong GetPlayerNetworkId(int toConvertGameId)
+        {
+            return networkIds[toConvertGameId];
+        }
 
-    #endregion
+        #endregion
 
 
 
-    // Method from unity netcode to serialize this struct (PlayerIdDataArray) before sending it through a network function (RPC) so it doesnt throw an error
-    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-    {
-        serializer.SerializeValue(ref networkIds);
-
-        serializer.SerializeValue(ref playerCount);
+        // Method from unity netcode to serialize this struct (PlayerIdDataArray) before sending it through a network function (RPC) so it doesnt throw an error
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref networkIds);
+            serializer.SerializeValue(ref playerCount);
+        }
     }
 }

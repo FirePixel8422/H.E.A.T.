@@ -1,6 +1,8 @@
-﻿using System;
+﻿using FirePixel.Networking;
+using System;
 using System.Collections;
 using Unity.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
 public static class ExtensionMethods
@@ -85,7 +87,7 @@ public static class ExtensionMethods
         }
     }
 
-#endregion
+    #endregion
 
 
     #region TryGetComponent(s)
@@ -215,5 +217,14 @@ public static class ExtensionMethods
         {
             obj.SetActive(state);
         }
+    }
+
+
+    /// <summary>
+    /// Get PlayerGameId through ClintManager using OwnerClientId.
+    /// </summary>
+    public static int GetOwnerClientGameId(this NetworkObject networkObj)
+    {
+        return ClientManager.GetClientGameId(networkObj.OwnerClientId);
     }
 }

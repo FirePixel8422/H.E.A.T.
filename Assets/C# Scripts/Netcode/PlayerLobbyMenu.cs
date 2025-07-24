@@ -1,193 +1,195 @@
 using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
-using Unity.Services.Authentication;
 using UnityEngine;
 
 
-public class ClientLobbyMenu : NetworkBehaviour
+namespace FirePixel.Networking
 {
-    public static ClientLobbyMenu Instance { get; private set; }
-
-    private void Awake()
+    public class ClientLobbyMenu : NetworkBehaviour
     {
-        Instance = this;
+        public static ClientLobbyMenu Instance { get; private set; }
 
-        ClientManager.OnClientDisconnectedCallback += OnClientDisconnected_OnServer;
-    }
+        private void Awake()
+        {
+            Instance = this;
 
-
-
-    [SerializeField] private TextMeshProUGUI[] clientNameField;
-    [SerializeField] private GameObject[] kickButtonObjs;
-
-    [SerializeField] private GameObject startGameButton;
-    [SerializeField] private GameObject invisibleScreenCover;
+            ClientManager.OnClientDisconnectedCallback += OnClientDisconnected_OnServer;
+        }
 
 
-    private FixedString64Bytes[] _savedFixedClientNames;
+
+        [SerializeField] private TextMeshProUGUI[] clientNameField;
+        [SerializeField] private GameObject[] kickButtonObjs;
+
+        [SerializeField] private GameObject startGameButton;
+        [SerializeField] private GameObject invisibleScreenCover;
+
+
+        private FixedString64Bytes[] _savedFixedClientNames;
 
 #if UNITY_EDITOR
-    public string[] debugNames;
+        public string[] debugNames;
 #endif
 
 
-    public override void OnNetworkSpawn()
-    {
-        _savedFixedClientNames = new FixedString64Bytes[GlobalGameSettings.MaxPlayers];
-
-        RecieveLocalClientGameId();
-    }
-
-
-    private void RecieveLocalClientGameId()
-    {
-        string userName = ClientManager.LocalUserName;
-
-        int localClientGameId = ClientManager.GetClientGameId(NetworkManager.LocalClientId);
-
-        AddClient_ServerRPC(new FixedString64Bytes(userName), localClientGameId);
-
-        if (IsServer)
+        public override void OnNetworkSpawn()
         {
-            startGameButton.SetActive(true);
+            _savedFixedClientNames = new FixedString64Bytes[GlobalGameSettings.MaxPlayers];
+
+            RecieveLocalClientGameId();
         }
-    }
 
 
-
-
-    public async void KickClientOrLeaveAsync(int toKickClientNetworkId)
-    {
-        if (IsServer)
+        private void RecieveLocalClientGameId()
         {
-            // If the client to kick is the host, disconnect all clients and shutdown the network.
-            if (toKickClientNetworkId == 0)
+            string userName = ClientManager.LocalUserName;
+
+            int localClientGameId = ClientManager.GetClientGameId(NetworkManager.LocalClientId);
+
+            AddClient_ServerRPC(new FixedString64Bytes(userName), localClientGameId);
+
+            if (IsServer)
             {
-                ClientManager.Instance.DisconnectAllClients_ServerRPC();
-
-                // Terminate lobby and shutdown network.
-                await LobbyManager.DeleteLobbyAsync_OnServer();
-
-                NetworkManager.Shutdown();
+                startGameButton.SetActive(true);
             }
-            // If the client to kick is not the host, just disconnect that client.
+        }
+
+
+
+
+        public async void KickClientOrLeaveAsync(int toKickClientNetworkId)
+        {
+            if (IsServer)
+            {
+                // If the client to kick is the host, disconnect all clients and shutdown the network.
+                if (toKickClientNetworkId == 0)
+                {
+                    ClientManager.Instance.DisconnectAllClients_ServerRPC();
+
+                    // Terminate lobby and shutdown network.
+                    await LobbyManager.DeleteLobbyAsync_OnServer();
+
+                    NetworkManager.Shutdown();
+                }
+                // If the client to kick is not the host, just disconnect that client.
+                else
+                {
+                    // Disconect client
+                    ClientManager.Instance.DisconnectClient_ServerRPC(toKickClientNetworkId);
+                }
+            }
             else
             {
-                // Disconect client
+                // Diconnect self
                 ClientManager.Instance.DisconnectClient_ServerRPC(toKickClientNetworkId);
             }
         }
-        else
+
+        public async void StartMatchAsync()
         {
-            // Diconnect self
-            ClientManager.Instance.DisconnectClient_ServerRPC(toKickClientNetworkId);
+            invisibleScreenCover.SetActive(true);
+
+            await LobbyManager.SetLobbyLockStateAsync_OnServer(true);
+
+            SceneManager.LoadSceneOnNetwork_OnServer("Patrick");
         }
-    }
-
-    public async void StartMatchAsync()
-    {
-        invisibleScreenCover.SetActive(true);
-
-        await LobbyManager.SetLobbyLockStateAsync_OnServer(true);
-
-        SceneManager.LoadSceneOnNetwork_OnServer("Patrick");
-    }
 
 
-    private void OnClientDisconnected_OnServer(ulong clientNetworkId, int clientGameId, int newClientCount)
-    {
-        print(clientGameId + " left, " + newClientCount + " Client left");
-
-        for (int i = clientGameId; i < newClientCount; i++)
+        private void OnClientDisconnected_OnServer(ulong clientNetworkId, int clientGameId, int newClientCount)
         {
-            //move down all the networkIds in the array by 1.
-            _savedFixedClientNames[i] = _savedFixedClientNames[i + 1];
-        }
-        _savedFixedClientNames[newClientCount] = "";
+            print(clientGameId + " left, " + newClientCount + " Client left");
 
-        SyncClientNames_ClientRPC(_savedFixedClientNames, newClientCount);
-    }
-
-
-    [ServerRpc(RequireOwnership = false)]
-    public void AddClient_ServerRPC(FixedString64Bytes fixedClientName, int clientGameId)
-    {
-        clientNameField[clientGameId].text = fixedClientName.ToString();
-
-        _savedFixedClientNames[clientGameId] = fixedClientName;
-
-        int clientCount = NetworkManager.ConnectedClientsIds.Count;
-
-        SyncClientNames_ClientRPC(_savedFixedClientNames, clientCount);
-    }
-
-
-    [ClientRpc(RequireOwnership = false)]
-    public void SyncClientNames_ClientRPC(FixedString64Bytes[] fixedClientNames, int clientCount)
-    {
-        string targetUserName;
-
-        for (int i = 0; i < clientCount; i++)
-        {
-            targetUserName = fixedClientNames[i].ToString();
-
-            clientNameField[i].transform.parent.gameObject.SetActive(true);
-
-            //add kick (disconnect/leave) button for you own client
-            if (targetUserName == ClientManager.LocalUserName)
+            for (int i = clientGameId; i < newClientCount; i++)
             {
-                clientNameField[i].text += " (You)";
-
-                kickButtonObjs[i].SetActive(true);
+                //move down all the networkIds in the array by 1.
+                _savedFixedClientNames[i] = _savedFixedClientNames[i + 1];
             }
+            _savedFixedClientNames[newClientCount] = "";
+
+            SyncClientNames_ClientRPC(_savedFixedClientNames, newClientCount);
+        }
 
 
-            //if username is an auto generated name through a dev account
-            if (targetUserName.EndsWith("DEV_DEV_DEV_DEV_DEV_DEV"))
+        [ServerRpc(RequireOwnership = false)]
+        public void AddClient_ServerRPC(FixedString64Bytes fixedClientName, int clientGameId)
+        {
+            clientNameField[clientGameId].text = fixedClientName.ToString();
+
+            _savedFixedClientNames[clientGameId] = fixedClientName;
+
+            int clientCount = NetworkManager.ConnectedClientsIds.Count;
+
+            SyncClientNames_ClientRPC(_savedFixedClientNames, clientCount);
+        }
+
+
+        [ClientRpc(RequireOwnership = false)]
+        public void SyncClientNames_ClientRPC(FixedString64Bytes[] fixedClientNames, int clientCount)
+        {
+            string targetUserName;
+
+            for (int i = 0; i < clientCount; i++)
             {
-                if (int.TryParse(targetUserName[^24].ToString(), out int numberCount))
+                targetUserName = fixedClientNames[i].ToString();
+
+                clientNameField[i].transform.parent.gameObject.SetActive(true);
+
+                //add kick (disconnect/leave) button for you own client
+                if (targetUserName == ClientManager.LocalUserName)
                 {
-                    //remove "DEV_DEV_DEV_DEV_DEV_DEV", the int before that storing how many numbers there are in this names corresponding clientNetworkId AND the clientNetworkId
-                    targetUserName = targetUserName.Substring(0, targetUserName.Length - 24 - numberCount);
+                    clientNameField[i].text += " (You)";
+
+                    kickButtonObjs[i].SetActive(true);
+                }
+
+
+                //if username is an auto generated name through a dev account
+                if (targetUserName.EndsWith("DEV_DEV_DEV_DEV_DEV_DEV"))
+                {
+                    if (int.TryParse(targetUserName[^24].ToString(), out int numberCount))
+                    {
+                        //remove "DEV_DEV_DEV_DEV_DEV_DEV", the int before that storing how many numbers there are in this names corresponding clientNetworkId AND the clientNetworkId
+                        targetUserName = targetUserName.Substring(0, targetUserName.Length - 24 - numberCount);
+                    }
+                }
+
+                clientNameField[i].text = targetUserName;
+
+
+                //add kick button for every client if you are the server (host)
+                if (IsServer)
+                {
+                    kickButtonObjs[i].SetActive(true);
                 }
             }
 
-            clientNameField[i].text = targetUserName;
-
-
-            //add kick button for every client if you are the server (host)
-            if (IsServer)
+            for (int i = 3; i >= clientCount; i--)
             {
-                kickButtonObjs[i].SetActive(true);
+                clientNameField[i].transform.parent.gameObject.SetActive(false);
+                kickButtonObjs[i].SetActive(false);
             }
         }
 
-        for (int i = 3; i >= clientCount ; i--)
+
+        public override void OnDestroy()
         {
-            clientNameField[i].transform.parent.gameObject.SetActive(false);
-            kickButtonObjs[i].SetActive(false);
+            base.OnDestroy();
+
+            ClientManager.OnClientDisconnectedCallback -= OnClientDisconnected_OnServer;
         }
-    }
-
-
-    public override void OnDestroy()
-    {
-        base.OnDestroy();
-
-        ClientManager.OnClientDisconnectedCallback -= OnClientDisconnected_OnServer;
-    }
 
 
 #if UNITY_EDITOR
-    private void Update()
-    {
-        debugNames = new string[_savedFixedClientNames.Length];
-
-        for (int i = 0; i < debugNames.Length; i++)
+        private void Update()
         {
-            debugNames[i] = _savedFixedClientNames[i].ToString();
+            debugNames = new string[_savedFixedClientNames.Length];
+
+            for (int i = 0; i < debugNames.Length; i++)
+            {
+                debugNames[i] = _savedFixedClientNames[i].ToString();
+            }
         }
-    }
 #endif
+    }
 }

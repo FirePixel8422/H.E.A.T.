@@ -332,11 +332,13 @@ GameObject:
   - component: {fileID: 7655005037721419446}
   - component: {fileID: 6829219136680250846}
   - component: {fileID: 7952861885439663320}
+  - component: {fileID: 5199238681142820621}
   - component: {fileID: 142522545318499200}
   - component: {fileID: 5049168299905142815}
   - component: {fileID: 4844815309922621150}
   - component: {fileID: 5837324410720302518}
   - component: {fileID: 6957241378848993016}
+  - component: {fileID: 4006692444922911781}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -513,7 +515,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 615913309
+  GlobalObjectIdHash: 4091230015
   InScenePlacedSourceGlobalObjectIdHash: 3415726141
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -607,7 +609,7 @@ MonoBehaviour:
   shootPointTransform: {fileID: 0}
   gunShotSource: {fileID: 5837324410720302518}
   gunOverheatSource: {fileID: 6957241378848993016}
-  overrideIsOwner: 1
+  overrideIsOwner: 0
 --- !u!114 &6829219136680250846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -633,6 +635,8 @@ MonoBehaviour:
   maxTiltAngle: 90
   mouseSensitivity: 0.2
   groundCheckRadius: 0.05
+  moveLerpSpeed: 10
+  rotLerpSpeed: 10
 --- !u!114 &7952861885439663320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -653,6 +657,27 @@ MonoBehaviour:
   sprintAnimation: Sprint
   hurtAnimation: Hurt
   dead: 0
+--- !u!95 &5199238681142820621
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3487219833232609719}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &142522545318499200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -916,6 +941,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4006692444922911781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3487219833232609719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 375b2240f2635474eaa902303a6da96f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  componentList:
+  - {fileID: 8084332042966875633}
+  - {fileID: 1732793575751869812}
+  - {fileID: 4769577523386625857}
+  - {fileID: 8797678985547001680}
+  ObjList:
+  - {fileID: 3294571926836186955}
+  - {fileID: 5226201016357555277}
+  - {fileID: 1219505594150818122}
 --- !u!1 &5079844055576357656
 GameObject:
   m_ObjectHideFlags: 0

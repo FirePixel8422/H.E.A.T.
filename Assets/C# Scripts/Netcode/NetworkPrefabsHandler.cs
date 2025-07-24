@@ -3,48 +3,49 @@ using Unity.Netcode;
 using UnityEngine;
 
 
-public class NetworkPrefabsHandler : MonoBehaviour
+namespace FirePixel.Networking
 {
-    [SerializeField] private NetworkPrefabsList[] networkPrefabsList;
-
-
-
-    private void Start()
+    public class NetworkPrefabsHandler : MonoBehaviour
     {
-        HashSet<GameObject> filterdPrefabSet = GetFilterdPrefabList();
-        SetupNetworkPrefabs(filterdPrefabSet);
-    }
+        [SerializeField] private NetworkPrefabsList[] networkPrefabsList;
 
 
-    private HashSet<GameObject> GetFilterdPrefabList()
-    {
-        HashSet<GameObject> filterdPrefabSet = new HashSet<GameObject>();
-
-        for (int i = 0; i < networkPrefabsList.Length; i++)
+        private void Start()
         {
-            int prefabCount = networkPrefabsList[i].PrefabList.Count;
+            HashSet<GameObject> filterdPrefabSet = GetFilterdPrefabList();
+            SetupNetworkPrefabs(filterdPrefabSet);
+        }
 
-            for (int i2 = 0; i2 < prefabCount; i2++)
+        private HashSet<GameObject> GetFilterdPrefabList()
+        {
+            HashSet<GameObject> filterdPrefabSet = new HashSet<GameObject>();
+
+            for (int i = 0; i < networkPrefabsList.Length; i++)
             {
-                filterdPrefabSet.Add(networkPrefabsList[i].PrefabList[i2].Prefab);
+                int prefabCount = networkPrefabsList[i].PrefabList.Count;
+
+                for (int i2 = 0; i2 < prefabCount; i2++)
+                {
+                    filterdPrefabSet.Add(networkPrefabsList[i].PrefabList[i2].Prefab);
+                }
             }
+
+            return filterdPrefabSet;
         }
 
-        return filterdPrefabSet;
-    }
-
-    private void SetupNetworkPrefabs(HashSet<GameObject> filterdPrefabSet)
-    {
-        foreach (GameObject prefab in filterdPrefabSet)
+        private void SetupNetworkPrefabs(HashSet<GameObject> filterdPrefabSet)
         {
-            NetworkPrefab networkPrefab = new NetworkPrefab
+            foreach (GameObject prefab in filterdPrefabSet)
             {
-                Prefab = prefab
-            };
+                NetworkPrefab networkPrefab = new NetworkPrefab
+                {
+                    Prefab = prefab
+                };
 
-            NetworkManager.Singleton.NetworkConfig.Prefabs.Add(networkPrefab);
+                NetworkManager.Singleton.NetworkConfig.Prefabs.Add(networkPrefab);
+            }
+
+            Destroy(this);
         }
-
-        Destroy(this);
     }
 }

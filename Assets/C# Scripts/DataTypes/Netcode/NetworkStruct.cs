@@ -4,33 +4,36 @@ using UnityEngine;
 
 
 
-/// <summary>
-/// Netcode compatible wrapper for structs. Adds an OnValueChanged event that can be used to notify when the value changes.
-/// </summary>
-[System.Serializable]
-public class NetworkStruct<T> where T : INetworkSerializable 
+namespace FirePixel.Networking
 {
-    [SerializeField] private T value;
-
-    public Action<T> OnValueChanged;
-
-    public T Value     
+    /// <summary>
+    /// Netcode compatible wrapper for structs. Adds an OnValueChanged event that can be used to notify when the value changes.
+    /// </summary>
+    [System.Serializable]
+    public class NetworkStruct<T> where T : INetworkSerializable
     {
-        get => value;
-        set
+        [SerializeField] private T value;
+
+        public Action<T> OnValueChanged;
+
+        public T Value
         {
-            this.value = value;
+            get => value;
+            set
+            {
+                this.value = value;
+                OnValueChanged?.Invoke(value);
+            }
+        }
+
+        public NetworkStruct(T initialValue = default(T))
+        {
+            value = initialValue;
+        }
+
+        public void SetDirty()
+        {
             OnValueChanged?.Invoke(value);
         }
-    }
-
-    public NetworkStruct(T initialValue = default(T))
-    {
-        value = initialValue;
-    }
-
-    public void SetDirty()
-    {
-        OnValueChanged?.Invoke(value);
     }
 }

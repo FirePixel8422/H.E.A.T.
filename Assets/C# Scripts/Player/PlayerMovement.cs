@@ -1,9 +1,11 @@
+using FirePixel.Networking;
 using Unity.Mathematics;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-public class PlayerController : MonoBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
     [SerializeField] private float crouchSpeed = 1;
     [SerializeField] private float moveSpeed = 3;
@@ -24,6 +26,9 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private float groundCheckRadius = 0.05f;
     private bool IsGrounded => Physics.CheckSphere(groundCheck.position, groundCheckRadius);
+
+    [SerializeField] private float moveLerpSpeed = 10;
+    [SerializeField] private float rotLerpSpeed = 10;
 
     private Rigidbody rb;
     private NetworkStateMachine stateMachine;
@@ -83,6 +88,7 @@ public class PlayerController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
         rb = GetComponent<Rigidbody>();
+        stateMachine = GetComponent<NetworkStateMachine>();
     }
 
 
@@ -91,19 +97,42 @@ public class PlayerController : MonoBehaviour
 
     private void OnFixedUpdate()
     {
-        float targetMoveSpeed = GetTargetMoveSpeed();
-        float rbVelocityY = rb.velocity.y;
+        float fixedDeltaTime = Time.fixedDeltaTime;
 
-        // Calculate the target velocity based on the input direction and target speed (crouched, sprinting, or normal)
-        Vector3 targetMovementVelocity = new Vector3(moveDir.x * targetMoveSpeed, rbVelocityY, moveDir.y * targetMoveSpeed);
-
-        // Move Rigidbodys velocity to targetMovementVelocity
-        rb.velocity = VectorLogic.InstantMoveTowards(rb.velocity, transform.TransformDirection(targetMovementVelocity), speedChangePower * Time.fixedDeltaTime);
-
-        //if player is falling
-        if (rbVelocityY < 0)
+        if (IsOwner)
         {
-            rb.AddForce(Vector3.down * fallGravityMultiplier, ForceMode.Acceleration);
+            float targetMoveSpeed = GetTargetMoveSpeed();
+            float rbVelocityY = rb.velocity.y;
+
+            // Calculate the target velocity based on the input direction and target speed (crouched, sprinting, or normal)
+            Vector3 targetMovementVelocity = new Vector3(moveDir.x * targetMoveSpeed, rbVelocityY, moveDir.y * targetMoveSpeed);
+
+            // Move Rigidbodys velocity to targetMovementVelocity
+            rb.velocity = VectorLogic.InstantMoveTowards(rb.velocity, transform.TransformDirection(targetMovementVelocity), speedChangePower * fixedDeltaTime);
+
+            // If player is falling
+            if (rbVelocityY < 0)
+            {
+                rb.AddForce(Vector3.down * fallGravityMultiplier, ForceMode.Acceleration);
+            }
+
+            SendPlayerTransforms_ServerRPC(transform.position, cameraTransform.eulerAngles.x, transform.rotation.y, ClientManager.LocalClientGameId);
+        }
+        else
+        {
+            // Position
+            transform.position = Vector3.Lerp(transform.position, lastRecievedPos, fixedDeltaTime * moveLerpSpeed);
+
+            // Yaw, rotate around Y axis (horizontal turn)
+            Quaternion targetYawRotation = Quaternion.Euler(0f, lastRecievedYaw, 0f);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetYawRotation, fixedDeltaTime * rotLerpSpeed);
+
+            // Pitch, apply to camera local X rotation
+            Vector3 camEuler = cameraTransform.localEulerAngles;
+            camEuler.x = Mathf.LerpAngle(camEuler.x, lastRecievedPitch, fixedDeltaTime * rotLerpSpeed);
+            camEuler.y = 0f;
+            camEuler.z = 0f;
+            cameraTransform.localEulerAngles = camEuler;
         }
     }
 
@@ -119,5 +148,26 @@ public class PlayerController : MonoBehaviour
             return sprintSpeed;
 
         return moveSpeed;
+    }
+
+
+    private Vector3 lastRecievedPos;
+    private float lastRecievedPitch;
+    private float lastRecievedYaw;
+
+    [ServerRpc(RequireOwnership = false)]
+    private void SendPlayerTransforms_ServerRPC(Vector3 pos, float pitch, float yaw, int clientGameId)
+    {
+        RecievPlayerTransforms_ClientRPC(pos, pitch, yaw, GameIdRPCTargets.SendToAllButClient(clientGameId));
+    }
+
+    [ClientRpc(RequireOwnership = false)]
+    private void RecievPlayerTransforms_ClientRPC(Vector3 pos, float pitch, float yaw, GameIdRPCTargets rpcTargets)
+    {
+        if (rpcTargets.IsTarget == false) return;
+
+        lastRecievedPos = pos;
+        lastRecievedPitch = pitch;
+        lastRecievedYaw = yaw;
     }
 }
