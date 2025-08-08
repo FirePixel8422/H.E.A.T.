@@ -76,7 +76,24 @@ public class GunCore : NetworkBehaviour
 
         timeSinceLastShot = coreStats.ShootInterval;
         burstShotTimer = coreStats.burstShotInterval;
+
+        SwapGun_ServerRPC(ClientManager.LocalClientGameId, gunId);
     }
+
+    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    private void SwapGun_ServerRPC(int forClientGameId, int gunId)
+    {
+        SwapGun_ClientRPC(gunId, GameIdRPCTargets.SendToOppositeClient(forClientGameId));
+    }
+
+    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    private void SwapGun_ClientRPC(int gunId, GameIdRPCTargets rpcTargets)
+    {
+        if (rpcTargets.IsTarget == false) return;
+
+        GunManager.Instance.GetGunStats(gunId, out coreStats, out heatSink.stats);
+    }
+
 
 
     private void OnUpdate()
@@ -199,6 +216,8 @@ public class GunCore : NetworkBehaviour
 
         float DEBUG_damageThisShot = 0;
 
+        BulletHoleMessage[] bulletHoleMessages = new BulletHoleMessage[projectileCount];
+
         for (int i = 0; i < projectileCount; i++)
         {
             float2 spreadOffset = RandomApproxPointInCircle(coreStats.GetSpread(previousHeatPercentage));
@@ -242,14 +261,11 @@ public class GunCore : NetworkBehaviour
                 // Set scale
                 Vector3 bulletHoleScale = Vector3.one * EzRandom.Range(coreStats.bulletHoleFXSize);
 
-                // Create Decal trhough DecalVfxManager
-                DecalVfxManager.Instance.RegisterDecal(bulletHolePos, bulletHoleRotation, bulletHoleScale, hitSurfaceType, coreStats.bulletHoleFXLifetime);
+                bulletHoleMessages[i] = new BulletHoleMessage(bulletHolePos, bulletHoleRotation, bulletHoleScale, hitSurfaceType, coreStats.bulletHoleFXLifetime);
 
                 #endregion
             }
         }
-
-        DebugLogger.Log("Shot hit for " + DEBUG_damageThisShot + " damage!");
 
         if (heatSink.Overheated)
         {
@@ -257,8 +273,8 @@ public class GunCore : NetworkBehaviour
         }
 
         // Call shoot method through the server and all clients, except self > call shoot locally
-        Shoot_ServerRPC(ClientManager.LocalClientGameId);
-        Shoot();
+        Shoot_ServerRPC(ClientManager.LocalClientGameId, bulletHoleMessages);
+        ShootEffects(bulletHoleMessages);
     }
 
     private float2 RandomApproxPointInCircle(float radius)
@@ -271,27 +287,30 @@ public class GunCore : NetworkBehaviour
     /// <summary>
     /// Method to actually fire a shot
     /// </summary>
-    private void Shoot()
+    private void ShootEffects(BulletHoleMessage[] bulletHoleMessages)
     {
         int randomAudioId = EzRandom.Range(0, coreStats.shootAudioClips.Length);
         float randomPitch = EzRandom.Range(coreStats.minMaxPitch);
 
         gunShotSource.PlayClipWithPitch(coreStats.shootAudioClips[randomAudioId], randomPitch);
+
+        // Create Decal trhough DecalVfxManager
+        DecalVfxManager.Instance.RegisterDecal(bulletHoleMessages);
     }
 
 
     [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    private void Shoot_ServerRPC(int clientGameId)
+    private void Shoot_ServerRPC(int clientGameId, BulletHoleMessage[] bulletHoleMessages)
     {
-        Shoot_ClientRPC(GameIdRPCTargets.SendToOppositeClient(clientGameId));
+        Shoot_ClientRPC(bulletHoleMessages, GameIdRPCTargets.SendToOppositeClient(clientGameId));
     }
 
     [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    private void Shoot_ClientRPC(GameIdRPCTargets rpcTargets)
+    private void Shoot_ClientRPC(BulletHoleMessage[] bulletHoleMessages, GameIdRPCTargets rpcTargets)
     {
         if (rpcTargets.IsTarget == false) return;
 
-        Shoot();
+        ShootEffects(bulletHoleMessages);
     }
 
     #endregion

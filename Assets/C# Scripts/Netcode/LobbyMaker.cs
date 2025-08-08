@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,15 +44,15 @@ namespace FirePixel.Networking
         private async Task InitializeAsync()
         {
             (bool playerGUIDExists, ValueWrapper<string> playerGUID) = await FileManager.LoadInfo<ValueWrapper<string>>("PlayerGUID.json");
-            if (playerGUIDExists)
+            if (false && playerGUIDExists)
             {
-                ClientManager.SetLocalPlayerGUID(playerGUID.Value);
+                ClientManager.SetPlayerGUID(playerGUID.Value);
             }
             else
             {
                 string newGUID = System.Guid.NewGuid().ToString();
 
-                ClientManager.SetLocalPlayerGUID(newGUID);
+                ClientManager.SetPlayerGUID(newGUID);
 
                 await FileManager.SaveInfo(new ValueWrapper<string>(newGUID), "PlayerGUID.json");
             }
@@ -134,16 +135,16 @@ namespace FirePixel.Networking
                     IsLocked = false,
 
                     Data = new Dictionary<string, DataObject>()
-                {
                     {
-                        "joinCode", new DataObject(
+                        {
+                            "joinCode", new DataObject(
                             visibility: DataObject.VisibilityOptions.Public,
                             value: _hostData.JoinCode)
-                    },
-                },
+                        },
+                    }
                 };
 
-                Lobby lobby = await Lobbies.Instance.CreateLobbyAsync(PlayerNameHandler.playerName + "'s Lobby", maxPlayers, options);
+                Lobby lobby = await Lobbies.Instance.CreateLobbyAsync(ClientManager.LocalUserName + "'s Lobby", maxPlayers, options);
 
                 await LobbyManager.SetLobbyData(lobby, true);
 
@@ -275,10 +276,10 @@ namespace FirePixel.Networking
 
             try
             {
-                Lobby lobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId, new JoinLobbyByIdOptions
-                {
-                    Player = new Player(ClientManager.LocalPlayerGUID)
-                });
+                Lobby lobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);//, new JoinLobbyByIdOptions
+                //{
+                //    Player = new Player(ClientManager.LocalPlayerGUID)
+                //});
 
                 await LobbyManager.SetLobbyData(lobby);
 
@@ -361,7 +362,7 @@ namespace FirePixel.Networking
 
                 NetworkManager.Singleton.StartClient();
             }
-            catch (LobbyServiceException e)
+            catch (Exception e)
             {
                 invisibleScreenCover.SetActive(false);
 

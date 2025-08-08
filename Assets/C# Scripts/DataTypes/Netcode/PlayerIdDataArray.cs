@@ -1,3 +1,4 @@
+using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ using UnityEngine;
 namespace FirePixel.Networking
 {
     [System.Serializable]
-    [Tooltip("Netcode friendly array to store client data (clientId (also called networkId), gameId (the Xth client this is in the lobby -1))")]
+    [Tooltip("Netcode friendly array to store client data (clientId (also called networkId), gameId (the Xth client this is in the lobby -1), > (SERVER ONLY) > username string and guid (unique player id string for LobbySystem)")]
     public struct PlayerIdDataArray : INetworkSerializable
     {
         [Header("[0] = 2? client with networkId 2 is client 0")]
@@ -19,10 +20,16 @@ namespace FirePixel.Networking
         public readonly int PlayerCount => playerCount;
 
 
+        [SerializeField] private string[] usernamesOnServer;
+        [SerializeField] private string[] guidsOnServer;
+
 
         public PlayerIdDataArray(int maxPlayerCount)
         {
             networkIds = new ulong[maxPlayerCount];
+
+            usernamesOnServer = new string[maxPlayerCount];
+            guidsOnServer = new string[maxPlayerCount];
 
             playerCount = 0;
         }
@@ -33,8 +40,13 @@ namespace FirePixel.Networking
         public void AddPlayer(ulong addedNetworkId)
         {
             networkIds[playerCount] = addedNetworkId;
-
             playerCount += 1;
+        }
+
+        public void SetUserNameAndGUID(int playerGameId, string username, string guid)
+        {
+            usernamesOnServer[playerGameId] = username;
+            guidsOnServer[playerGameId] = guid;
         }
 
 
@@ -46,8 +58,10 @@ namespace FirePixel.Networking
 
             for (int i = removedGameId; i < playerCount; i++)
             {
-                //move down all the networkIds in the array by 1.
+                // Move down all the networkIds in the array by 1.
                 networkIds[i] = networkIds[i + 1];
+                usernamesOnServer[i] = usernamesOnServer[i + 1];
+                guidsOnServer[i] = guidsOnServer[i + 1];
             }
         }
 
@@ -88,6 +102,16 @@ namespace FirePixel.Networking
         public ulong GetPlayerNetworkId(int toConvertGameId)
         {
             return networkIds[toConvertGameId];
+        }
+
+        public string GetUserName(int toConvertGameId)
+        {
+            return usernamesOnServer[toConvertGameId].ToString();
+        }
+
+        public string GetPlayerGUID(int toConvertGameId)
+        {
+            return guidsOnServer[toConvertGameId].ToString();
         }
 
         #endregion

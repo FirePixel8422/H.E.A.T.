@@ -103,39 +103,48 @@ namespace FirePixel.Networking
         #endregion
 
 
-
-        public void Idle(float transitionDuration = 0.25f)
+        public void UpdateMovementState(bool moving, bool crouching, bool sprinting, float transitionDuration = 0.25f)
         {
             if (dead) return;
 
+            if (moving)
+            {
+                if (crouching)
+                    CrouchWalk(transitionDuration);
+                else if (sprinting)
+                    Sprint(transitionDuration);
+                else
+                    Walk(transitionDuration);
+            }
+            else
+            {
+                if (crouching)
+                    Crouch(transitionDuration);
+                else
+                    Idle(transitionDuration);
+            }
+        }
+
+        private void Idle(float transitionDuration = 0.25f)
+        {
             TryTransitionAnimation(idleAnimationHash, transitionDuration);
         }
 
-
-        public void Crouch(float transitionDuration = 0.25f)
+        private void Crouch(float transitionDuration = 0.25f)
         {
-            if (dead) return;
-
             TryTransitionAnimation(crouchAnimationHash, transitionDuration);
         }
-        public void CrouchWalk(float transitionDuration = 0.25f)
+        private void CrouchWalk(float transitionDuration = 0.25f)
         {
-            if (dead) return;
-
             TryTransitionAnimation(crouchWalkAnimationHash, transitionDuration);
         }
 
-
-        public void Walk(float transitionDuration = 0.25f)
+        private void Walk(float transitionDuration = 0.25f)
         {
-            if (dead) return;
-
             TryTransitionAnimation(walkAnimationHash, transitionDuration);
         }
-        public void Sprint(float transitionDuration = 0.25f)
+        private void Sprint(float transitionDuration = 0.25f)
         {
-            if (dead) return;
-
             TryTransitionAnimation(sprintHash, transitionDuration);
         }
 
@@ -146,8 +155,7 @@ namespace FirePixel.Networking
 
             TryTransitionAnimation(hurtAnimationHash, transitionDuration);
 
-            StopAllCoroutines();
-            StartCoroutine(AutoTransition(idleAnimationHash, transitionDuration));
+            AutoTransition(idleAnimationHash, transitionDuration);
         }
         public void Die(Vector3 ragdollDirection, Vector3 ragdollImpactPoint, float transitionDuration = 0.25f)
         {
@@ -157,8 +165,15 @@ namespace FirePixel.Networking
         }
 
 
-
-        private IEnumerator AutoTransition(int animationHash, float transitionDuration, int layer = 0)
+        /// <summary>
+        /// Create an auto transition to target animation after current animation finishes playing.
+        /// </summary>
+        private void AutoTransition(int animationHash, float transitionDuration, int layer = 0)
+        {
+            StopAllCoroutines();
+            StartCoroutine(AutoTransitionCoroutine(animationHash, transitionDuration, layer));
+        }
+        private IEnumerator AutoTransitionCoroutine(int animationHash, float transitionDuration, int layer = 0)
         {
             float clipTime = anim.GetCurrentAnimatorStateInfo(layer).length;
 

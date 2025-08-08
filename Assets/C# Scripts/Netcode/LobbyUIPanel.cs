@@ -12,6 +12,7 @@ namespace FirePixel.Networking
         public Button button;
 
         public TextMeshProUGUI lobbyName;
+        public TextMeshProUGUI creationDate;
         public TextMeshProUGUI amountOfPlayersInLobby;
         public string lobbyId;
 
@@ -38,8 +39,9 @@ namespace FirePixel.Networking
             button = GetComponentInChildren<Button>(true);
 
             TextMeshProUGUI[] textFields = GetComponentsInChildren<TextMeshProUGUI>(true);
-            lobbyName = textFields[1];
-            amountOfPlayersInLobby = textFields[0];
+            lobbyName = textFields[0];
+            creationDate = textFields[1];
+            amountOfPlayersInLobby = textFields[2];
         }
 
         public void JoinLobby()

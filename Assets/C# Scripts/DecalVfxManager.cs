@@ -49,7 +49,10 @@ public class DecalVfxManager : MonoBehaviour
         for (int i = 0; i < decalCap; i++)
         {
             DecalProjector decalInstance = Instantiate(decalPrefab);
+
             decalInstance.gameObject.SetActive(false);
+            DontDestroyOnLoad(decalInstance.gameObject);
+
             decalPool.Enqueue(decalInstance);
 
 #if UNITY_EDITOR
@@ -68,30 +71,36 @@ public class DecalVfxManager : MonoBehaviour
     /// <summary>
     /// Create decal like bullet holes based on SurfaceType with a certain lifetime.
     /// </summary>
-    public void RegisterDecal(Vector3 pos, Quaternion rot, Vector3 scale, SurfaceType surfaceType, float lifetime)
+    public void RegisterDecal(BulletHoleMessage[] messages)
     {
-        // If list is at max capacity, remove the oldest bullet hole
-        if (decalEntries.Count >= decalCap)
+        int messagesCount = messages.Length;
+
+        for (int i = 0; i < messagesCount; i++)
         {
-            // Kill all bullet GameObjects
-            for (int i = 0; i < onCapReachCleanupCount; i++)
+            BulletHoleMessage cMessage = messages[i];
+
+            // If list is at max capacity, remove the oldest bullet hole
+            if (decalEntries.Count >= decalCap)
             {
-                // Add decal to pool, in the method the gameObject is disabled
-                AddDecalToPool(decalEntries[i].decalProjector);
+                // Kill all bullet GameObjects
+                for (int i2 = 0; i2 < onCapReachCleanupCount; i2++)
+                {
+                    // Add decal to pool, in the method the gameObject is disabled
+                    AddDecalToPool(decalEntries[i2].decalProjector);
+                }
+
+                // Remove all destroyed bullet entries at once
+                decalEntries.RemoveRange(0, onCapReachCleanupCount);
             }
+            // Add Decal
+            DecalProjector decalRenderer = GetDecalFromPool(cMessage.pos, cMessage.rot, cMessage.scale, (int)cMessage.hitSurfaceType);
 
-            // Remove all destroyed bullet entries at once
-            decalEntries.RemoveRange(0, onCapReachCleanupCount);
-        }
-
-        // Add Decal
-        DecalProjector decalRenderer = GetDecalFromPool(pos, rot, scale, (int)surfaceType);
-
-        decalEntries.Add(new DecalEntry(decalRenderer, Time.time + lifetime));
+            decalEntries.Add(new DecalEntry(decalRenderer, Time.time + cMessage.lifetime));
 
 #if UNITY_EDITOR
-        decalRenderer.transform.SetParent(transform);
+            decalRenderer.transform.SetParent(transform);
 #endif
+        }
     }
 
     private void OnUpdate()

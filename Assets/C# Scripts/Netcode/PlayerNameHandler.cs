@@ -27,10 +27,6 @@ namespace FirePixel.Networking
             "TheFrenchLikeBaguette",
             };
 
-#pragma warning disable UDR0001
-        public static string playerName;
-#pragma warning restore UDR0001
-
 
         private async void Start()
         {
@@ -39,14 +35,14 @@ namespace FirePixel.Networking
             if (success)
             {
                 nameInputField.text = savedPlayerName.Value;
-                playerName = savedPlayerName.Value;
+                ClientManager.SetLocalUsername(savedPlayerName.Value);
             }
             else
             {
                 string funnyName = GetRandomFunnyName();
 
                 previewTextField.text = funnyName;
-                playerName = funnyName;
+                ClientManager.SetLocalUsername(funnyName);
             }
         }
 
@@ -58,14 +54,14 @@ namespace FirePixel.Networking
                 string funnyName = GetRandomFunnyName();
 
                 previewTextField.text = funnyName;
-                playerName = funnyName;
+                ClientManager.SetLocalUsername(funnyName);
 
                 FileManager.TryDeleteFile("PlayerName.fpx");
 
                 return;
             }
 
-            playerName = newValue;
+            ClientManager.SetLocalUsername(newValue);
             await FileManager.SaveInfo(new ValueWrapper<string>(newValue), "PlayerName.fpx");
         }
 

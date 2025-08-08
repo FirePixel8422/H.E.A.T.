@@ -40,7 +40,6 @@ namespace FirePixel.Networking
                 DebugLogger.LogError("UpdatePlayerIdDataArray_OnServer called on non server Client, this should only be called from the server!");
             }
 #endif
-
             Instance.playerIdDataArray.Value = newValue;
         }
 
@@ -50,18 +49,27 @@ namespace FirePixel.Networking
             ReceivePlayerIdDataArray_ClientRPC(newValue, NetworkIdRPCTargets.SendToAllButServer());
         }
 
-        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-        private void RequestPlayerIdDataArray_ServerRPC(ulong clientNetworkId)
-        {
-            ReceivePlayerIdDataArray_ClientRPC(playerIdDataArray.Value, NetworkIdRPCTargets.SendToTargetClient(clientNetworkId));
-        }
-
         [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         private void ReceivePlayerIdDataArray_ClientRPC(PlayerIdDataArray newValue, NetworkIdRPCTargets rpcTargets)
         {
             if (rpcTargets.IsTarget == false) return;
 
             playerIdDataArray.Value = newValue;
+        }
+
+
+        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+        private void RequestPlayerIdDataArray_ServerRPC(ulong clientNetworkId)
+        {
+            ReceiveSilentPlayerIdDataArray_ClientRPC(playerIdDataArray.Value, NetworkIdRPCTargets.SendToTargetClient(clientNetworkId));
+        }
+
+        [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+        private void ReceiveSilentPlayerIdDataArray_ClientRPC(PlayerIdDataArray newValue, NetworkIdRPCTargets rpcTargets)
+        {
+            if (rpcTargets.IsTarget == false) return;
+
+            playerIdDataArray.SilentValue = newValue;
         }
 
         #endregion
@@ -107,18 +115,37 @@ namespace FirePixel.Networking
         public static ulong UnAsignedPlayerId => (ulong)Instance.playerIdDataArray.Value.PlayerCount;
 
 
-        [Tooltip("Local Client userName, value is set after ClientDisplayManager's OnNetworkSpawn")]
+        [Tooltip("Local Client UserName, value is set by nameHandler")]
         public static string LocalUserName { get; private set; }
-        private void CreateLocalUsername()
+        public static void SetLocalUsername(string name)
         {
-            LocalUserName = PlayerNameHandler.playerName;
+            LocalUserName = name;
         }
 
         [Tooltip("Local Player GUID, value is set by loaded or generated through LobbyMaker")]
         public static string LocalPlayerGUID { get; private set; }
-        public static void SetLocalPlayerGUID(string guid)
+        public static void SetPlayerGUID(string guid)
         {
             LocalPlayerGUID = guid;
+        }
+
+        #endregion
+
+
+        #region Send/Recieve Username and GUID and set that data in PlayerIdDataArray
+
+        [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+        private void RequestUsernameAndGUID_ClientRPC(int fromPlayerGameId, NetworkIdRPCTargets rpcTargets)
+        {
+            if (rpcTargets.IsTarget == false) return;
+
+            SendUsernameAndGUID_ServerRPC(fromPlayerGameId, LocalUserName, LocalPlayerGUID);
+        }
+
+        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+        private void SendUsernameAndGUID_ServerRPC(int fromPlayerGameId, string username, string guid)
+        {
+            playerIdDataArray.SilentValue.SetUserNameAndGUID(fromPlayerGameId, username, guid);
         }
 
         #endregion
@@ -135,9 +162,11 @@ namespace FirePixel.Networking
                 // On value changed event of playerIdDataArray
                 playerIdDataArray.OnValueChanged += (PlayerIdDataArray newValue) =>
                 {
-                    LocalClientGameId = newValue.GetPlayerGameId(NetworkManager.LocalClientId);
                     SendPlayerIdDataArrayChange_OnServer(newValue);
                 };
+
+                // host (server) is always gameId 0
+                LocalClientGameId = 0;
 
                 // Setup server only events
                 NetworkManager.OnClientConnectedCallback += OnClientConnected_OnServer;
@@ -157,8 +186,6 @@ namespace FirePixel.Networking
 
             // Setup server and client event
             NetworkManager.OnClientDisconnectCallback += OnClientDisconnected_OnClient;
-
-            CreateLocalUsername();
         }
 
 
@@ -178,6 +205,8 @@ namespace FirePixel.Networking
             playerIdDataArray.Value = updatedDataArray;
 
             OnClientConnectedCallback?.Invoke(clientNetworkId, playerIdDataArray.Value.GetPlayerGameId(clientNetworkId), NetworkManager.ConnectedClients.Count);
+
+            RequestUsernameAndGUID_ClientRPC(GetClientGameId(clientNetworkId), NetworkIdRPCTargets.SendToTargetClient(clientNetworkId));
         }
 
 
@@ -218,7 +247,7 @@ namespace FirePixel.Networking
             NetworkManager.OnClientDisconnectCallback -= OnClientDisconnected_OnClient;
 
             // When kicked from the server, load this scene
-            SceneManager.LoadScene("Setup Network");
+            SceneManager.LoadScene("Main Menu");
 
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -279,7 +308,7 @@ namespace FirePixel.Networking
 
             }
 
-                playerIdDataArray.OnValueChanged = null;
+            playerIdDataArray.OnValueChanged = null;
             OnClientConnectedCallback = null;
             OnClientDisconnectedCallback = null;
             OnKicked = null;

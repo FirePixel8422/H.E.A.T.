@@ -31,6 +31,15 @@ namespace FirePixel.Networking
             value = initialValue;
         }
 
+        public T SilentValue
+        {
+            get => value;
+            set
+            {
+                this.value = value;
+            }
+        }
+
         public void SetDirty()
         {
             OnValueChanged?.Invoke(value);
