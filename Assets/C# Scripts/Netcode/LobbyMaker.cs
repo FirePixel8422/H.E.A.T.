@@ -35,18 +35,39 @@ namespace FirePixel.Networking
         private bool inSearchLobbyScreen = false;
 
 
-        private async void Start()
+        private void Start()
         {
-            (bool fileExists, ValueWrapper<string> lastJoinedLobbyId) = await FileManager.LoadInfo<ValueWrapper<string>>("RejoinData.json");
-
-            if (fileExists)
+            _ = InitializeAsync();
+            _ = SearchLobbiesTimerAsync();
+        }
+        private async Task InitializeAsync()
+        {
+            (bool playerGUIDExists, ValueWrapper<string> playerGUID) = await FileManager.LoadInfo<ValueWrapper<string>>("PlayerGUID.json");
+            if (playerGUIDExists)
             {
-                // Turn rejoin menu visible and setup rejoin button to call method
-                rejoinMenu.SetActive(true);
-                rejoinMenu.GetComponentInChildren<Button>().onClick.AddListener(() => RejoinLobbyAsync(lastJoinedLobbyId.Value));
+                ClientManager.SetLocalPlayerGUID(playerGUID.Value);
+            }
+            else
+            {
+                string newGUID = System.Guid.NewGuid().ToString();
+
+                ClientManager.SetLocalPlayerGUID(newGUID);
+
+                await FileManager.SaveInfo(new ValueWrapper<string>(newGUID), "PlayerGUID.json");
             }
 
-            _ = SearchLobbiesTimerAsync();
+            (bool rejoinFileExists, ValueWrapper<string> lastJoinedLobbyId) = await FileManager.LoadInfo<ValueWrapper<string>>("RejoinData.json");
+            if (rejoinFileExists)
+            {
+                bool lobbyExists = await LobbyExistsAsync(lastJoinedLobbyId.Value);
+
+                if (lobbyExists)
+                {
+                    // Turn rejoin menu visible and setup rejoin button to call method
+                    rejoinMenu.SetActive(true);
+                    rejoinMenu.GetComponentInChildren<Button>().onClick.AddListener(() => RejoinLobbyAsync(lastJoinedLobbyId.Value));
+                }
+            }
         }
 
         public void SetMenuState(bool _inSearchLobbyScreen)
@@ -143,7 +164,7 @@ namespace FirePixel.Networking
                 invisibleScreenCover.SetActive(false);
 
 #if UNITY_EDITOR
-                print(e);
+                DebugLogger.Log(e.ToString());
 #endif
             }
         }
@@ -165,6 +186,7 @@ namespace FirePixel.Networking
 
                 // Join oldest joinable lobby
                 Lobby lobby = lobbies[0];
+
                 await LobbyManager.SetLobbyData(lobby, false);
 
                 string joinCode = lobby.Data["joinCode"].Value;
@@ -197,7 +219,7 @@ namespace FirePixel.Networking
                 invisibleScreenCover.SetActive(false);
 
 #if UNITY_EDITOR
-                print(e);
+                DebugLogger.Log(e.ToString());
 #endif
             }
         }
@@ -239,7 +261,7 @@ namespace FirePixel.Networking
             catch (LobbyServiceException e)
             {
 #if UNITY_EDITOR
-                print(e);
+                DebugLogger.Log(e.ToString());
 #endif
                 return (false, null);
             }
@@ -253,7 +275,12 @@ namespace FirePixel.Networking
 
             try
             {
-                Lobby lobby = await Lobbies.Instance.JoinLobbyByIdAsync(lobbyId);
+                Lobby lobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId, new JoinLobbyByIdOptions
+                {
+                    Player = new Player(ClientManager.LocalPlayerGUID)
+                });
+
+                await LobbyManager.SetLobbyData(lobby);
 
                 string joinCode = lobby.Data["joinCode"].Value;
                 JoinAllocation allocation = await Relay.Instance.JoinAllocationAsync(joinCode);
@@ -284,9 +311,23 @@ namespace FirePixel.Networking
                 invisibleScreenCover.SetActive(false);
 
 #if UNITY_EDITOR
-                print(e);
+                DebugLogger.Log(e.ToString());
 #endif
                 throw;
+            }
+        }
+
+        private async Task<bool> LobbyExistsAsync(string lobbyId)
+        {
+            try
+            {
+                Lobby lobby = await LobbyService.Instance.GetLobbyAsync(lobbyId);
+
+                return true;
+            }
+            catch (LobbyServiceException)
+            {
+                return false;
             }
         }
 
@@ -325,7 +366,7 @@ namespace FirePixel.Networking
                 invisibleScreenCover.SetActive(false);
 
 #if UNITY_EDITOR
-                print(e);
+                DebugLogger.Log(e.ToString());
 #endif
             }
         }

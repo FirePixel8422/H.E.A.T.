@@ -18,7 +18,7 @@ public class SurfaceTypeIdentifier : MonoBehaviour
         // If there are no colliders on this GameObject, log a warning in the editor.
         if (transform.TryGetComponents(out Collider[] colliders) && colliders.Length == 0)
         {
-            Debug.LogWarning($"GameObject '{gameObject.name}' has no colliders. " + "SurfaceTypeIdentifier is useless.");
+            DebugLogger.LogWarning($"GameObject '{gameObject.name}' has no colliders. " + "SurfaceTypeIdentifier is useless.");
         }
     }
 #endif

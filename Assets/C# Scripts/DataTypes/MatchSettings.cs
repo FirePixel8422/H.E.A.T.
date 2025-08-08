@@ -25,7 +25,7 @@ public struct MatchSettings : INetworkSerializable
                 break;
             default:
 #if UNITY_EDITOR
-                Debug.LogError("Error asigning value in MatchSettings.cs");
+                DebugLogger.LogError("Error asigning value in MatchSettings.cs");
 #endif
                 break;
         }

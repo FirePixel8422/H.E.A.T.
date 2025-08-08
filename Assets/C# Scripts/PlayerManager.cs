@@ -32,7 +32,7 @@ public class PlayerManager : NetworkBehaviour
 
     #region Spawn player and destroy all uneeded components on other clients side for your player
 
-    [ServerRpc(RequireOwnership = false)]
+    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     private void SpawnPlayer_ServerRPC(ulong ownerNetworkId)
     {
         NetworkObject spawnedPlayer = NetworkObject.InstantiateAndSpawn(playerPrefab, NetworkManager, ownerNetworkId);
@@ -45,7 +45,7 @@ public class PlayerManager : NetworkBehaviour
         spawnedPlayerCount += 1;
     }
 
-    [ClientRpc(RequireOwnership = false)]
+    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     private void SetupPlayer_ClientRPC(ulong networkObjectId, ulong ownerNetworkId)
     {
         if (NetworkManager.LocalClientId != ownerNetworkId)
@@ -59,14 +59,14 @@ public class PlayerManager : NetworkBehaviour
     #endregion
 
 
-    [ServerRpc(RequireOwnership = false)]
+    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     private void RequestSync_ServerRPC(ulong clientNetworkId)
     {
-        SetupPlayers_ClientRPC(spawnedPlayerNetworkObjectIds, spawnedPlayerOwnerIds, NetworkIdRPCTargets.SendToTargetClient(clientNetworkId));
+        SetupPlayers_ClientRPC(spawnedPlayerNetworkObjectIds, spawnedPlayerOwnerIds, spawnedPlayerCount, NetworkIdRPCTargets.SendToTargetClient(clientNetworkId));
     }
 
-    [ClientRpc(RequireOwnership = false)]
-    private void SetupPlayers_ClientRPC(ulong[] networkObjectId, ulong[] ownerNetworkId, NetworkIdRPCTargets rpcTargets)
+    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    private void SetupPlayers_ClientRPC(ulong[] networkObjectId, ulong[] ownerNetworkId, int spawnedPlayerCount, NetworkIdRPCTargets rpcTargets)
     {
         if (rpcTargets.IsTarget == false) return;
 

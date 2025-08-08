@@ -43,13 +43,13 @@ public class RagDollController : NetworkBehaviour
         ActivateRagdoll_ServerRPC(ClientManager.LocalClientGameId, ragdollDirection, ragdollImpactPoint);
     }
 
-    [ServerRpc(RequireOwnership = false)]
+    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     private void ActivateRagdoll_ServerRPC(int fromClientGameId, Vector3 ragdollDirection, Vector3 ragdollImpactPoint)
     {
         ActivateRagdoll_ClientRPC(ragdollDirection, ragdollImpactPoint, GameIdRPCTargets.SendToOppositeClient(fromClientGameId));
     }
 
-    [ClientRpc(RequireOwnership = false)]
+    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     private void ActivateRagdoll_ClientRPC(Vector3 ragdollDirection, Vector3 ragdollImpactPoint, GameIdRPCTargets rpcTargets)
     {
         if (rpcTargets.IsTarget == false) return;

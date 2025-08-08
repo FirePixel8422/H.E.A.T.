@@ -79,7 +79,7 @@ namespace FirePixel.Networking
                 errorString += networkIds[i] + ", ";
             }
 
-            Debug.LogError(errorString);
+            DebugLogger.LogError(errorString);
 #endif
 
             return -1;

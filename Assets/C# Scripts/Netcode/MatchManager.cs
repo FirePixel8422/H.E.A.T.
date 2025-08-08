@@ -64,13 +64,13 @@ namespace FirePixel.Networking
             }
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         private void RequestSyncMatchSettings_ServerRPC(ulong clientNetworkId)
         {
             SyncMatchSettings_ClientRPC(settings, NetworkIdRPCTargets.SendToTargetClient(clientNetworkId));
         }
 
-        [ClientRpc(RequireOwnership = false)]
+        [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         private void SyncMatchSettings_ClientRPC(MatchSettings _settings, NetworkIdRPCTargets rpcTargets)
         {
             if (rpcTargets.IsTarget == false) return;
@@ -79,17 +79,12 @@ namespace FirePixel.Networking
         }
 
 
-
         private async Task<MatchSettings> LoadSettingsFromFileAsync()
         {
             (bool succes, MatchSettings loadedMatchSettings) = await FileManager.LoadInfo<MatchSettings>(SaveDataPath);
 
             return succes ? loadedMatchSettings : defaultMatchSettings;
         }
-
-        /// <summary>
-        /// Settings are saved when creating the lobby
-        /// </summary>
         private async Task SaveSettingsAsync(MatchSettings data)
         {
             await FileManager.SaveInfo(data, SaveDataPath);

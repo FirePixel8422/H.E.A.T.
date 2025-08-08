@@ -24,8 +24,6 @@ namespace FirePixel.Networking
         public Scrollbar scrollBar;
         private TMP_InputField inputField;
 
-        private FixedString128Bytes localPlayerName;
-
         public bool showLocalNameAs_You;
         public bool active;
 
@@ -40,8 +38,6 @@ namespace FirePixel.Networking
         public override void OnNetworkSpawn()
         {
             inputField = GetComponentInChildren<TMP_InputField>();
-
-            localPlayerName = new FixedString128Bytes(ClientManager.LocalUserName);
         }
 
 
@@ -66,7 +62,7 @@ namespace FirePixel.Networking
                 return;
             }
 
-            SendTextGlobal_ServerRPC(ClientManager.LocalClientGameId, localPlayerName, inputField.text);
+            SendTextGlobal_ServerRPC(ClientManager.LocalClientGameId, ClientManager.LocalUserName, inputField.text);
 
             inputField.ActivateInputField();
             inputField.text = "";
@@ -74,24 +70,24 @@ namespace FirePixel.Networking
 
 
         [ServerRpc(RequireOwnership = false)]
-        public void SendTextGlobal_ServerRPC(int clientGameId, FixedString128Bytes senderName, FixedString128Bytes text)
+        public void SendTextGlobal_ServerRPC(int clientGameId, string senderName, string text)
         {
             SendTextGlobal_ClientRPC(clientGameId, senderName, text);
         }
         [ClientRpc(RequireOwnership = false)]
-        private void SendTextGlobal_ClientRPC(int clientGameId, FixedString128Bytes senderName, FixedString128Bytes text)
+        private void SendTextGlobal_ClientRPC(int clientGameId, string senderName, string text)
         {
             StartCoroutine(AddTextToChatBox(clientGameId, senderName, text));
         }
 
 
         [ServerRpc(RequireOwnership = false)]
-        public void SendTextToClient_ServerRPC(int clientGameId, FixedString128Bytes senderName, FixedString128Bytes text)
+        public void SendTextToClient_ServerRPC(int clientGameId, string senderName, string text)
         {
             SendTextToClient_ClientRPC(clientGameId, senderName, text);
         }
         [ClientRpc(RequireOwnership = false)]
-        private void SendTextToClient_ClientRPC(int clientGameId, FixedString128Bytes senderName, FixedString128Bytes text)
+        private void SendTextToClient_ClientRPC(int clientGameId, string senderName, string text)
         {
             //send to only "toClientId"
             if (ClientManager.LocalClientGameId != clientGameId) return;
@@ -101,7 +97,7 @@ namespace FirePixel.Networking
 
 
 
-        private IEnumerator AddTextToChatBox(int clientGameId, FixedString128Bytes playerName, FixedString128Bytes text)
+        private IEnumerator AddTextToChatBox(int clientGameId, string playerName, string text)
         {
             GameObject obj = Instantiate(textBoxPrefab, chatContentHolder, false);
 

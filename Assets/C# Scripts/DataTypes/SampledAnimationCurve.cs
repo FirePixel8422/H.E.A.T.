@@ -43,7 +43,7 @@ public struct SampledAnimationCurve
 #if UNITY_EDITOR
         if (bakedCurve == null || bakedCurve.Length != sampleCount)
         {
-            Debug.LogWarning("FastAnimationCurve: Baked curve is not initialized properly, call Bake before use.");
+            DebugLogger.LogWarning("FastAnimationCurve: Baked curve is not initialized properly, call Bake before use.");
             Bake();
         }
 #endif

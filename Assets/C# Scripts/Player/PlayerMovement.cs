@@ -104,7 +104,7 @@ public class PlayerMovement : NetworkBehaviour
             float targetMoveSpeed = GetTargetMoveSpeed();
             float rbVelocityY = rb.velocity.y;
 
-            // Calculate the target velocity based on the input direction and target speed (crouched, sprinting, or normal)
+            // Calculate the target velocity based on the input direction and target speed (crouched, sDebugLogger.Loging, or normal)
             Vector3 targetMovementVelocity = new Vector3(moveDir.x * targetMoveSpeed, rbVelocityY, moveDir.y * targetMoveSpeed);
 
             // Move Rigidbodys velocity to targetMovementVelocity
@@ -116,23 +116,22 @@ public class PlayerMovement : NetworkBehaviour
                 rb.AddForce(Vector3.down * fallGravityMultiplier, ForceMode.Acceleration);
             }
 
-            SendPlayerTransforms_ServerRPC(transform.position, cameraTransform.eulerAngles.x, transform.rotation.y, ClientManager.LocalClientGameId);
+            if (IsServer == false && Time.frameCount % 60 == 0)
+            {
+                TextSender.Instance.SendTextGlobal_ServerRPC(-1, "S", "Sent: \nYaw: " + transform.eulerAngles.y);
+            }
+
+            SendPlayerTransforms_ServerRPC(transform.position, cameraTransform.localEulerAngles.x, transform.eulerAngles.y, ClientManager.LocalClientGameId);
         }
         else
         {
-            // Position
-            transform.position = Vector3.Lerp(transform.position, lastRecievedPos, fixedDeltaTime * moveLerpSpeed);
+            transform.SetPositionAndRotation(lastRecievedPos, Quaternion.Euler(0f, lastRecievedYaw, 0f));
+            cameraTransform.localEulerAngles = new Vector3(lastRecievedPitch, 0f, 0f);
 
-            // Yaw, rotate around Y axis (horizontal turn)
-            Quaternion targetYawRotation = Quaternion.Euler(0f, lastRecievedYaw, 0f);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetYawRotation, fixedDeltaTime * rotLerpSpeed);
-
-            // Pitch, apply to camera local X rotation
-            Vector3 camEuler = cameraTransform.localEulerAngles;
-            camEuler.x = Mathf.LerpAngle(camEuler.x, lastRecievedPitch, fixedDeltaTime * rotLerpSpeed);
-            camEuler.y = 0f;
-            camEuler.z = 0f;
-            cameraTransform.localEulerAngles = camEuler;
+            if (IsServer && Time.frameCount % 60 == 0)
+            {
+                TextSender.Instance.SendTextGlobal_ServerRPC(-1, "S", "Recieved: \nYaw: " + lastRecievedYaw);
+            }
         }
     }
 
@@ -169,5 +168,11 @@ public class PlayerMovement : NetworkBehaviour
         lastRecievedPos = pos;
         lastRecievedPitch = pitch;
         lastRecievedYaw = yaw;
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
 }

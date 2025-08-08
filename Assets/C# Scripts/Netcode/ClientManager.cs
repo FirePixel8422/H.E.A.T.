@@ -1,5 +1,6 @@
 using System;
 using Unity.Netcode;
+using Unity.Services.Lobbies;
 using UnityEngine;
 
 
@@ -36,7 +37,7 @@ namespace FirePixel.Networking
 #if UNITY_EDITOR
             if (Instance.IsServer == false)
             {
-                Debug.LogError("UpdatePlayerIdDataArray_OnServer called on non server Client, this should only be called from the server!");
+                DebugLogger.LogError("UpdatePlayerIdDataArray_OnServer called on non server Client, this should only be called from the server!");
             }
 #endif
 
@@ -49,13 +50,13 @@ namespace FirePixel.Networking
             ReceivePlayerIdDataArray_ClientRPC(newValue, NetworkIdRPCTargets.SendToAllButServer());
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         private void RequestPlayerIdDataArray_ServerRPC(ulong clientNetworkId)
         {
             ReceivePlayerIdDataArray_ClientRPC(playerIdDataArray.Value, NetworkIdRPCTargets.SendToTargetClient(clientNetworkId));
         }
 
-        [ClientRpc(RequireOwnership = false)]
+        [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         private void ReceivePlayerIdDataArray_ClientRPC(PlayerIdDataArray newValue, NetworkIdRPCTargets rpcTargets)
         {
             if (rpcTargets.IsTarget == false) return;
@@ -108,10 +109,16 @@ namespace FirePixel.Networking
 
         [Tooltip("Local Client userName, value is set after ClientDisplayManager's OnNetworkSpawn")]
         public static string LocalUserName { get; private set; }
-
         private void CreateLocalUsername()
         {
             LocalUserName = PlayerNameHandler.playerName;
+        }
+
+        [Tooltip("Local Player GUID, value is set by loaded or generated through LobbyMaker")]
+        public static string LocalPlayerGUID { get; private set; }
+        public static void SetLocalPlayerGUID(string guid)
+        {
+            LocalPlayerGUID = guid;
         }
 
         #endregion
@@ -162,7 +169,7 @@ namespace FirePixel.Networking
         /// </summary>
         private void OnClientConnected_OnServer(ulong clientNetworkId)
         {
-            print(clientNetworkId + " connected to server");
+            DebugLogger.Log(clientNetworkId + " connected to server");
 
             PlayerIdDataArray updatedDataArray = playerIdDataArray.Value;
 
@@ -222,7 +229,7 @@ namespace FirePixel.Networking
 
         #region Kick Client and kill Server Code
 
-        [ServerRpc(RequireOwnership = false)]
+        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         public void DisconnectClient_ServerRPC(int clientGameId)
         {
             ulong clientNetworkId = GetClientNetworkId(clientGameId);
@@ -232,13 +239,13 @@ namespace FirePixel.Networking
             NetworkManager.DisconnectClient(clientNetworkId);
         }
 
-        [ServerRpc(RequireOwnership = false)]
+        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         public void DisconnectAllClients_ServerRPC()
         {
             GetKicked_ClientRPC(GameIdRPCTargets.SendToAll());
         }
 
-        [ClientRpc(RequireOwnership = false)]
+        [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         private void GetKicked_ClientRPC(GameIdRPCTargets rpcTargets)
         {
             if (rpcTargets.IsTarget == false) return;
@@ -247,6 +254,8 @@ namespace FirePixel.Networking
 
             // Destroy the rejoin reference on the kicked client
             FileManager.TryDeleteFile("RejoinData.json");
+
+            SceneManager.LoadScene("Main Menu");
         }
 
         #endregion
@@ -256,7 +265,21 @@ namespace FirePixel.Networking
         {
             base.OnDestroy();
 
-            playerIdDataArray.OnValueChanged = null;
+            if (IsServer)
+            {
+                // Kick all clients, terminate lobby and shutdown network.
+                DisconnectAllClients_ServerRPC();
+
+                _ = LobbyManager.DeleteLobbyAsync_OnServer();
+
+                NetworkManager.Shutdown();
+            }
+            else
+            {
+
+            }
+
+                playerIdDataArray.OnValueChanged = null;
             OnClientConnectedCallback = null;
             OnClientDisconnectedCallback = null;
             OnKicked = null;

@@ -100,7 +100,7 @@ Transform:
   m_GameObject: {fileID: 1219505594150818122}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalPosition: {x: 0, y: -1.056, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -610,6 +610,7 @@ MonoBehaviour:
   gunShotSource: {fileID: 5837324410720302518}
   gunOverheatSource: {fileID: 6957241378848993016}
   overrideIsOwner: 0
+  DEBUG_toSwapGunId: 0
 --- !u!114 &6829219136680250846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -654,7 +655,7 @@ MonoBehaviour:
   crouchAnimation: Crouch
   crouchWalkAnimation: CrouchWalk
   walkAnimation: Walk
-  sprintAnimation: Sprint
+  sprint: SDebugLogger.Log
   hurtAnimation: Hurt
   dead: 0
 --- !u!95 &5199238681142820621
@@ -958,6 +959,7 @@ MonoBehaviour:
   - {fileID: 1732793575751869812}
   - {fileID: 4769577523386625857}
   - {fileID: 8797678985547001680}
+  - {fileID: 5049168299905142815}
   ObjList:
   - {fileID: 3294571926836186955}
   - {fileID: 5226201016357555277}

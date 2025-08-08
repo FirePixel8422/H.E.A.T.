@@ -159,7 +159,7 @@ public class InstanceRenderer
 //#if UNITY_EDITOR
 //        if (perMeshArraySize > 100)
 //        {
-//            Debug.LogWarning("Attempted to display DEBUG data for too large arrays, please lower the gridSize or disable the debug array display");
+//            DebugLogger.LogWarning("Attempted to display DEBUG data for too large arrays, please lower the gridSize or disable the debug array display");
 //            return;
 //        }
 

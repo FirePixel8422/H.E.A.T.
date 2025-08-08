@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
-using UnityEngine;
 
 
 namespace FirePixel.Networking
@@ -25,6 +24,9 @@ namespace FirePixel.Networking
 #pragma warning disable CS4014
                 HeartbeatLobbyTask(CurrentLobby.Id, 25000);
 #pragma warning restore CS4014
+
+                // Host doesnt have to save rejoin data, if host disconnects, the lobby will be deleted
+                return;
             }
 
             await FileManager.SaveInfo(new ValueWrapper<string>(LobbyId), "RejoinData.json");
@@ -56,7 +58,7 @@ namespace FirePixel.Networking
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"Error updating lobby: {e.Message}");
+                DebugLogger.LogError($"Error updating lobby: {e.Message}");
             }
         }
 

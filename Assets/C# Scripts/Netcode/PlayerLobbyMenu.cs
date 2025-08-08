@@ -98,7 +98,7 @@ namespace FirePixel.Networking
 
         private void OnClientDisconnected_OnServer(ulong clientNetworkId, int clientGameId, int newClientCount)
         {
-            print(clientGameId + " left, " + newClientCount + " Client left");
+            DebugLogger.Log(clientGameId + " left, " + newClientCount + " Client left");
 
             for (int i = clientGameId; i < newClientCount; i++)
             {
@@ -111,7 +111,7 @@ namespace FirePixel.Networking
         }
 
 
-        [ServerRpc(RequireOwnership = false)]
+        [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         public void AddClient_ServerRPC(FixedString64Bytes fixedClientName, int clientGameId)
         {
             clientNameField[clientGameId].text = fixedClientName.ToString();
@@ -124,7 +124,7 @@ namespace FirePixel.Networking
         }
 
 
-        [ClientRpc(RequireOwnership = false)]
+        [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
         public void SyncClientNames_ClientRPC(FixedString64Bytes[] fixedClientNames, int clientCount)
         {
             string targetUserName;

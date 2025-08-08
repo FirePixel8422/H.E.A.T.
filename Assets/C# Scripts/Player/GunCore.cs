@@ -249,19 +249,16 @@ public class GunCore : NetworkBehaviour
             }
         }
 
-        print("Shot hit for " + DEBUG_damageThisShot + " damage!");
+        DebugLogger.Log("Shot hit for " + DEBUG_damageThisShot + " damage!");
 
         if (heatSink.Overheated)
         {
             gunOverheatSource.PlayClipWithPitch(coreStats.overHeatAudioClip, EzRandom.Range(coreStats.overHeatMinMaxPitch));
         }
 
-        int randomAudioId = EzRandom.Range(0, coreStats.shootAudioClips.Length);
-        float randomPitch = EzRandom.Range(coreStats.minMaxPitch);
-
-        // Call shoot method on the server and all clients, except self > call shoot locally
-        Shoot_ServerRPC(ClientManager.LocalClientGameId, randomAudioId, randomPitch);
-        Shoot(randomAudioId, randomPitch);
+        // Call shoot method through the server and all clients, except self > call shoot locally
+        Shoot_ServerRPC(ClientManager.LocalClientGameId);
+        Shoot();
     }
 
     private float2 RandomApproxPointInCircle(float radius)
@@ -274,24 +271,27 @@ public class GunCore : NetworkBehaviour
     /// <summary>
     /// Method to actually fire a shot
     /// </summary>
-    private void Shoot(int randomAudioId, float randomPitch)
+    private void Shoot()
     {
+        int randomAudioId = EzRandom.Range(0, coreStats.shootAudioClips.Length);
+        float randomPitch = EzRandom.Range(coreStats.minMaxPitch);
+
         gunShotSource.PlayClipWithPitch(coreStats.shootAudioClips[randomAudioId], randomPitch);
     }
 
 
-    [ServerRpc(RequireOwnership = false)]
-    private void Shoot_ServerRPC(int clientGameId, int randomAudioId, float randomPitch)
+    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    private void Shoot_ServerRPC(int clientGameId)
     {
-        Shoot_ClientRPC(randomAudioId, randomPitch, GameIdRPCTargets.SendToOppositeClient(clientGameId));
+        Shoot_ClientRPC(GameIdRPCTargets.SendToOppositeClient(clientGameId));
     }
 
-    [ClientRpc(RequireOwnership = false)]
-    private void Shoot_ClientRPC(int randomAudioId, float randomPitch, GameIdRPCTargets rpcTargets)
+    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    private void Shoot_ClientRPC(GameIdRPCTargets rpcTargets)
     {
         if (rpcTargets.IsTarget == false) return;
 
-        Shoot(randomAudioId, randomPitch);
+        Shoot();
     }
 
     #endregion
@@ -307,5 +307,14 @@ public class GunCore : NetworkBehaviour
 
 #if UNITY_EDITOR
     [SerializeField] private bool overrideIsOwner = true;
+
+
+    [SerializeField] private int DEBUG_toSwapGunId = 0;
+
+    [ContextMenu("DEBUG_SwapGun")]
+    private void DEBUG_SwapGun()
+    {
+        SwapGun(DEBUG_toSwapGunId);
+    }
 #endif
 }
