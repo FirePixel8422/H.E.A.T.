@@ -1,6 +1,7 @@
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 using Unity.Services.Lobbies.Models;
+using UnityEngine;
 
 
 namespace FirePixel.Networking
@@ -33,17 +34,23 @@ namespace FirePixel.Networking
             activeLobbyUISlots = lobbies.Count;
             for (int i = 0; i < lobbies.Count; i++)
             {
-                lobbyUISlots[i].mainUI.SetActive(true);
-                lobbyUISlots[i].lobbyName.text = lobbies[i].Name;
-                lobbyUISlots[i].lobbyId = lobbies[i].Id;
+                LobbyUIPanel targetUISlot = lobbyUISlots[i];
+
+                targetUISlot.mainUI.SetActive(true);
+                targetUISlot.lobbyName.text = lobbies[i].Name;
+                targetUISlot.lobbyId = lobbies[i].Id;
 
                 int maxPlayers = lobbies[i].MaxPlayers;
-                string creationDate = lobbies[i].Created.ToLocalTime().ToString();
+
+                DateTime creationTimeUtc = lobbies[i].Created; // likely in UTC
+                DateTime creationTimeLocal = creationTimeUtc.ToLocalTime();
+                string creationDate = creationTimeLocal.ToString("HH.mm"); // e.g. "12.00"
+
                 bool full = lobbies[i].AvailableSlots == 0;
 
-                lobbyUISlots[i].amountOfPlayersInLobby.text = (maxPlayers - lobbies[i].AvailableSlots).ToString() + "/" + maxPlayers.ToString() + (full ? "Full!" : "");
-                lobbyUISlots[i].creationDate.text = creationDate;
-                lobbyUISlots[i].Full = full;
+                targetUISlot.amountOfPlayersInLobby.text = (maxPlayers - lobbies[i].AvailableSlots).ToString() + "/" + maxPlayers.ToString() + (full ? "Full!" : "");
+                targetUISlot.creationDate.text = "created: " + creationDate;
+                targetUISlot.Full = full;
             }
         }
     }

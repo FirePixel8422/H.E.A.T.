@@ -7,10 +7,6 @@ namespace FirePixel.Networking
 {
     public class NetworkStateMachine : NetworkBehaviour
     {
-        private Animator anim;
-        private RagDollController ragDollController;
-
-
         #region animation data
 
         [Header("Start Animation")]
@@ -24,21 +20,36 @@ namespace FirePixel.Networking
         [SerializeField] private string crouchWalkAnimation = "CrouchWalk";
 
         [SerializeField] private string walkAnimation = "Walk";
-        [SerializeField] private string sprint = "SDebugLogger.Log";
+        [SerializeField] private string sprintAnimation = "Sprint";
+
+        [SerializeField] private string jumpAnimation = "Jump";
+        [SerializeField] private string fallAnimation = "Falling";
 
         [SerializeField] private string hurtAnimation = "Hurt";
+        [SerializeField] private string shakeGooglyEyesAnimation = "ShakeGooglyEyes";
+        [SerializeField] private string eyesCuriousAnimation = "ShakeGooglyEyes";
 
 
         private int currentAnimationHash;
+
         private int idleAnimationHash;
         private int crouchAnimationHash;
         private int crouchWalkAnimationHash;
         private int walkAnimationHash;
-        private int sprintHash;
+        private int sprintAnimationHash;
+
+        private int jumpAnimationHash;
+        private int fallAnimationHash;
+
         private int hurtAnimationHash;
+        private int shakeGooglyEyesAnimationHash;
+        private int eyesCuriousAnimationHash;
 
         #endregion
 
+        private Animator anim;
+        private RagDollController ragDollController;
+        private Rigidbody rb;
 
         [SerializeField] private bool dead;
 
@@ -49,15 +60,23 @@ namespace FirePixel.Networking
         {
             anim = GetComponent<Animator>();
             ragDollController = GetComponent<RagDollController>();
+            rb = GetComponent<Rigidbody>();
 
             // Cache animation hashes for performance
             currentAnimationHash = Animator.StringToHash(currentAnimation);
+
             idleAnimationHash = Animator.StringToHash(idleAnimation);
             crouchAnimationHash = Animator.StringToHash(crouchAnimation);
             crouchWalkAnimationHash = Animator.StringToHash(crouchWalkAnimation);
             walkAnimationHash = Animator.StringToHash(walkAnimation);
-            sprintHash = Animator.StringToHash(sprint);
+            sprintAnimationHash = Animator.StringToHash(sprintAnimation);
+
+            jumpAnimationHash = Animator.StringToHash(jumpAnimation);
+            fallAnimationHash = Animator.StringToHash(fallAnimation);
+
             hurtAnimationHash = Animator.StringToHash(hurtAnimation);
+            shakeGooglyEyesAnimationHash = Animator.StringToHash(shakeGooglyEyesAnimation);
+            eyesCuriousAnimationHash = Animator.StringToHash(eyesCuriousAnimation);
         }
 
 
@@ -71,6 +90,7 @@ namespace FirePixel.Networking
             //if the new animation is the same as current, return false
             if (currentAnimationHash == animationHash) return false;
 
+            DebugLogger.Log($"Transitioning to animation: {animationHash} with duration: {transitionDuration}, speed: {speed}, layer: {layer}");
 
             SyncAnimation_ServerRPC(ClientManager.LocalClientGameId, animationHash, transitionDuration, speed, layer);
 
@@ -102,6 +122,8 @@ namespace FirePixel.Networking
 
         #endregion
 
+
+        #region Movement State Functions
 
         public void UpdateMovementState(bool moving, bool crouching, bool sprinting, float transitionDuration = 0.25f)
         {
@@ -145,7 +167,23 @@ namespace FirePixel.Networking
         }
         private void Sprint(float transitionDuration = 0.25f)
         {
-            TryTransitionAnimation(sprintHash, transitionDuration);
+            TryTransitionAnimation(sprintAnimationHash, transitionDuration);
+        }
+
+        #endregion
+
+
+        public void Jump(float transitionDuration = 0.25f)
+        {
+            TryTransitionAnimation(jumpAnimationHash, transitionDuration);
+        }
+
+
+        public void ShakeGooglyEyes(float transitionDuration = 0.25f)
+        {
+            TryTransitionAnimation(shakeGooglyEyesAnimationHash, transitionDuration, 1, 1);
+
+            AutoTransition(eyesCuriousAnimationHash, transitionDuration, 1);
         }
 
 

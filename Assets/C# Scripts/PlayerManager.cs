@@ -20,10 +20,6 @@ public class PlayerManager : NetworkBehaviour
             spawnedPlayerNetworkObjectIds = new ulong[GlobalGameSettings.MaxPlayers];
             spawnedPlayerOwnerIds = new ulong[GlobalGameSettings.MaxPlayers];
         }
-        else
-        {
-            RequestSync_ServerRPC(NetworkManager.LocalClientId);
-        }
 
         SpawnPlayer_ServerRPC(NetworkManager.LocalClientId);
     }
@@ -37,48 +33,11 @@ public class PlayerManager : NetworkBehaviour
     {
         NetworkObject spawnedPlayer = NetworkObject.InstantiateAndSpawn(playerPrefab, NetworkManager, ownerNetworkId);
 
-        SetupPlayer_ClientRPC(spawnedPlayer.NetworkObjectId, ownerNetworkId);
-
         spawnedPlayerNetworkObjectIds[spawnedPlayerCount] = spawnedPlayer.NetworkObjectId;
         spawnedPlayerOwnerIds[spawnedPlayerCount] = ownerNetworkId;
 
         spawnedPlayerCount += 1;
     }
 
-    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    private void SetupPlayer_ClientRPC(ulong networkObjectId, ulong ownerNetworkId)
-    {
-        if (NetworkManager.LocalClientId != ownerNetworkId)
-        {
-            NetworkObject playerObj = NetworkManager.SpawnManager.SpawnedObjects[networkObjectId];
-
-            playerObj.GetComponent<ObjectDestroyer>().DestroyAll();
-        }
-    }
-
     #endregion
-
-
-    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    private void RequestSync_ServerRPC(ulong clientNetworkId)
-    {
-        SetupPlayers_ClientRPC(spawnedPlayerNetworkObjectIds, spawnedPlayerOwnerIds, spawnedPlayerCount, NetworkIdRPCTargets.SendToTargetClient(clientNetworkId));
-    }
-
-    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    private void SetupPlayers_ClientRPC(ulong[] networkObjectId, ulong[] ownerNetworkId, int spawnedPlayerCount, NetworkIdRPCTargets rpcTargets)
-    {
-        if (rpcTargets.IsTarget == false) return;
-
-        for (int i = 0; i < spawnedPlayerCount; i++)
-        {
-            if (NetworkManager.LocalClientId != ownerNetworkId[i])
-            {
-                NetworkObject playerObj = NetworkManager.SpawnManager.SpawnedObjects[networkObjectId[i]];
-
-                playerObj.GetComponent<ObjectDestroyer>().DestroyAll();
-            }
-        }
-
-    }
 }

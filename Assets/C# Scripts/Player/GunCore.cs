@@ -299,13 +299,13 @@ public class GunCore : NetworkBehaviour
     }
 
 
-    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    [ServerRpc(RequireOwnership = false)]
     private void Shoot_ServerRPC(int clientGameId, BulletHoleMessage[] bulletHoleMessages)
     {
         Shoot_ClientRPC(bulletHoleMessages, GameIdRPCTargets.SendToOppositeClient(clientGameId));
     }
 
-    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    [ClientRpc(RequireOwnership = false)]
     private void Shoot_ClientRPC(BulletHoleMessage[] bulletHoleMessages, GameIdRPCTargets rpcTargets)
     {
         if (rpcTargets.IsTarget == false) return;
@@ -326,7 +326,6 @@ public class GunCore : NetworkBehaviour
 
 #if UNITY_EDITOR
     [SerializeField] private bool overrideIsOwner = true;
-
 
     [SerializeField] private int DEBUG_toSwapGunId = 0;
 

@@ -631,8 +631,9 @@ GameObject:
   - component: {fileID: 4844815309922621150}
   - component: {fileID: 5837324410720302518}
   - component: {fileID: 6957241378848993016}
+  - component: {fileID: 4006692444922911781}
   m_Layer: 0
-  m_Name: Player
+  m_Name: Player 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -669,7 +670,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 3415726141
+  GlobalObjectIdHash: 4091230015
   InScenePlacedSourceGlobalObjectIdHash: 3415726141
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -946,12 +947,12 @@ MonoBehaviour:
   crouchAnimation: Crouching
   crouchWalkAnimation: CrouchWalking
   walkAnimation: Walking
-  sprintAnimation: Sprinting
+  sprintAnimation: Sprint
   jumpAnimation: Jump
   fallAnimation: Fall
   hurtAnimation: Hurt
   shakeGooglyEyesAnimation: ShakeGooglyEyes
-  eyesCuriousAnimation: EyesCurious
+  eyesCuriousAnimation: ShakeGooglyEyes
   dead: 0
 --- !u!95 &5199238681142820621
 Animator:
@@ -1237,6 +1238,34 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4006692444922911781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3487219833232609719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 375b2240f2635474eaa902303a6da96f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selfComponentList: []
+  selfObjList:
+  - {fileID: 9210777544061837348}
+  - {fileID: 8010328628006728693}
+  - {fileID: 7069165511469314193}
+  - {fileID: 5748304353548528883}
+  - {fileID: 5622744863648830228}
+  otherComponentList:
+  - {fileID: 1732793575751869812}
+  - {fileID: 8797678985547001680}
+  - {fileID: 4769577523386625857}
+  - {fileID: 5049168299905142815}
+  - {fileID: 8084332042966875633}
+  otherObjList:
+  - {fileID: 3294571926836186955}
+  - {fileID: 5226201016357555277}
 --- !u!1 &4400905500031147721
 GameObject:
   m_ObjectHideFlags: 0

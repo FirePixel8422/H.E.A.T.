@@ -105,6 +105,8 @@ public class PlayerController : NetworkBehaviour
             sprintJumped = sprinting;
 
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
+            stateMachine.Jump();
         }
     }
 
@@ -124,6 +126,8 @@ public class PlayerController : NetworkBehaviour
         cameraTransform.eulerAngles = camEuler;
 
         transform.Rotate(Vector3.up, mouseMovement.x * mouseSensitivity);
+
+        stateMachine.ShakeGooglyEyes();
     }
 
     #endregion
@@ -139,7 +143,7 @@ public class PlayerController : NetworkBehaviour
     {
         if (IsOwner == false) return;
 
-        //Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Locked;
 
         // set gun to correct FOV independent and always in front layer ("Gun")
         int layerId = LayerMask.NameToLayer("Gun");

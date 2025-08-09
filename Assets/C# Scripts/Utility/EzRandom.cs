@@ -61,6 +61,11 @@ public static class EzRandom
         return chance > random.NextFloat(0, 100);
     }
 
+    public static uint Seed()
+    {
+        return random.NextUInt(uint.MinValue, uint.MaxValue);
+    }
+
     public static float Range(MinMaxFloat value)
     {
         return random.NextFloat(value.min, value.max);
