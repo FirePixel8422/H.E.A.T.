@@ -25,32 +25,31 @@ namespace FirePixel.Networking
         [SerializeField] private string jumpAnimation = "Jump";
         [SerializeField] private string fallAnimation = "Falling";
 
-        [SerializeField] private string hurtAnimation = "Hurt";
         [SerializeField] private string shakeGooglyEyesAnimation = "ShakeGooglyEyes";
         [SerializeField] private string eyesCuriousAnimation = "ShakeGooglyEyes";
 
 
-        private int currentAnimationHash;
+        private int[] currentAnimationHashes;
 
         private int idleAnimationHash;
         private int crouchAnimationHash;
         private int crouchWalkAnimationHash;
         private int walkAnimationHash;
         private int sprintAnimationHash;
-
+        
         private int jumpAnimationHash;
         private int fallAnimationHash;
-
-        private int hurtAnimationHash;
+        
         private int shakeGooglyEyesAnimationHash;
         private int eyesCuriousAnimationHash;
-
+        
         #endregion
 
         private Animator anim;
         private RagDollController ragDollController;
         private Rigidbody rb;
 
+        private bool IsJumping => currentAnimationHashes[0] == jumpAnimationHash;
         [SerializeField] private bool dead;
 
 
@@ -62,8 +61,11 @@ namespace FirePixel.Networking
             ragDollController = GetComponent<RagDollController>();
             rb = GetComponent<Rigidbody>();
 
+            currentAnimationHashes = new int[4];
+
             // Cache animation hashes for performance
-            currentAnimationHash = Animator.StringToHash(currentAnimation);
+            currentAnimationHashes[0] = Animator.StringToHash(currentAnimation);
+            currentAnimationHashes[1] = Animator.StringToHash(shakeGooglyEyesAnimation);
 
             idleAnimationHash = Animator.StringToHash(idleAnimation);
             crouchAnimationHash = Animator.StringToHash(crouchAnimation);
@@ -74,7 +76,6 @@ namespace FirePixel.Networking
             jumpAnimationHash = Animator.StringToHash(jumpAnimation);
             fallAnimationHash = Animator.StringToHash(fallAnimation);
 
-            hurtAnimationHash = Animator.StringToHash(hurtAnimation);
             shakeGooglyEyesAnimationHash = Animator.StringToHash(shakeGooglyEyesAnimation);
             eyesCuriousAnimationHash = Animator.StringToHash(eyesCuriousAnimation);
         }
@@ -88,16 +89,16 @@ namespace FirePixel.Networking
         private bool TryTransitionAnimation(int animationHash, float transitionDuration = 0.25f, float speed = 1, int layer = 0)
         {
             //if the new animation is the same as current, return false
-            if (currentAnimationHash == animationHash) return false;
+            if (currentAnimationHashes[layer] == animationHash) return false;
 
-            DebugLogger.Log($"Transitioning to animation: {animationHash} with duration: {transitionDuration}, speed: {speed}, layer: {layer}");
+            //DebugLogger.Log($"Transitioning to animation: {animationHash} with duration: {transitionDuration}, speed: {speed}, layer: {layer}");
 
             SyncAnimation_ServerRPC(ClientManager.LocalClientGameId, animationHash, transitionDuration, speed, layer);
 
-            currentAnimationHash = animationHash;
+            currentAnimationHashes[layer] = animationHash;
 
             anim.speed = speed;
-            anim.CrossFade(animationHash, transitionDuration, layer);
+            anim.CrossFadeInFixedTime(animationHash, transitionDuration, layer);
 
             return true;
         }
@@ -117,7 +118,7 @@ namespace FirePixel.Networking
             if (rpcTargets.IsTarget == false) return;
 
             anim.speed = speed;
-            anim.CrossFade(animationHash, transitionDuration, layer);
+            anim.CrossFadeInFixedTime(animationHash, transitionDuration, layer);
         }
 
         #endregion
@@ -127,7 +128,7 @@ namespace FirePixel.Networking
 
         public void UpdateMovementState(bool moving, bool crouching, bool sprinting, float transitionDuration = 0.25f)
         {
-            if (dead) return;
+            if (dead || IsJumping) return;
 
             if (moving)
             {
@@ -151,7 +152,7 @@ namespace FirePixel.Networking
         {
             TryTransitionAnimation(idleAnimationHash, transitionDuration);
         }
-
+            
         private void Crouch(float transitionDuration = 0.25f)
         {
             TryTransitionAnimation(crouchAnimationHash, transitionDuration);
@@ -176,6 +177,8 @@ namespace FirePixel.Networking
         public void Jump(float transitionDuration = 0.25f)
         {
             TryTransitionAnimation(jumpAnimationHash, transitionDuration);
+
+            AutoTransition(idleAnimationHash, transitionDuration);
         }
 
 
@@ -183,18 +186,10 @@ namespace FirePixel.Networking
         {
             TryTransitionAnimation(shakeGooglyEyesAnimationHash, transitionDuration, 1, 1);
 
-            AutoTransition(eyesCuriousAnimationHash, transitionDuration, 1);
+            AutoTransition(eyesCuriousAnimationHash, transitionDuration, 1, 1);
         }
 
 
-        public void GetHurt(float transitionDuration = 0.25f)
-        {
-            if (dead) return;
-
-            TryTransitionAnimation(hurtAnimationHash, transitionDuration);
-
-            AutoTransition(idleAnimationHash, transitionDuration);
-        }
         public void Die(Vector3 ragdollDirection, Vector3 ragdollImpactPoint, float transitionDuration = 0.25f)
         {
             dead = true;
@@ -206,18 +201,20 @@ namespace FirePixel.Networking
         /// <summary>
         /// Create an auto transition to target animation after current animation finishes playing.
         /// </summary>
-        private void AutoTransition(int animationHash, float transitionDuration, int layer = 0)
+        private void AutoTransition(int animationHash, float transitionDuration, float speed = 1, int layer = 0)
         {
-            StopAllCoroutines();
-            StartCoroutine(AutoTransitionCoroutine(animationHash, transitionDuration, layer));
+            StartCoroutine(AutoTransitionCoroutine(animationHash, transitionDuration, speed, layer));
         }
-        private IEnumerator AutoTransitionCoroutine(int animationHash, float transitionDuration, int layer = 0)
+        private IEnumerator AutoTransitionCoroutine(int animationHash, float transitionDuration, float speed = 1, int layer = 0)
         {
-            float clipTime = anim.GetCurrentAnimatorStateInfo(layer).length;
+            yield return null; // Wait 1 frame so animator updates to the new state
 
-            yield return new WaitForSeconds(clipTime);
+            AnimatorStateInfo state = anim.GetCurrentAnimatorStateInfo(layer);
+            float remainingTime = (1f - state.normalizedTime) * state.length;
 
-            TryTransitionAnimation(animationHash, transitionDuration);
+            yield return new WaitForSeconds(remainingTime);
+
+            TryTransitionAnimation(animationHash, transitionDuration, speed, layer);
         }
     }
 }

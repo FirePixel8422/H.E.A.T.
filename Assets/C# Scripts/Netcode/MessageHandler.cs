@@ -4,13 +4,14 @@ using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace FirePixel.Networking
 {
-    public class TextSender : NetworkBehaviour
+    public class MessageHandler : NetworkBehaviour
     {
-        public static TextSender Instance { get; private set; }
+        public static MessageHandler Instance { get; private set; }
         private void Awake()
         {
             Instance = this;
@@ -54,13 +55,12 @@ namespace FirePixel.Networking
                 transform.localPosition = VectorLogic.InstantMoveTowards(transform.localPosition, pos, toggleSpeed * Time.deltaTime);
             }
         }
-
+        /// <summary>
+        /// Global chat message sending (the entire lobby).
+        /// </summary>
         public void TrySendText()
         {
-            if (string.IsNullOrEmpty(inputField.text))
-            {
-                return;
-            }
+            if (string.IsNullOrEmpty(inputField.text)) return;
 
             SendTextGlobal_ServerRPC(ClientManager.LocalClientGameId, ClientManager.LocalUserName, inputField.text);
 
@@ -68,6 +68,14 @@ namespace FirePixel.Networking
             inputField.text = "";
         }
 
+
+        /// <summary>
+        /// Local chat message sending.
+        /// </summary>
+        public void SendTextLocal(string message)
+        {
+            StartCoroutine(AddTextToChatBox(ClientManager.LocalClientGameId, ClientManager.LocalUserName, message));
+        }
 
         [ServerRpc(RequireOwnership = false)]
         public void SendTextGlobal_ServerRPC(int clientGameId, string senderName, string text)
@@ -89,7 +97,7 @@ namespace FirePixel.Networking
         [ClientRpc(RequireOwnership = false)]
         private void SendTextToClient_ClientRPC(int clientGameId, string senderName, string text)
         {
-            //send to only "toClientId"
+            // Send to only "toClientId"
             if (ClientManager.LocalClientGameId != clientGameId) return;
 
             StartCoroutine(AddTextToChatBox(clientGameId, senderName, text));

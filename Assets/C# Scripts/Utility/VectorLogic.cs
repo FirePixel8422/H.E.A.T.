@@ -1,13 +1,17 @@
-﻿using Unity.Mathematics;
+﻿using System.Runtime.CompilerServices;
+using Unity.Burst;
+using Unity.Mathematics;
 using UnityEngine;
 
 
+[BurstCompile]
 public static class VectorLogic
 {
     /// <summary>
     /// Instantly move a vector3 towards the new Vector3, up to maxDistance
     /// </summary>
     /// <returns>The new Position</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector3 InstantMoveTowards(Vector3 from, Vector3 to, float maxDist)
     {
         // Calculate the direction vector and its magnitude
@@ -28,6 +32,7 @@ public static class VectorLogic
     }
 
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector3 Clamp(this Vector3 value, Vector3 min, Vector3 max)
     {
         value.x = math.clamp(value.x, min.x, max.x);
@@ -36,6 +41,7 @@ public static class VectorLogic
 
         return value;
     }
+
 
 
     public static Vector3 ClampDirection(this Vector3 value, Vector3 clamp)

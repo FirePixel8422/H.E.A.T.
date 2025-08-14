@@ -2714,6 +2714,7 @@ GameObject:
   - component: {fileID: 661675219}
   - component: {fileID: 661675220}
   - component: {fileID: 661675221}
+  - component: {fileID: 661675222}
   m_Layer: 0
   m_Name: MatchManagement
   m_TagString: Untagged
@@ -2820,7 +2821,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6c9d864c3a17e044b4d794616d7c509, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 3487219833232609719, guid: aecb7691986b2a44ca7b5e44378938b1,
+  playerPrefab: {fileID: 3487219833232609719, guid: 33ae4ad9ad2946a4d92fcec06e7c86be,
     type: 3}
 --- !u!114 &661675221
 MonoBehaviour:
@@ -2841,6 +2842,18 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 11a8c72d97e11e74d88b292fa769a67c, type: 2}
   - {fileID: 11400000, guid: 32d506f0be6f2a64c9a137600b5378e7, type: 2}
   - {fileID: 11400000, guid: 518d03d1b3accf542ac1f9ac07310f10, type: 2}
+--- !u!114 &661675222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 661675214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7106d8d319e269f499eeb73dd7ffdfe8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &773142763
 GameObject:
   m_ObjectHideFlags: 0

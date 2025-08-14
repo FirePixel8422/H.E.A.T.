@@ -39,6 +39,20 @@ public static class UpdateScheduler
     {
         OnUpdate -= action;
     }
+    /// <summary>
+    /// Register or Unregister a method for Update() based on bool <paramref name="register"/>
+    /// </summary>
+    public static void ManageUpdate(Action action, bool register)
+    {
+        if (register)
+        {
+            RegisterUpdate(action);
+        }
+        else
+        {
+            UnregisterUpdate(action);
+        }
+    }
 
     /// <summary>
     /// Register a method to call every frame like FixedUpdate()
@@ -55,6 +69,20 @@ public static class UpdateScheduler
     public static void UnregisterFixedUpdate(Action action)
     {
         OnFixedUpdate -= action;
+    }
+    /// <summary>
+    /// Register or Unregister a method for FixedUpdate() based on bool <paramref name="register"/>
+    /// </summary>
+    public static void ManageFixedUpdate(Action action, bool register)
+    {
+        if (register)
+        {
+            RegisterFixedUpdate(action);
+        }
+        else
+        {
+            UnregisterFixedUpdate(action);
+        }
     }
 
 
