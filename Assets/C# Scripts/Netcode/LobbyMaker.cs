@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Unity.Netcode;
@@ -60,13 +61,23 @@ namespace FirePixel.Networking
             (bool rejoinFileExists, ValueWrapper<string> lastJoinedLobbyId) = await FileManager.LoadInfo<ValueWrapper<string>>("RejoinData.json");
             if (rejoinFileExists)
             {
-                bool lobbyExists = await LobbyExistsAsync(lastJoinedLobbyId.Value);
-
-                if (lobbyExists)
+                try
                 {
-                    // Turn rejoin menu visible and setup rejoin button to call method
-                    rejoinMenu.SetActive(true);
-                    rejoinMenu.GetComponentInChildren<Button>().onClick.AddListener(() => RejoinLobbyAsync(lastJoinedLobbyId.Value));
+                    Lobby lobby = await LobbyService.Instance.GetLobbyAsync(lastJoinedLobbyId.Value);
+
+                    // If lobby was found, check if it still has a host (eg not marked for termination)
+                    bool lobbyExists = lobby != null && lobby.Data["LobbyTerminated"].Value == "false";
+
+                    if (lobbyExists)
+                    {
+                        // Turn rejoin menu visible and setup rejoin button to call method
+                        rejoinMenu.SetActive(true);
+                        rejoinMenu.GetComponentInChildren<Button>().onClick.AddListener(() => RejoinLobbyAsync(lastJoinedLobbyId.Value));
+                    }
+                }
+                catch (LobbyServiceException e)
+                {
+                    DebugLogger.Log(e.ToString());
                 }
             }
         }
@@ -86,7 +97,9 @@ namespace FirePixel.Networking
             {
                 // Wait until inSearchLobbyScreen is true
                 while (!inSearchLobbyScreen && !token.IsCancellationRequested)
+                {
                     await Task.Delay(100, token);
+                }
 
                 if (token.IsCancellationRequested) break;
 
@@ -141,6 +154,11 @@ namespace FirePixel.Networking
                             visibility: DataObject.VisibilityOptions.Public,
                             value: _hostData.JoinCode)
                         },
+                        {
+                            "LobbyTerminated", new DataObject(
+                            visibility: DataObject.VisibilityOptions.Public,
+                            value: "false")
+                        },
                     }
                 };
 
@@ -164,9 +182,7 @@ namespace FirePixel.Networking
             {
                 invisibleScreenCover.SetActive(false);
 
-#if UNITY_EDITOR
                 DebugLogger.Log(e.ToString());
-#endif
             }
         }
 
@@ -218,10 +234,7 @@ namespace FirePixel.Networking
             catch (LobbyServiceException e)
             {
                 invisibleScreenCover.SetActive(false);
-
-#if UNITY_EDITOR
                 DebugLogger.Log(e.ToString());
-#endif
             }
         }
 
@@ -261,9 +274,8 @@ namespace FirePixel.Networking
             }
             catch (LobbyServiceException e)
             {
-#if UNITY_EDITOR
                 DebugLogger.Log(e.ToString());
-#endif
+
                 return (false, null);
             }
         }
@@ -311,24 +323,7 @@ namespace FirePixel.Networking
             {
                 invisibleScreenCover.SetActive(false);
 
-#if UNITY_EDITOR
                 DebugLogger.Log(e.ToString());
-#endif
-                throw;
-            }
-        }
-
-        private async Task<bool> LobbyExistsAsync(string lobbyId)
-        {
-            try
-            {
-                Lobby lobby = await LobbyService.Instance.GetLobbyAsync(lobbyId);
-
-                return true;
-            }
-            catch (LobbyServiceException)
-            {
-                return false;
             }
         }
 
@@ -366,16 +361,14 @@ namespace FirePixel.Networking
             {
                 invisibleScreenCover.SetActive(false);
 
-#if UNITY_EDITOR
                 DebugLogger.Log(e.ToString());
-#endif
             }
         }
 
 
         private void OnDestroy()
         {
-            lobbySearchCts.Cancel();
+            lobbySearchCts?.Cancel();
         }
     }
 }

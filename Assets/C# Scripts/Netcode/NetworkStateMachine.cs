@@ -1,16 +1,18 @@
 using System.Collections;
+using System.Runtime.CompilerServices;
 using Unity.Netcode;
 using UnityEngine;
+using static UnityEditor.Experimental.GraphView.GraphView;
 
 
 namespace FirePixel.Networking
 {
     public class NetworkStateMachine : NetworkBehaviour
     {
-        #region animation data
+        #region Animation Data
 
         [Header("Start Animation")]
-        [SerializeField] private string currentAnimation = "Idle";
+        [SerializeField] private string[] currentAnimation = { "Idle", "ShakeGooglyEyes" };
 
 
         [Header("Animation Names")]
@@ -26,7 +28,7 @@ namespace FirePixel.Networking
         [SerializeField] private string fallAnimation = "Falling";
 
         [SerializeField] private string shakeGooglyEyesAnimation = "ShakeGooglyEyes";
-        [SerializeField] private string eyesCuriousAnimation = "ShakeGooglyEyes";
+        [SerializeField] private string eyesCuriousAnimation = "EyesCurious";
 
 
         private int[] currentAnimationHashes;
@@ -45,9 +47,14 @@ namespace FirePixel.Networking
         
         #endregion
 
+
         private Animator anim;
         private RagDollController ragDollController;
         private Rigidbody rb;
+
+        private int animationLayerCount;
+
+        private Coroutine[] autoTransitiosCOs;
 
         private bool IsJumping => currentAnimationHashes[0] == jumpAnimationHash;
         [SerializeField] private bool dead;
@@ -55,17 +62,16 @@ namespace FirePixel.Networking
 
 
 
-        private void Start()
+        private void Awake()
         {
             anim = GetComponent<Animator>();
             ragDollController = GetComponent<RagDollController>();
             rb = GetComponent<Rigidbody>();
 
-            currentAnimationHashes = new int[4];
+            animationLayerCount = anim.layerCount;
 
-            // Cache animation hashes for performance
-            currentAnimationHashes[0] = Animator.StringToHash(currentAnimation);
-            currentAnimationHashes[1] = Animator.StringToHash(shakeGooglyEyesAnimation);
+            currentAnimationHashes = new int[animationLayerCount];
+            autoTransitiosCOs = new Coroutine[animationLayerCount];
 
             idleAnimationHash = Animator.StringToHash(idleAnimation);
             crouchAnimationHash = Animator.StringToHash(crouchAnimation);
@@ -78,6 +84,15 @@ namespace FirePixel.Networking
 
             shakeGooglyEyesAnimationHash = Animator.StringToHash(shakeGooglyEyesAnimation);
             eyesCuriousAnimationHash = Animator.StringToHash(eyesCuriousAnimation);
+
+            // Get and set the start animation hashes
+            for (int i = 0; i < animationLayerCount; i++)
+            {
+                currentAnimationHashes[i] = Animator.StringToHash(currentAnimation[i]);
+
+                anim.speed = 1;
+                anim.CrossFadeInFixedTime(currentAnimationHashes[i], 0, i);
+            }
         }
 
 
@@ -95,12 +110,18 @@ namespace FirePixel.Networking
 
             SyncAnimation_ServerRPC(ClientManager.LocalClientGameId, animationHash, transitionDuration, speed, layer);
 
+            TransitionAnimation(animationHash, transitionDuration, speed, layer);
+
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void TransitionAnimation(int animationHash, float transitionDuration, float speed, int layer)
+        {
             currentAnimationHashes[layer] = animationHash;
 
             anim.speed = speed;
             anim.CrossFadeInFixedTime(animationHash, transitionDuration, layer);
-
-            return true;
         }
 
         /// <summary>
@@ -117,8 +138,7 @@ namespace FirePixel.Networking
         {
             if (rpcTargets.IsTarget == false) return;
 
-            anim.speed = speed;
-            anim.CrossFadeInFixedTime(animationHash, transitionDuration, layer);
+            TransitionAnimation(animationHash, transitionDuration, speed, layer);
         }
 
         #endregion
@@ -203,7 +223,11 @@ namespace FirePixel.Networking
         /// </summary>
         private void AutoTransition(int animationHash, float transitionDuration, float speed = 1, int layer = 0)
         {
-            StartCoroutine(AutoTransitionCoroutine(animationHash, transitionDuration, speed, layer));
+            if (autoTransitiosCOs[layer] != null)
+            {
+                StopCoroutine(autoTransitiosCOs[layer]);
+            }
+            autoTransitiosCOs[layer] = StartCoroutine(AutoTransitionCoroutine(animationHash, transitionDuration, speed, layer));
         }
         private IEnumerator AutoTransitionCoroutine(int animationHash, float transitionDuration, float speed = 1, int layer = 0)
         {

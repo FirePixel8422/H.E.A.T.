@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
@@ -34,11 +35,21 @@ namespace FirePixel.Networking
 
 
         /// <summary>
-        /// MUST be called on server. Deletes Lobby
+        /// MUST be called on server. Deletes Lobby Async
         /// </summary>
         public async static Task DeleteLobbyAsync_OnServer()
         {
             await Lobbies.Instance.DeleteLobbyAsync(LobbyId);
+        }
+
+        /// <summary>
+        /// MUST be called on server. Deletes Lobby instantly
+        /// </summary>
+        public static void DeleteLobbyInstant_OnServer()
+        {
+            //_ = UpdateLobbyDataAsync(LobbyId, "LobbyTerminated", "true");
+
+            Lobbies.Instance.DeleteLobbyAsync(LobbyId);
         }
 
         /// <summary>
@@ -59,6 +70,31 @@ namespace FirePixel.Networking
             catch (System.Exception e)
             {
                 DebugLogger.LogError($"Error updating lobby: {e.Message}");
+            }
+        }
+
+        public static async Task UpdateLobbyDataAsync(string lobbyId, string key, string value)
+        {
+            try
+            {
+                UpdateLobbyOptions updateOptions = new UpdateLobbyOptions
+                {
+                    Data = new Dictionary<string, DataObject>
+                    {
+                        [key] = new DataObject(
+                            visibility: DataObject.VisibilityOptions.Member, // who can see this
+                            value: value
+                        )
+                    }
+                };
+
+                CurrentLobby = await LobbyService.Instance.UpdateLobbyAsync(lobbyId, updateOptions);
+
+                DebugLogger.Log($"Lobby updated: {key} = {value}");
+            }
+            catch (LobbyServiceException e)
+            {
+                DebugLogger.LogWarning($"Failed to update lobby data: {e}");
             }
         }
 

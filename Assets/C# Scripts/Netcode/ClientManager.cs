@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace FirePixel.Networking
 {
-
     public class ClientManager : NetworkBehaviour
     {
         public static ClientManager Instance { get; private set; }
@@ -196,8 +195,6 @@ namespace FirePixel.Networking
         /// </summary>
         private void OnClientConnected_OnServer(ulong clientNetworkId)
         {
-            DebugLogger.Log(clientNetworkId + " connected to server");
-
             PlayerIdDataArray updatedDataArray = playerIdDataArray.Value;
 
             updatedDataArray.AddPlayer(clientNetworkId);
@@ -207,6 +204,8 @@ namespace FirePixel.Networking
             OnClientConnectedCallback?.Invoke(clientNetworkId, playerIdDataArray.Value.GetPlayerGameId(clientNetworkId), NetworkManager.ConnectedClients.Count);
 
             RequestUsernameAndGUID_ClientRPC(GetClientGameId(clientNetworkId), NetworkIdRPCTargets.SendToTargetClient(clientNetworkId));
+
+            DebugLogger.Log("Player " + GetClientGameId(clientNetworkId) + ", (NetworkId: " + clientNetworkId + "), connected to server!");
         }
 
 
@@ -215,6 +214,8 @@ namespace FirePixel.Networking
         /// </summary>
         private void OnClientDisconnected_OnServer(ulong clientNetworkId)
         {
+            DebugLogger.Log("Player " + GetClientGameId(clientNetworkId) + ", (NetworkId: " + clientNetworkId + "), disconnected from server");
+
             // If the diconnecting client is the host dont update data, the server is shut down anyways.
             if (clientNetworkId == 0) return;
 
@@ -282,9 +283,13 @@ namespace FirePixel.Networking
             OnKicked?.Invoke();
 
             // Destroy the rejoin reference on the kicked client
-            FileManager.TryDeleteFile("RejoinData.json");
+            bool deletionSucces = FileManager.TryDeleteFile("RejoinData.json");
+
+            DebugLogger.Log("RejoinData.json deleted: " + deletionSucces);
 
             SceneManager.LoadScene("Main Menu");
+
+            MessageHandler.Instance.SendTextLocal("You have been kicked from the server!");
         }
 
         #endregion
@@ -299,7 +304,7 @@ namespace FirePixel.Networking
                 // Kick all clients, terminate lobby and shutdown network.
                 DisconnectAllClients_ServerRPC();
 
-                _ = LobbyManager.DeleteLobbyAsync_OnServer();
+                LobbyManager.DeleteLobbyInstant_OnServer();
 
                 NetworkManager.Shutdown();
             }

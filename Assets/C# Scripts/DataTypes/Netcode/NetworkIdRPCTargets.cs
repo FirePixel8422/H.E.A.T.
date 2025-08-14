@@ -102,7 +102,10 @@ namespace FirePixel.Networking
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
             serializer.SerializeValue(ref sendToAll);
-            serializer.SerializeValue(ref targetNetworkIds);
+            if (sendToAll == false)
+            {
+                serializer.SerializeValue(ref targetNetworkIds);
+            }
         }
     }
 }

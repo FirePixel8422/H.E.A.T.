@@ -900,16 +900,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4088eb8e43070941841f9449ed3f3d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentAnimation: Idle
+  currentAnimation:
+  - Idle
+  - EyesCurious
   idleAnimation: Idle
   crouchAnimation: Crouching
   crouchWalkAnimation: CrouchWalking
   walkAnimation: Walking
-  sprintAnimation: Sprint
+  sprintAnimation: Sprinting
   jumpAnimation: Jump
   fallAnimation: Fall
   shakeGooglyEyesAnimation: ShakeGooglyEyes
-  eyesCuriousAnimation: ShakeGooglyEyes
+  eyesCuriousAnimation: EyesCurious
   dead: 0
 --- !u!95 &5199238681142820621
 Animator:
@@ -2589,8 +2591,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -25}
-  m_SizeDelta: {x: 150, y: 150}
+  m_AnchoredPosition: {x: 0, y: -17.5}
+  m_SizeDelta: {x: 110, y: 110}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2366519239545619549
 CanvasRenderer:

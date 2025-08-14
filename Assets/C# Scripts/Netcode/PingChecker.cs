@@ -1,5 +1,7 @@
 ﻿using FirePixel.Networking;
+using TMPro;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 
 
@@ -7,17 +9,34 @@ namespace FirePixel.Netcode
 {
     public class PingChecker : NetworkBehaviour
     {
+        [SerializeField] private float updateInterval = 0.5f; // How often to update the ping display
+        private float elapsedTime = 0f;
+
+        private TextMeshProUGUI pingTextObj;
+        private UnityTransport transport;
+        private ulong serverClientId;
+
+
+        public override void OnNetworkSpawn()
+        {
+            pingTextObj = GetComponentInChildren<TextMeshProUGUI>();
+            transport = NetworkManager.NetworkConfig.NetworkTransport as UnityTransport;
+            serverClientId = NetworkManager.NetworkConfig.NetworkTransport.ServerClientId;
+        }
+
         private void OnEnable() => UpdateScheduler.RegisterFixedUpdate(OnFixedUpdate);
         private void OnDisable() => UpdateScheduler.UnregisterFixedUpdate(OnFixedUpdate);
 
-
         private void OnFixedUpdate()
         {
-            if (IsSpawned == false || MessageHandler.Instance == null || Time.frameCount % 30 != 0) return; 
+            elapsedTime += Time.fixedDeltaTime;
+            if (elapsedTime < updateInterval || IsSpawned == false || MessageHandler.Instance == null) return;
 
-            ulong ping = NetworkManager.Singleton.NetworkConfig.NetworkTransport.GetCurrentRtt(NetworkManager.Singleton.NetworkConfig.NetworkTransport.ServerClientId);
+            elapsedTime = 0;
 
-            MessageHandler.Instance.SendTextLocal("ping: " + ping + "ms");
+            ulong pingMs = transport.GetCurrentRtt(serverClientId);
+
+            pingTextObj.text = pingMs + "ms";
         }
     }
 }
