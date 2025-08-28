@@ -94,10 +94,18 @@ public class GunCore : NetworkBehaviour
         GunManager.Instance.GetGunStats(gunId, out coreStats, out heatSink.stats);
     }
 
-
-
     private void OnUpdate()
     {
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            GunManager.Instance.GetNextGunStats(out coreStats, out heatSink.stats, out int gunId);
+
+            timeSinceLastShot = coreStats.ShootInterval;
+            burstShotTimer = coreStats.burstShotInterval;
+
+            SwapGun_ServerRPC(ClientManager.LocalClientGameId, gunId);
+        }
+
 #if UNITY_EDITOR
         if (IsOwner == false && overrideIsOwner == false) return;
 #else

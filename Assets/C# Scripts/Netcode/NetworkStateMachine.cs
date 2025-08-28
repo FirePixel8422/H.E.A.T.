@@ -2,7 +2,6 @@ using System.Collections;
 using System.Runtime.CompilerServices;
 using Unity.Netcode;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 
 namespace FirePixel.Networking

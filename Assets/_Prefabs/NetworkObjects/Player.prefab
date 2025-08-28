@@ -626,7 +626,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2499336466
+  GlobalObjectIdHash: 2369081872
   InScenePlacedSourceGlobalObjectIdHash: 3415726141
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -887,7 +887,7 @@ MonoBehaviour:
   cameraTransform: {fileID: 6012974010948853806}
   gunHolder: {fileID: 8568243580743899453}
   maxTiltAngle: 90
-  mouseSensitivity: 0.2
+  mouseSensitivity: 0.1
 --- !u!114 &7952861885439663320
 MonoBehaviour:
   m_ObjectHideFlags: 0

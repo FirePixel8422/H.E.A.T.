@@ -926,11 +926,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: ee246512-e8cc-4693-bd17-708efb29b3d0
+  cloudProjectId: 7391cfa8-cc36-4398-a86a-596278f7c99f
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: High Energy Advanced Technology
-  organizationId: fire-pixel8422
+  projectName: 3d First Person Shooter
+  organizationId: bmtminecraft
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}
