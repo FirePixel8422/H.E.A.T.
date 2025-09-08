@@ -93,48 +93,67 @@ public static class ExtensionMethods
 
     #region TryGetComponent(s)
 
-    public static bool TryGetComponents<T>(this Transform trans, out T[] components) where T : Component
+    public static bool TryGetComponents<T>(this Transform trans, out T[] components) where T : UnityEngine.Object
     {
         components = trans.GetComponents<T>();
 
         return components.Length > 0;
     }
 
-    public static bool TryGetComponentInChildren<T>(this Transform trans, out T component, bool includeInactive = false) where T : Component
+    public static bool TryGetComponentInChildren<T>(this Transform trans, out T component, bool includeInactive = false) where T : UnityEngine.Object
     {
         component = trans.GetComponentInChildren<T>(includeInactive);
         return component != null;
     }
-    public static bool TryGetComponentsInChildren<T>(this Transform trans, out T[] components, bool includeInactive) where T : Component
+    public static bool TryGetComponentsInChildren<T>(this Transform trans, out T[] components, bool includeInactive) where T : UnityEngine.Object
     {
         components = trans.GetComponentsInChildren<T>(includeInactive);
 
         return components.Length > 0;
     }
 
-    public static bool TryGetComponentInParent<T>(this Transform trans, out T component) where T : Component
+    public static bool TryGetComponentInParent<T>(this Transform trans, out T component) where T : UnityEngine.Object
     {
         component = trans.GetComponentInParent<T>();
         return component != null;
     }
-    public static bool TryGetComponentsInParent<T>(this Transform trans, out T[] component) where T : Component
+    public static bool TryGetComponentsInParent<T>(this Transform trans, out T[] component) where T : UnityEngine.Object
     {
         component = trans.GetComponentsInParent<T>();
         return component != null;
     }
 
-    public static bool TryFindObjectOfType<T>(this UnityEngine.Object obj, out T component, FindObjectsInactive includeInactive = FindObjectsInactive.Include) where T : Component
+    public static bool TryFindObjectOfType<T>(this UnityEngine.Object obj, out T component, bool includeInactive) where T : UnityEngine.Object
     {
-        component = UnityEngine.Object.FindFirstObjectByType<T>(includeInactive);
+        FindObjectsInactive findObjectsInactive = includeInactive ? FindObjectsInactive.Include : FindObjectsInactive.Exclude;
+
+        component = UnityEngine.Object.FindFirstObjectByType<T>(findObjectsInactive);
         return component != null;
     }
-    public static bool TryFindObjectsOfType<T>(this UnityEngine.Object obj, out T[] component, FindObjectsInactive includeInactive = FindObjectsInactive.Include, FindObjectsSortMode sortMode = FindObjectsSortMode.None) where T : Component
+    public static bool TryFindObjectsOfType<T>(this UnityEngine.Object obj, out T[] component, bool includeInactive, bool sortByInstanceID = false) where T : UnityEngine.Object
     {
-        component = UnityEngine.Object.FindObjectsByType<T>(includeInactive, sortMode);
+        FindObjectsInactive findObjectsInactive = includeInactive ? FindObjectsInactive.Include : FindObjectsInactive.Exclude;
+        FindObjectsSortMode sortMode = sortByInstanceID ? FindObjectsSortMode.InstanceID : FindObjectsSortMode.None;
+
+        component = UnityEngine.Object.FindObjectsByType<T>(findObjectsInactive, sortMode);
         return component != null;
     }
 
     #endregion
+
+
+    public static T FindObjectOfType<T>(this UnityEngine.Object obj) where T : UnityEngine.Object
+    {
+        return UnityEngine.Object.FindFirstObjectByType<T>();
+    }
+
+    public static T[] FindObjectsOfType<T>(this UnityEngine.Object obj, bool includeInactive, bool sortByInstanceID = false) where T : UnityEngine.Object
+    {
+        FindObjectsInactive findObjectsInactive = includeInactive ? FindObjectsInactive.Include : FindObjectsInactive.Exclude;
+        FindObjectsSortMode sortMode = sortByInstanceID ? FindObjectsSortMode.InstanceID : FindObjectsSortMode.None;
+
+        return UnityEngine.Object.FindObjectsByType<T>(findObjectsInactive, sortMode);
+    }
 
 
     #region HasComponent

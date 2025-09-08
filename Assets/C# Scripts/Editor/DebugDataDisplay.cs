@@ -1,4 +1,5 @@
 #if UNITY_EDITOR
+using FirePixel.Networking;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -100,15 +101,15 @@ public class DebugDataDisplay : MonoBehaviour
     // Manual reload method to refresh expensive stats (call from inspector button)
     public void ReloadExpensiveStats()
     {
-        gameObjectCount = FindObjectsByType<GameObject>(FindObjectsInactive.Include, FindObjectsSortMode.None).Length;
+        gameObjectCount = this.FindObjectsOfType<GameObject>(true).Length;
 
-        componentCount = FindObjectsByType<Component>(FindObjectsInactive.Include, FindObjectsSortMode.None).Count(c => c is not Transform);
-        activeComponentCount = FindObjectsByType<Component>(FindObjectsInactive.Include, FindObjectsSortMode.None).Count(c => c is not Transform);
+        componentCount = this.FindObjectsOfType<Component>(true).Count(c => c is not Transform);
+        activeComponentCount = this.FindObjectsOfType<Component>(true).Count(c => c is not Transform);
 
-        networkObjectCount = FindObjectsByType<NetworkObject>(FindObjectsInactive.Include, FindObjectsSortMode.None).Length;
+        networkObjectCount = this.FindObjectsOfType<NetworkObject>(true).Length;
 
         activeAudioSources = 0;
-        AudioSource[] sources = FindObjectsOfType<AudioSource>();
+        AudioSource[] sources = this.FindObjectsOfType<AudioSource>(true);
         foreach (var src in sources)
         {
             if (src.isPlaying)
