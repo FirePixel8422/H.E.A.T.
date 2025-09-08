@@ -220,7 +220,7 @@ public class PlayerController : NetworkBehaviour
     {
         // Update RigidBody velocity and send Transform Data to ServerRPC
         
-        float rbVelocityY = rb.velocity.y;
+        float rbVelocityY = rb.linearVelocity.y;
 
         Vector3 targetForwardVelocity = GetForwardDirection();
 
@@ -239,7 +239,7 @@ public class PlayerController : NetworkBehaviour
 
         float targetSpeedChangePower = IsGrounded ? steerPower : midAirSteerPower;
 
-        rb.velocity = VectorLogic.InstantMoveTowards(rb.velocity, targetForwardVelocity, targetSpeedChangePower * Time.fixedDeltaTime);
+        rb.linearVelocity = VectorLogic.InstantMoveTowards(rb.linearVelocity, targetForwardVelocity, targetSpeedChangePower * Time.fixedDeltaTime);
 
         // If player is falling
         if (rbVelocityY < 0)

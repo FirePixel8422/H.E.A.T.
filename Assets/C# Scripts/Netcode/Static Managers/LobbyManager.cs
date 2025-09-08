@@ -39,7 +39,7 @@ namespace FirePixel.Networking
         /// </summary>
         public async static Task DeleteLobbyAsync_OnServer()
         {
-            await Lobbies.Instance.DeleteLobbyAsync(LobbyId);
+            await LobbyService.Instance.DeleteLobbyAsync(LobbyId);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace FirePixel.Networking
         {
             //_ = UpdateLobbyDataAsync(LobbyId, "LobbyTerminated", "true");
 
-            Lobbies.Instance.DeleteLobbyAsync(LobbyId);
+            LobbyService.Instance.DeleteLobbyAsync(LobbyId);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace FirePixel.Networking
         {
             while (true)
             {
-                await Lobbies.Instance.SendHeartbeatPingAsync(lobbyId);
+                await LobbyService.Instance.SendHeartbeatPingAsync(lobbyId);
 
                 await Task.Delay(pingDelayTicks);
             }

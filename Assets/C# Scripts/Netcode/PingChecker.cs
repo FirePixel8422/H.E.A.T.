@@ -1,11 +1,10 @@
-﻿using FirePixel.Networking;
-using TMPro;
+﻿using TMPro;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 
 
-namespace FirePixel.Netcode
+namespace FirePixel.Networking
 {
     public class PingChecker : NetworkBehaviour
     {

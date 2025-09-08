@@ -1,11 +1,10 @@
 using System.Collections;
 using TMPro;
-using Unity.Collections;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using static System.Net.Mime.MediaTypeNames;
-
 
 namespace FirePixel.Networking
 {
@@ -17,30 +16,41 @@ namespace FirePixel.Networking
             Instance = this;
         }
 
+        [SerializeField] private InputActionReference confirmAction;
 
+        [SerializeField] private GameObject textBoxPrefab;
+        [SerializeField] private Transform chatContentHolder;
 
-        public GameObject textBoxPrefab;
-        public Transform chatContentHolder;
+        [SerializeField] private Scrollbar scrollBar;
 
-        public Scrollbar scrollBar;
+        [SerializeField] private bool showLocalNameAs_You;
+        [SerializeField] private bool active;
+
+        [SerializeField] private Color serverMessagesColor;
+
+        [SerializeField] private float toggleSpeed;
+
+        [SerializeField] private Vector3 enabledPos;
+        [SerializeField] private Vector3 disabledPos;
+
         private TMP_InputField inputField;
 
-        public bool showLocalNameAs_You;
-        public bool active;
 
-        public Color serverMessagesColor;
-
-        public float toggleSpeed;
-
-        public Vector3 enabledPos;
-        public Vector3 disabledPos;
-
+        private void OnEnable()
+        {
+            confirmAction.action.performed += OnConfirm;
+            confirmAction.action.Enable();
+        }
+        private void OnDisable()
+        {
+            confirmAction.action.performed -= OnConfirm;
+            confirmAction.action.Disable();
+        }
 
         public override void OnNetworkSpawn()
         {
             inputField = GetComponentInChildren<TMP_InputField>();
         }
-
 
         public void ToggleUI()
         {
@@ -56,11 +66,12 @@ namespace FirePixel.Networking
             }
         }
         /// <summary>
-        /// Global chat message sending (the entire lobby).
+        /// Send typed message.
         /// </summary>
-        public void TrySendText()
+        public void OnConfirm(InputAction.CallbackContext ctx)
         {
-            if (string.IsNullOrEmpty(inputField.text)) return;
+            DebugLogger.Log("Confirm action performed " + (active == false || ctx.performed == false || string.IsNullOrEmpty(inputField.text)));
+            if (active == false || ctx.performed == false || string.IsNullOrEmpty(inputField.text)) return;
 
             SendTextGlobal_ServerRPC(ClientManager.LocalClientGameId, ClientManager.LocalUserName, inputField.text);
 

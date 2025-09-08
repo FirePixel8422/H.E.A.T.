@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Unity.Netcode;
@@ -128,7 +127,7 @@ namespace FirePixel.Networking
 
             try
             {
-                Allocation allocation = await Relay.Instance.CreateAllocationAsync(maxPlayers - 1, "europe-west4");
+                Allocation allocation = await RelayService.Instance.CreateAllocationAsync(maxPlayers - 1, "europe-west4");
                 RelayHostData _hostData = new RelayHostData
                 {
                     Key = allocation.Key,
@@ -139,7 +138,7 @@ namespace FirePixel.Networking
                     IPv4Address = allocation.RelayServer.IpV4
                 };
 
-                _hostData.JoinCode = await Relay.Instance.GetJoinCodeAsync(allocation.AllocationId);
+                _hostData.JoinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
 
 
                 CreateLobbyOptions options = new CreateLobbyOptions
@@ -162,7 +161,7 @@ namespace FirePixel.Networking
                     }
                 };
 
-                Lobby lobby = await Lobbies.Instance.CreateLobbyAsync(ClientManager.LocalUserName + "'s Lobby", maxPlayers, options);
+                Lobby lobby = await LobbyService.Instance.CreateLobbyAsync(ClientManager.LocalUserName + "'s Lobby", maxPlayers, options);
 
                 await LobbyManager.SetLobbyData(lobby, true);
 
@@ -207,7 +206,7 @@ namespace FirePixel.Networking
                 await LobbyManager.SetLobbyData(lobby, false);
 
                 string joinCode = lobby.Data["joinCode"].Value;
-                JoinAllocation allocation = await Relay.Instance.JoinAllocationAsync(joinCode);
+                JoinAllocation allocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
 
 
                 RelayJoinData _joinData = new RelayJoinData
@@ -296,7 +295,7 @@ namespace FirePixel.Networking
                 await LobbyManager.SetLobbyData(lobby);
 
                 string joinCode = lobby.Data["joinCode"].Value;
-                JoinAllocation allocation = await Relay.Instance.JoinAllocationAsync(joinCode);
+                JoinAllocation allocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
 
                 RelayJoinData _joinData = new RelayJoinData
                 {
@@ -334,7 +333,7 @@ namespace FirePixel.Networking
                 Lobby lobby = await LobbyService.Instance.ReconnectToLobbyAsync(lobbyId);
 
                 string joinCode = lobby.Data["joinCode"].Value;
-                JoinAllocation allocation = await Relay.Instance.JoinAllocationAsync(joinCode);
+                JoinAllocation allocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
 
                 RelayJoinData _joinData = new RelayJoinData
                 {

@@ -4966,9 +4966,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2310571959980414349, guid: b3990035876fda84eb2cc07dd241ff37,
         type: 3}
+      propertyPath: d
+      value: 
+      objectReference: {fileID: -6617220822564489828, guid: 2c212f90182e38b4992b61bd54e56b9c,
+        type: 3}
+    - target: {fileID: 2310571959980414349, guid: b3990035876fda84eb2cc07dd241ff37,
+        type: 3}
       propertyPath: active
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2310571959980414349, guid: b3990035876fda84eb2cc07dd241ff37,
+        type: 3}
+      propertyPath: confirmAction
+      value: 
+      objectReference: {fileID: -6617220822564489828, guid: 2c212f90182e38b4992b61bd54e56b9c,
+        type: 3}
     - target: {fileID: 2310571959980414349, guid: b3990035876fda84eb2cc07dd241ff37,
         type: 3}
       propertyPath: showLocalNameAs_You

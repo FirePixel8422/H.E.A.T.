@@ -4,6 +4,7 @@ using System.Collections;
 using Unity.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public static class ExtensionMethods
 {
@@ -104,7 +105,7 @@ public static class ExtensionMethods
         component = trans.GetComponentInChildren<T>(includeInactive);
         return component != null;
     }
-    public static bool TryGetComponentsInChildren<T>(this Transform trans, out T[] components, bool includeInactive = false) where T : Component
+    public static bool TryGetComponentsInChildren<T>(this Transform trans, out T[] components, bool includeInactive) where T : Component
     {
         components = trans.GetComponentsInChildren<T>(includeInactive);
 
@@ -122,14 +123,14 @@ public static class ExtensionMethods
         return component != null;
     }
 
-    public static bool TryFindObjectOfType<T>(this UnityEngine.Object obj, out T component, bool includeInactive = false) where T : Component
+    public static bool TryFindObjectOfType<T>(this UnityEngine.Object obj, out T component, FindObjectsInactive includeInactive = FindObjectsInactive.Include) where T : Component
     {
-        component = UnityEngine.Object.FindObjectOfType<T>(includeInactive);
+        component = UnityEngine.Object.FindFirstObjectByType<T>(includeInactive);
         return component != null;
     }
-    public static bool TryFindObjectsOfType<T>(this UnityEngine.Object obj, out T[] component, bool includeInactive = false) where T : Component
+    public static bool TryFindObjectsOfType<T>(this UnityEngine.Object obj, out T[] component, FindObjectsInactive includeInactive = FindObjectsInactive.Include, FindObjectsSortMode sortMode = FindObjectsSortMode.None) where T : Component
     {
-        component = UnityEngine.Object.FindObjectsOfType<T>(includeInactive);
+        component = UnityEngine.Object.FindObjectsByType<T>(includeInactive, sortMode);
         return component != null;
     }
 
@@ -156,16 +157,53 @@ public static class ExtensionMethods
     #endregion
 
 
+    #region DisposeIfCreated for Native Collections
 
     /// <summary>
     /// Check if the NativeArray is created, and if so, dispose of it
     /// </summary>
-    public static void DisposeIfCreated<T>(this NativeArray<T> array) where T : struct
+    public static void DisposeIfCreated<T>(this NativeArray<T> array) where T : unmanaged
+    {
+        if (array.IsCreated)
+            array.Dispose();
+    }
+    /// <summary>
+    /// Check if the NativeArray is created, and if so, dispose of it
+    /// </summary>
+    public static void DisposeIfCreated<T>(this NativeList<T> array) where T : unmanaged
+    {
+        if (array.IsCreated)
+            array.Dispose();
+    }
+    /// <summary>
+    /// Check if the NativeArray is created, and if so, dispose of it
+    /// </summary>
+    public static void DisposeIfCreated<T>(this NativeReference<T> array) where T : unmanaged
+    {
+        if (array.IsCreated)
+            array.Dispose();
+    }
+    /// <summary>
+    /// Check if the NativeArray is created, and if so, dispose of it
+    /// </summary>
+    public static void DisposeIfCreated<T>(this NativeHashSet<T> array) where T : unmanaged, IEquatable<T>
+    {
+        if (array.IsCreated)
+            array.Dispose();
+    }
+    /// <summary>
+    /// Check if the NativeArray is created, and if so, dispose of it
+    /// </summary>
+    public static void DisposeIfCreated<Tkey, TValue>(this NativeHashMap<Tkey, TValue> array) where Tkey : unmanaged, IEquatable<Tkey> where TValue : unmanaged
     {
         if (array.IsCreated)
             array.Dispose();
     }
 
+    #endregion
+
+
+    #region PlayClip with Pitch and Clip overloads for AudioSource
 
     /// <summary>
     /// Lets AudioSource play selected clip with selected pitch
@@ -185,17 +223,10 @@ public static class ExtensionMethods
         source.Play();
     }
 
+    #endregion
 
-    /// <returns>SurfaceType enum of the target collider, returns SurfaceType.None if there is no <see cref="SurfaceTypeIdentifier"/> attached to targetr collider</returns>
-    public static SurfaceType GetSurfaceType(this Collider collider)
-    {
-        if (collider.TryGetComponent(out SurfaceTypeIdentifier identifier))
-        {
-            return identifier.SurfaceType;
-        }
 
-        return SurfaceType.None;
-    }
+    #region SetActiveSmart for GameObjects and Components
 
     /// <summary>
     /// Set the active state of a Behaviour component only if the state is different from the current state.
@@ -219,6 +250,19 @@ public static class ExtensionMethods
         }
     }
 
+    #endregion
+
+
+    /// <returns>SurfaceType enum of the target collider, returns SurfaceType.None if there is no <see cref="SurfaceTypeIdentifier"/> attached to targetr collider</returns>
+    public static SurfaceType GetSurfaceType(this Collider collider)
+    {
+        if (collider.TryGetComponent(out SurfaceTypeIdentifier identifier))
+        {
+            return identifier.SurfaceType;
+        }
+
+        return SurfaceType.None;
+    }
 
     /// <summary>
     /// Get PlayerGameId through ClintManager using OwnerClientId.
@@ -226,5 +270,14 @@ public static class ExtensionMethods
     public static int GetOwnerClientGameId(this NetworkObject networkObj)
     {
         return ClientManager.GetClientGameId(networkObj.OwnerClientId);
+    }
+
+    /// <summary>
+    /// Try finding an action by name, returns true if found, false if not. Outputs the found action
+    /// </summary>
+    public static bool TryFindAction(this InputActionAsset actionAsset, string actionName, out InputAction action)
+    {
+        action = actionAsset.FindAction(actionName);
+        return action != null;
     }
 }
