@@ -2,6 +2,7 @@ using UnityEngine;
 using System.IO;
 using System.Threading.Tasks;
 using System;
+using System.Runtime.CompilerServices;
 
 
 [Tooltip("Utility class for saving and loading any type of container or single values or arrays using ValueWrapper<T> and ArrayWrapper<T>")]
@@ -40,7 +41,7 @@ public static class FileManager
     /// <summary>
     /// Method to get all files and deserialize into a NativeArray of structs
     /// </summary>
-    public static async Task<(bool, T[])> GetAllFilesFromDirectory<T>(string directoryPath, string fileExtension = ".json")
+    public static async Task<(bool, T[])> GetAllFilesFromDirectoryAsync<T>(string directoryPath, string fileExtension = ".json")
     {
         // Get all file names with the specified extension
         (bool anyFileInDirectory, string[] fileNames) = GetAllFileNamesFromDirectory(directoryPath, fileExtension);
@@ -57,7 +58,7 @@ public static class FileManager
             {
                 string fullPath = $"{directoryPath}/{fileNames[i]}";
 
-                (bool success, T loadedStruct) = await LoadInfo<T>(fullPath);
+                (bool success, T loadedStruct) = await LoadInfoAsync<T>(fullPath);
 
                 if (success)
                 {
@@ -90,7 +91,7 @@ public static class FileManager
     /// <summary>
     /// Save data using JSON serialization
     /// </summary>
-    public async static Task SaveInfo<T>(T saveData, string pathPlusFileName, bool encryptFile = false)
+    public async static Task SaveInfoAsync<T>(T saveData, string pathPlusFileName, bool encryptFile = false)
     {
         try
         {
@@ -131,7 +132,7 @@ public static class FileManager
     /// <summary>
     /// Load data using JSON deserialization
     /// </summary>
-    public async static Task<(bool, T)> LoadInfo<T>(string pathPlusFileName, bool decryptFile = false)
+    public async static Task<(bool, T)> LoadInfoAsync<T>(string pathPlusFileName, bool decryptFile = false)
     {
         pathPlusFileName = EnsurePersistentDataPath(pathPlusFileName);
         pathPlusFileName = EnsureFileExtension(pathPlusFileName);
@@ -262,6 +263,66 @@ public static class FileManager
             return path;
         }
     }
+
+
+
+#if UNITY_EDITOR
+    private static string GetEditorPath(string path)
+    {
+        string folder = Path.Combine(Application.dataPath, "Editor");
+        if (!Directory.Exists(folder))
+            Directory.CreateDirectory(folder);
+
+        string fileName = Path.GetFileName(path);
+        if (!fileName.EndsWith(".json"))
+            fileName += ".json";
+
+        return Path.Combine(folder, fileName);
+    }
+
+    /// <summary>
+    /// Save data to Assets/Editor Folder using JSON serialization
+    /// </summary>
+    public static async Task SaveInfoToEditorAsync<T>(T data, string fileName)
+    {
+        string path = GetEditorPath(fileName);
+        try
+        {
+            string json = JsonUtility.ToJson(data, true);
+            await File.WriteAllTextAsync(path, json);
+        }
+        catch (Exception ex)
+        {
+            DebugLogger.LogError($"Failed to save editor file: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Load data from Assets/Editor Folder using JSON deserialization
+    /// </summary>
+    public static async Task<(bool, T)> LoadInfoFromEditorAsync<T>(string fileName)
+    {
+        string path = GetEditorPath(fileName);
+        if (!File.Exists(path))
+        {
+            DebugLogger.LogWarning($"Editor file not found: {path}");
+            return (false, default);
+        }
+
+        try
+        {
+            string json = await File.ReadAllTextAsync(path);
+            T loadedData = JsonUtility.FromJson<T>(json);
+
+            return (true, loadedData);
+        }
+        catch (Exception ex)
+        {
+            DebugLogger.LogError($"Failed to load editor file: {ex.Message}");
+            return (false, default);
+        }
+    }
+#endif
 }
 
 

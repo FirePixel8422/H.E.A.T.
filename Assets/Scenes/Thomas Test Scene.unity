@@ -4605,7 +4605,7 @@ MonoBehaviour:
     type: 3}
   recoilPartScale: 0.2
   recoilPatternData:
-    weaponName: PulseRifle
+    weaponName: test file
     recoilPoints:
     - x: 0
       y: 0.169

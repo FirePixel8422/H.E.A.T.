@@ -51,10 +51,12 @@ MonoBehaviour:
     burstShots: 0
     burstShotInterval: 0.1
     heatPerShot: 0.015
-    adsRecoilPerShot: 2
+    hipFireRecoilPerShot: 2
     timeToMinRecoil: 5
-    recoilForce: 25
-    adsRecoilMultiplierCurve:
+    recoilForce:
+      x: 25
+      y: 50
+    hipFireRecoilMultiplierCurve:
       curve:
         serializedVersion: 2
         m_Curve:
@@ -89,8 +91,13 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       sampleCount: 75
+    adsRecoilPattern:
+      x: 0
+      y: 0
     recoilRecoveryDelay: 0.15
-    recoilRecovery: 80
+    recoilRecovery:
+      x: 0.5
+      y: 0.5
     maxSpread: 0.115
     spreadCurve:
       curve:

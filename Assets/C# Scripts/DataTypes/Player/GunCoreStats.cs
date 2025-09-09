@@ -63,13 +63,43 @@ public struct GunCoreStats
 
     [Header("How many sample to give the recoil multiplier curve")]
     [SerializeField] private SampledAnimationCurve hipFireRecoilMultiplierCurve;
-    [SerializeField] private SampledAnimationCurve adsRecoilMultiplierCurve;
 
-    [SerializeField] private float2 adsRecoilPattern;
-
-    public float GetHipFireRecoil(float shootingIntensity)
+    public float GetHipFireRecoil(float recoilPatternPercent)
     {
-        return hipFireRecoilMultiplierCurve.Evaluate(Mathf.Clamp(shootingIntensity, 0, timeToMinRecoil) / timeToMinRecoil) * adsRecoilPerShot;
+        recoilPatternPercent.Saturated();
+
+        return hipFireRecoilMultiplierCurve.Evaluate(Mathf.Clamp(recoilPatternPercent, 0, timeToMinRecoil) / timeToMinRecoil) * hipFireRecoilPerShot;
+    }
+
+    [Header("Scoped in recoil pattern and whether to smooth between points")]
+    [SerializeField] private float2[] adsRecoilPattern;
+    [SerializeField] private bool interpolateADSPattern;
+
+    public void SetADSRecoilPattern(float2[] pattern)
+    {
+        adsRecoilPattern = pattern;
+    }
+    public float2 GetADSRecoil(float recoilPatternPercent)
+    {
+        int patternLength = adsRecoilPattern.Length;
+        recoilPatternPercent.Saturated();
+
+        if (interpolateADSPattern)
+        {
+            int patternPointId = (int)math.round(recoilPatternPercent * (patternLength - 1));
+
+            return adsRecoilPattern[patternPointId];
+        }
+        else
+        {
+            float floatIndex = recoilPatternPercent * (patternLength - 1);
+
+            int indexA = (int)math.floor(floatIndex);
+            int indexB = math.min(indexA + 1, patternLength - 1);
+
+            float t = floatIndex - indexA;
+            return math.lerp(adsRecoilPattern[indexA], adsRecoilPattern[indexB], t);
+        }
     }
 
     [Header("The time that needs to pass while not shooting for the recoil to stabilize")]
@@ -123,7 +153,7 @@ public struct GunCoreStats
     public void BakeAllCurves()
     {
         damageFallOffCurve.Bake();
-        adsRecoilMultiplierCurve.Bake();
+        hipFireRecoilMultiplierCurve.Bake();
         spreadCurve.Bake();
     }
 
@@ -133,7 +163,7 @@ public struct GunCoreStats
     public void Dispose()
     {
         damageFallOffCurve.Dispose();
-        adsRecoilMultiplierCurve.Dispose();
+        hipFireRecoilMultiplierCurve.Dispose();
         spreadCurve.Dispose();
     }
 
@@ -159,9 +189,12 @@ public struct GunCoreStats
 
         heatPerShot = 0.1f,
 
-        adsRecoilPerShot = 0.1f,
-        adsRecoilMultiplierCurve = SampledAnimationCurve.Default(),
-        recoilForce = 15f,
+        hipFireRecoilPerShot = 0.1f,
+        hipFireRecoilMultiplierCurve = SampledAnimationCurve.Default(),
+
+        adsRecoilPattern = new float2[0],
+
+        recoilForce = new float2(25, 50),
         timeToMinRecoil = 7.5f,
 
         recoilRecoveryDelay = 0.25f,

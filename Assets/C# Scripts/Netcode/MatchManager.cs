@@ -81,13 +81,13 @@ namespace FirePixel.Networking
 
         private async Task<MatchSettings> LoadSettingsFromFileAsync()
         {
-            (bool succes, MatchSettings loadedMatchSettings) = await FileManager.LoadInfo<MatchSettings>(SaveDataPath);
+            (bool succes, MatchSettings loadedMatchSettings) = await FileManager.LoadInfoAsync<MatchSettings>(SaveDataPath);
 
             return succes ? loadedMatchSettings : defaultMatchSettings;
         }
         private async Task SaveSettingsAsync(MatchSettings data)
         {
-            await FileManager.SaveInfo(data, SaveDataPath);
+            await FileManager.SaveInfoAsync(data, SaveDataPath);
         }
     }
 }

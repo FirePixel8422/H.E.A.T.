@@ -309,4 +309,12 @@ public static class ExtensionMethods
     {
         return value.x == 0f && value.y == 0f;
     }
+
+    /// <summary>
+    /// Clamps float between 0 and 1.
+    /// </summary>
+    public static void Saturated(this ref float value)
+    {
+        value = math.saturate(value);
+    }
 }

@@ -30,7 +30,7 @@ namespace FirePixel.Networking
 
         private async void Start()
         {
-            (bool success, ValueWrapper<string> savedPlayerName) = await FileManager.LoadInfo<ValueWrapper<string>>("PlayerName.fpx");
+            (bool success, ValueWrapper<string> savedPlayerName) = await FileManager.LoadInfoAsync<ValueWrapper<string>>("PlayerName.fpx");
 
             if (success)
             {
@@ -62,7 +62,7 @@ namespace FirePixel.Networking
             }
 
             ClientManager.SetLocalUsername(newValue);
-            await FileManager.SaveInfo(new ValueWrapper<string>(newValue), "PlayerName.fpx");
+            await FileManager.SaveInfoAsync(new ValueWrapper<string>(newValue), "PlayerName.fpx");
         }
 
         private string GetRandomFunnyName()

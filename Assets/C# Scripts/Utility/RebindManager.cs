@@ -84,7 +84,7 @@ public class RebindManager : MonoBehaviour
 
     private async Task LoadRebindsAsync()
     {
-        (bool success, ValueWrapper<string> rebindJson) = await FileManager.LoadInfo<ValueWrapper<string>>(RebindsFilePath);
+        (bool success, ValueWrapper<string> rebindJson) = await FileManager.LoadInfoAsync<ValueWrapper<string>>(RebindsFilePath);
         if (success && !string.IsNullOrEmpty(rebindJson.Value))
         {
             inputActions.LoadBindingOverridesFromJson(rebindJson.Value);
@@ -93,7 +93,7 @@ public class RebindManager : MonoBehaviour
     private async Task SaveRebindsAsync()
     {
         string json = inputActions.SaveBindingOverridesAsJson();
-        await FileManager.SaveInfo(new ValueWrapper<string>(json), RebindsFilePath);
+        await FileManager.SaveInfoAsync(new ValueWrapper<string>(json), RebindsFilePath);
     }
 
     public void ResetRebinds()

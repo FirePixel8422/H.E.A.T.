@@ -43,22 +43,18 @@ public class DebugRecoilPatternMaker : MonoBehaviour
 
     public async Task LoadRecoilPatternFromFile()
     {
-        (bool succes, DebugRecoilPatternData loadedRecoilPattern) = await FileManager.LoadInfo<DebugRecoilPatternData>(RecoilSavesPath + recoilPatternData.weaponName + "'s Recoilpattern");
+        (bool succes, DebugRecoilPatternData loadedRecoilPattern) = await FileManager.LoadInfoFromEditorAsync<DebugRecoilPatternData>(RecoilSavesPath + recoilPatternData.weaponName + "'s Recoilpattern");
 
         if (succes)
         {
             recoilPatternData = loadedRecoilPattern;
             DebugLogger.Log("Weapon recoilpattern data loaded from file");
         }
-        else
-        {
-            DebugLogger.LogWarning("Weapon recoilpattern data not found");
-        }
     }
 
     public async Task SaveRecoilPatternToFile()
     {
-        await FileManager.SaveInfo(recoilPatternData, RecoilSavesPath + recoilPatternData.weaponName + "'s Recoilpattern");
+        await FileManager.SaveInfoToEditorAsync(recoilPatternData, RecoilSavesPath + recoilPatternData.weaponName + "'s Recoilpattern");
     }
 
     public void LoadRecoilPatternFromVisuals()

@@ -26,6 +26,14 @@ public struct SampledAnimationCurve
     /// </summary>
     public void Bake()
     {
+#if UNITY_EDITOR
+        if (curve.keys.Length == 0)
+        {
+            DebugLogger.LogError("AnimationCurve is null!");
+            return;
+        }
+#endif
+
         bakedCurve = new NativeArray<float>(sampleCount, Allocator.Persistent);
 
         for (int i = 0; i < sampleCount; i++)

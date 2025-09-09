@@ -31,7 +31,7 @@ public class GunCore : NetworkBehaviour
 
     private float timeSinceLastShot;
     private float timeSinceShootButtonPress;
-    private float shootingIntensity;
+    [SerializeField] private float shootingIntensity;
 
     private int burstShotsLeft = 0;
     private float burstShotTimer = 0f;
@@ -200,7 +200,7 @@ public class GunCore : NetworkBehaviour
         // Only stabilize recoil if no burst is currently firing
         if (timeSinceLastShot > coreStats.recoilRecoveryDelay && burstShotsLeft == 0)
         {
-            recoilHandler.StabilizeRecoil(coreStats.recoilRecovery);
+            recoilHandler.StabilizeRecoil(coreStats.recoilRecovery * deltaTime);
 
             shootingIntensity -= deltaTime;
             if (shootingIntensity < 0f)
@@ -225,7 +225,8 @@ public class GunCore : NetworkBehaviour
     {
         shootingIntensity += coreStats.ShootInterval;
 
-        float2 recoil = new float2(0, coreStats.GetHipFireRecoil(shootingIntensity));
+        //float2 recoil = new float2(0, coreStats.GetHipFireRecoil(shootingIntensity));
+        float2 recoil = coreStats.GetADSRecoil(shootingIntensity);
         recoilHandler.AddRecoil(recoil);
 
         heatSink.AddHeat(coreStats.heatPerShot, out float previousHeatPercentage);

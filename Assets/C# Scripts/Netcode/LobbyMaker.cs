@@ -43,7 +43,7 @@ namespace FirePixel.Networking
         }
         private async Task InitializeAsync()
         {
-            (bool playerGUIDExists, ValueWrapper<string> playerGUID) = await FileManager.LoadInfo<ValueWrapper<string>>("PlayerGUID.json");
+            (bool playerGUIDExists, ValueWrapper<string> playerGUID) = await FileManager.LoadInfoAsync<ValueWrapper<string>>("PlayerGUID.json");
             if (false && playerGUIDExists)
             {
                 ClientManager.SetPlayerGUID(playerGUID.Value);
@@ -54,10 +54,10 @@ namespace FirePixel.Networking
 
                 ClientManager.SetPlayerGUID(newGUID);
 
-                await FileManager.SaveInfo(new ValueWrapper<string>(newGUID), "PlayerGUID.json");
+                await FileManager.SaveInfoAsync(new ValueWrapper<string>(newGUID), "PlayerGUID.json");
             }
 
-            (bool rejoinFileExists, ValueWrapper<string> lastJoinedLobbyId) = await FileManager.LoadInfo<ValueWrapper<string>>("RejoinData.json");
+            (bool rejoinFileExists, ValueWrapper<string> lastJoinedLobbyId) = await FileManager.LoadInfoAsync<ValueWrapper<string>>("RejoinData.json");
             if (rejoinFileExists)
             {
                 try

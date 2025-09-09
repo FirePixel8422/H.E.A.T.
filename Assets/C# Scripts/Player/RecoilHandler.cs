@@ -64,8 +64,8 @@ public class RecoilHandler
 
         // Recover up to maxRecoilRecovery
         float2 recoilRecovery = recoil - new float2(
-            recoil.x - Mathf.MoveTowards(recoil.x, 0f, maxRecoilRecovery.x * Time.deltaTime),
-            recoil.y - Mathf.MoveTowards(recoil.y, 0f, maxRecoilRecovery.y * Time.deltaTime)
+            Mathf.MoveTowards(recoil.x, 0, maxRecoilRecovery.x),
+            Mathf.MoveTowards(recoil.y, 0, maxRecoilRecovery.y)
         );
 
         recoil -= recoilRecovery;

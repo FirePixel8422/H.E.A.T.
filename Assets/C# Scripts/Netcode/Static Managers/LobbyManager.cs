@@ -30,7 +30,7 @@ namespace FirePixel.Networking
                 return;
             }
 
-            await FileManager.SaveInfo(new ValueWrapper<string>(LobbyId), "RejoinData.json");
+            await FileManager.SaveInfoAsync(new ValueWrapper<string>(LobbyId), "RejoinData.json");
         }
 
 
