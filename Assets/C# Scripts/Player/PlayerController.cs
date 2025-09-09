@@ -177,7 +177,7 @@ public class PlayerController : NetworkBehaviour
 
         if (IsOwner == false) return;
 
-        //Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Locked;
 
         // set gun to correct FOV independent and always in front layer ("Gun")
         int layerId = LayerMask.NameToLayer("Gun");

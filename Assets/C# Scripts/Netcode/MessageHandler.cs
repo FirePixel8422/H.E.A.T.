@@ -70,7 +70,7 @@ namespace FirePixel.Networking
         /// </summary>
         public void OnConfirm(InputAction.CallbackContext ctx)
         {
-            DebugLogger.Log("Confirm action performed " + (active == false || ctx.performed == false || string.IsNullOrEmpty(inputField.text)));
+            //DebugLogger.Log("Confirm action performed " + (active == false || ctx.performed == false || string.IsNullOrEmpty(inputField.text)));
             if (active == false || ctx.performed == false || string.IsNullOrEmpty(inputField.text)) return;
 
             SendTextGlobal_ServerRPC(ClientManager.LocalClientGameId, ClientManager.LocalUserName, inputField.text);

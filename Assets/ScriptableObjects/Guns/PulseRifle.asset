@@ -60,10 +60,10 @@ MonoBehaviour:
     burstShots: 0
     burstShotInterval: 0.1
     heatPerShot: 0.06
-    recoilPerShot: 0.75
+    adsRecoilPerShot: 2
     timeToMinRecoil: 2.5
     recoilForce: 12
-    recoilMultiplierCurve:
+    adsRecoilMultiplierCurve:
       curve:
         serializedVersion: 2
         m_Curve:

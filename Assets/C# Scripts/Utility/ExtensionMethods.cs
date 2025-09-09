@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using Unity.Collections;
+using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -272,6 +273,7 @@ public static class ExtensionMethods
     #endregion
 
 
+
     /// <returns>SurfaceType enum of the target collider, returns SurfaceType.None if there is no <see cref="SurfaceTypeIdentifier"/> attached to targetr collider</returns>
     public static SurfaceType GetSurfaceType(this Collider collider)
     {
@@ -279,7 +281,6 @@ public static class ExtensionMethods
         {
             return identifier.SurfaceType;
         }
-
         return SurfaceType.None;
     }
 
@@ -298,5 +299,14 @@ public static class ExtensionMethods
     {
         action = actionAsset.FindAction(actionName);
         return action != null;
+    }
+
+    public static bool IsZero(this float3 value)
+    {
+        return value.x == 0f && value.y == 0f && value.z == 0f;
+    }
+    public static bool IsZero(this float2 value)
+    {
+        return value.x == 0f && value.y == 0f;
     }
 }

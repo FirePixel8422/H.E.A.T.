@@ -26,9 +26,12 @@ public class GunCore : NetworkBehaviour
     private bool ShootInputBuffered => shootButtonHeld || inputBufferTimer > 0f;
 
     private bool shootButtonHeld;
+    private bool adsButtonHeld;
+    private bool IsScaopedIn => adsButtonHeld && heatSink.Overheated == false;
+
     private float timeSinceLastShot;
     private float timeSinceShootButtonPress;
-    private float stabilityPower;
+    private float shootingIntensity;
 
     private int burstShotsLeft = 0;
     private float burstShotTimer = 0f;
@@ -39,7 +42,7 @@ public class GunCore : NetworkBehaviour
 
     public void OnShoot(InputAction.CallbackContext ctx)
     {
-        //get the shoot button state (held true or released false)
+        // Get the shoot button state (held true or released false)
         shootButtonHeld = ctx.ReadValueAsButton();
 
         if (shootButtonHeld)
@@ -48,10 +51,15 @@ public class GunCore : NetworkBehaviour
             timeSinceShootButtonPress = math.min(timeSinceLastShot, coreStats.ShootInterval);
         }
     }
+    public void OnADS(InputAction.CallbackContext ctx)
+    {
+        // Get the shoot button state (held true or released false)
+        adsButtonHeld = ctx.ReadValueAsButton();
+    }
 
     public void OnMouseMovement(InputAction.CallbackContext ctx)
     {
-        recoilHandler.OnMouseMovement(ctx.ReadValue<Vector2>().y);
+        recoilHandler.OnMouseMovement(ctx.ReadValue<Vector2>());
     }
 
 
@@ -63,12 +71,14 @@ public class GunCore : NetworkBehaviour
         if (IsOwner)
         {
             cam = GetComponentInChildren<Camera>();
-
             DecalVfxManager.Instance.Init(cam);
         }
 
         SwapGun(0);
     }
+
+
+    #region SwapGun
 
     private void SwapGun(int gunId)
     {
@@ -94,8 +104,17 @@ public class GunCore : NetworkBehaviour
         GunManager.Instance.GetGunStats(gunId, out coreStats, out heatSink.stats);
     }
 
+    #endregion
+
+
     private void OnUpdate()
     {
+#if UNITY_EDITOR
+        if (IsOwner == false && overrideIsOwner == false) return;
+#else
+        if (IsOwner == false) return;
+#endif
+
         if (Input.GetKeyDown(KeyCode.V))
         {
             GunManager.Instance.GetNextGunStats(out coreStats, out heatSink.stats, out int gunId);
@@ -105,12 +124,6 @@ public class GunCore : NetworkBehaviour
 
             SwapGun_ServerRPC(ClientManager.LocalClientGameId, gunId);
         }
-
-#if UNITY_EDITOR
-        if (IsOwner == false && overrideIsOwner == false) return;
-#else
-        if (IsOwner == false) return;
-#endif
 
         float deltaTime = Time.deltaTime;
 
@@ -189,10 +202,10 @@ public class GunCore : NetworkBehaviour
         {
             recoilHandler.StabilizeRecoil(coreStats.recoilRecovery);
 
-            stabilityPower -= coreStats.recoilRecovery * deltaTime;
-            if (stabilityPower < 0f)
+            shootingIntensity -= deltaTime;
+            if (shootingIntensity < 0f)
             {
-                stabilityPower = 0f;
+                shootingIntensity = 0f;
             }
         }
 
@@ -210,9 +223,9 @@ public class GunCore : NetworkBehaviour
     /// </summary>
     private void PrepareShot(int projectileCount)
     {
-        stabilityPower += coreStats.ShootInterval;
+        shootingIntensity += coreStats.ShootInterval;
 
-        float recoil = coreStats.GetRecoil(stabilityPower);
+        float2 recoil = new float2(0, coreStats.GetHipFireRecoil(shootingIntensity));
         recoilHandler.AddRecoil(recoil);
 
         heatSink.AddHeat(coreStats.heatPerShot, out float previousHeatPercentage);
@@ -228,7 +241,7 @@ public class GunCore : NetworkBehaviour
 
         for (int i = 0; i < projectileCount; i++)
         {
-            float2 spreadOffset = RandomApproxPointInCircle(coreStats.GetSpread(previousHeatPercentage));
+            float2 spreadOffset = RandomApproxPointInCircle(coreStats.GetHipFireSpread(previousHeatPercentage));
 
             Vector3 rayDirWithSpread = math.normalize(ray.direction + camRight * spreadOffset.x + camUp * spreadOffset.y);
 
@@ -239,7 +252,6 @@ public class GunCore : NetworkBehaviour
 
                 // Deal damage to hit player
                 DEBUG_damageThisShot += coreStats.GetDamageOutput(hit.distance, false);
-
 
 
                 #region BulletHole FX

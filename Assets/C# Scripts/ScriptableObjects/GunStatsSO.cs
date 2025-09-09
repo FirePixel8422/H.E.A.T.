@@ -11,7 +11,7 @@ public class GunStatsSO : ScriptableObject
 
     public GunCoreStats GetCoreStats()
     {
-        coreStats.ReBakeAllCurves();
+        coreStats.BakeAllCurves();
 
         return coreStats;
     }
