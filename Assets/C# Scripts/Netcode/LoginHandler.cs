@@ -1,7 +1,6 @@
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 
@@ -9,11 +8,10 @@ namespace FirePixel.Networking
 {
     public class LoginHandler : MonoBehaviour
     {
-        [SerializeField] private string StartScreenSceneName = "StartScreen";
+        [SerializeField] private string startScreenSceneName = "StartScreen";
         [SerializeField] private string mainMenuSceneName = "MainMenu";
 
         private AsyncOperation mainSceneLoadOperation;
-        [SerializeField] private UnityEvent onCompleted;
 
 
         private async void Awake()
@@ -22,8 +20,11 @@ namespace FirePixel.Networking
 
             mainSceneLoadOperation.completed += (_) =>
             {
-                onCompleted?.Invoke();
-                //SceneManager.UnLoadSceneAsync(StartScreenSceneName);
+                mainSceneLoadOperation.allowSceneActivation = true;
+
+                SceneManager.UnLoadSceneAsync(startScreenSceneName);
+
+                this.FindObjectOfType<LoginCallbackReciever>().onLoginCompleted?.Invoke();
             };
 
             await UnityServices.InitializeAsync();
@@ -31,8 +32,6 @@ namespace FirePixel.Networking
             AuthenticationService.Instance.SignOut();
 
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
-
-            mainSceneLoadOperation.allowSceneActivation = true;
         }
     }
 }

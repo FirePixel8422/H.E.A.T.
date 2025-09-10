@@ -15,8 +15,7 @@ public class DebugRecoilPatternMaker : MonoBehaviour
     [SerializeField] GunStatsSO toSaveLoadGunDataObject;
 
     [SerializeField] private bool updateRecoilVisualsLive;
-    [Range(0.05f, 2)]
-    [SerializeField] private float shootingSequenceInterval;
+    [SerializeField] private float shootingSequenceRPM;
 
     private AudioSource source;
 
@@ -112,7 +111,7 @@ public class DebugRecoilPatternMaker : MonoBehaviour
         int recoilPointCount = recoilPatternData.recoilPoints.Length;
         for (int i = 0; i < recoilPointCount; i++)
         {
-            yield return new WaitForSeconds(shootingSequenceInterval);
+            yield return new WaitForSeconds(60 / shootingSequenceRPM);
 
             source.PlayWithPitch(EzRandom.Range(0.95f, 1.05f));
 
@@ -122,7 +121,7 @@ public class DebugRecoilPatternMaker : MonoBehaviour
             obj.transform.localPosition = new Vector3(cRecoil.x, cRecoil.y, 0);
             obj.transform.localScale = Vector3.one * recoilPartScale;
 
-            elapsed += shootingSequenceInterval;
+            elapsed += 60 / shootingSequenceRPM;
         }
 
         recoilPatternData.totalTime = elapsed;

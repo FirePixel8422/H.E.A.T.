@@ -8,12 +8,12 @@ public struct BulletHoleMessage : INetworkSerializable
 {
     public Vector3 pos;
     public Quaternion rot;
-    public Vector3 scale;
+    public float scale;
     public SurfaceType hitSurfaceType;
     public float lifetime;
 
 
-    public BulletHoleMessage(Vector3 pos, Quaternion rot, Vector3 scale, SurfaceType hitSurfaceType, float lifetime)
+    public BulletHoleMessage(Vector3 pos, Quaternion rot, float scale, SurfaceType hitSurfaceType, float lifetime)
     {
         this.pos = pos;
         this.rot = rot;

@@ -93,7 +93,7 @@ public class DecalVfxManager : MonoBehaviour
                 decalEntries.RemoveRange(0, onCapReachCleanupCount);
             }
             // Add Decal
-            DecalProjector decalRenderer = GetDecalFromPool(cMessage.pos, cMessage.rot, cMessage.scale, (int)cMessage.hitSurfaceType);
+            DecalProjector decalRenderer = GetDecalFromPool(cMessage.pos, cMessage.rot, Vector3.one * cMessage.scale, (int)cMessage.hitSurfaceType);
 
             decalEntries.Add(new DecalEntry(decalRenderer, Time.time + cMessage.lifetime));
 
@@ -129,10 +129,7 @@ public class DecalVfxManager : MonoBehaviour
             if (CullingUtility.TestPlanesAABB(cameraPlanes, boundsCenter, boundsExtents))
             {
                 // If decal is in frustum and disabled, enable it
-                if (targetDecalProjector.enabled == false)
-                {
-                    targetDecalProjector.enabled = true;
-                }
+                targetDecalProjector.SetActiveStateSmart(true);
             }
             else
             {
@@ -145,15 +142,14 @@ public class DecalVfxManager : MonoBehaviour
                     decalCount--;
                 }
                 // If decal is still alive but out of view, disable its renderer
-                else if (targetDecalProjector.enabled)
+                else
                 {
-                    targetDecalProjector.enabled = false;
+                    targetDecalProjector.SetActiveStateSmart(false);
                 }
             }
         }
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private DecalProjector GetDecalFromPool(Vector3 pos, Quaternion rot, Vector3 scale, int materialId)
     {
         if (decalPool.Count > 0)

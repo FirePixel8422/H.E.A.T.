@@ -40,7 +40,7 @@ MonoBehaviour:
           outWeight: 0.33333334
         - serializedVersion: 3
           time: 1
-          value: 0.1
+          value: 0.25
           inSlope: -2.4150937
           outSlope: -2.4150937
           tangentMode: 0
@@ -182,8 +182,8 @@ MonoBehaviour:
       y: 0.09000003
     invertX: 1
     adsRecoilMultiplier:
-      x: 10
-      y: 10
+      x: 20
+      y: 40
     adsRecoilDecayMultiplier: 25
     recoilRecoveryDelay: 0.33
     recoilRecovery:

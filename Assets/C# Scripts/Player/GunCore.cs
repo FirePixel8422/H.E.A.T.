@@ -20,6 +20,7 @@ public class GunCore : NetworkBehaviour
     [SerializeField] private AudioSource gunOverheatSource;
 
     private Camera cam;
+    private GunVisualHandler gunEmmisionHandler;
 
     private bool CanShoot => timeSinceLastShot >= coreStats.ShootInterval;
 
@@ -90,7 +91,10 @@ public class GunCore : NetworkBehaviour
         timeSinceLastShot = coreStats.ShootInterval;
         burstShotTimer = coreStats.burstShotInterval;
 
+        gunEmmisionHandler = GetComponentInChildren<GunVisualHandler>();
+
         SwapGun_ServerRPC(ClientManager.LocalClientGameId, gunId);
+        UpdateVisualHeatEmmision_ServerRPC(0);
     }
 
     [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
@@ -105,6 +109,8 @@ public class GunCore : NetworkBehaviour
         if (rpcTargets.IsTarget == false) return;
 
         GunManager.Instance.GetGunStats(gunId, out coreStats, out heatSink.stats);
+
+        gunEmmisionHandler = GetComponentInChildren<GunVisualHandler>();
     }
 
     #endregion
@@ -147,6 +153,14 @@ public class GunCore : NetworkBehaviour
 
         ProcessShooting();
         ProcessRecoilAndHeat(deltaTime);
+
+        if (gunEmmisionHandler != null)
+        {
+            float heatPercent = heatSink.HeatPercentage;
+
+            UpdateVisualHeatEmmision_ServerRPC(heatPercent);
+            gunEmmisionHandler.UpdateHeatEmission(heatPercent);
+        }
 
         recoilHandler.OnUpdate(coreStats.recoilForce * deltaTime);
         gunShakeHandler.OnUpdate(deltaTime);
@@ -288,7 +302,7 @@ public class GunCore : NetworkBehaviour
                 Quaternion bulletHoleRotation = Quaternion.Slerp(directionRotation, normalRotation, 0.5f) * Quaternion.Euler(0, 0, EzRandom.RandomRotationAxis());
 
                 // Set scale
-                Vector3 bulletHoleScale = Vector3.one * EzRandom.Range(coreStats.bulletHoleFXSize);
+                float bulletHoleScale = EzRandom.Range(coreStats.bulletHoleFXSize);
 
                 bulletHoleMessages[i] = new BulletHoleMessage(bulletHolePos, bulletHoleRotation, bulletHoleScale, hitSurfaceType, coreStats.bulletHoleFXLifetime);
 
@@ -304,6 +318,19 @@ public class GunCore : NetworkBehaviour
         // Call shoot method through the server and all clients, except self > call shoot locally
         Shoot_ServerRPC(ClientManager.LocalClientGameId, bulletHoleMessages);
         ShootEffects(bulletHoleMessages);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void UpdateVisualHeatEmmision_ServerRPC(float percent)
+    {
+        UpdateVisualHeatEmmision_ClientRPC(GameIdRPCTargets.SendToOppositeClient(ClientManager.LocalClientGameId), percent);
+    }
+    [ClientRpc(RequireOwnership = false)]
+    private void UpdateVisualHeatEmmision_ClientRPC(GameIdRPCTargets rpcTargets, float percent)
+    {
+        if (rpcTargets.IsTarget == false) return;
+
+        gunEmmisionHandler.UpdateHeatEmission(percent);
     }
 
     private float2 RandomApproxPointInCircle(float radius)

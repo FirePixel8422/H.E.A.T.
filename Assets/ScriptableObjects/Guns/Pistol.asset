@@ -1,0 +1,220 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b0b7c3e06db8a14b87487cb5b20ad5f, type: 3}
+  m_Name: Pistol
+  m_EditorClassIdentifier: 
+  coreStats:
+    damage: 10
+    headShotMultiplier: 1.5
+    maxEffectiveRange: 15
+    damageFallOffCurve:
+      curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0.00000023841855
+          outSlope: 0.00000023841855
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 1
+        - serializedVersion: 3
+          time: 0.33
+          value: 1
+          inSlope: -0.00000023841858
+          outSlope: -0.00000023841858
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 1
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 0.25
+          inSlope: -2.4150937
+          outSlope: -2.4150937
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.08843061
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      sampleCount: 75
+    bulletSize: 0.065
+    bulletHoleFXSize:
+      min: 0.15
+      max: 0.175
+    bulletHoleFXLifetime: 12.5
+    projectileCount: 1
+    burstShots: 0
+    burstShotInterval: 0.1
+    heatPerShot: 0.05
+    shootIntensityGainMultplier: 4.0000005
+    shootIntensityDescreaseMultplier: 20.000002
+    hipFireRecoilPerShot: 2
+    timeToMinRecoil: 2.5
+    recoilForce:
+      x: 30
+      y: 100
+    hipFireRecoilMultiplierCurve:
+      curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0.002976069
+          outSlope: 0.002976069
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 1
+        - serializedVersion: 3
+          time: 0.43030235
+          value: 0.88103753
+          inSlope: -0.49055716
+          outSlope: -0.49055716
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.21195424
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.6441272
+          value: 0.5595804
+          inSlope: -1.4350376
+          outSlope: -1.4350376
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.32717654
+          outWeight: 0.08958072
+        - serializedVersion: 3
+          time: 0.99853516
+          value: 0.15
+          inSlope: 0.028201737
+          outSlope: 0.028201737
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.27929753
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      sampleCount: 75
+    adsRecoilPattern:
+    - x: 0
+      y: 0
+    - x: 0
+      y: 0.1
+    - x: 0
+      y: 0.139
+    - x: 0.007
+      y: 0.132
+    - x: -0.044999998
+      y: 0.15500003
+    - x: 0.111
+      y: 0.23799998
+    - x: -0.018
+      y: 0.11900002
+    - x: -0.104
+      y: 0.13300002
+    - x: -0.074
+      y: 0.12199998
+    - x: -0.026
+      y: 0.09099996
+    - x: 0.009000003
+      y: 0.102
+    - x: -0.040000007
+      y: 0.11400008
+    - x: -0.025999993
+      y: 0.09399998
+    - x: 0.048999995
+      y: 0.110000014
+    - x: 0.033000007
+      y: 0.085999966
+    - x: 0.037999995
+      y: 0.049999952
+    - x: 0.046000004
+      y: 0.032000065
+    - x: -0.041
+      y: 0.054999948
+    - x: -0.052
+      y: -0.003000021
+    - x: 0.027000003
+      y: 0.06800008
+    invertX: 1
+    adsRecoilMultiplier:
+      x: 3
+      y: 6
+    adsRecoilDecayMultiplier: 25
+    recoilRecoveryDelay: 0.33
+    recoilRecovery:
+      x: 15
+      y: 50
+    maxSpread: 0.075
+    spreadCurve:
+      curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0.15
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 0.2
+          value: 0.15
+          inSlope: 0.0042411094
+          outSlope: 0.0042411094
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.9918181
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 0.925
+          value: 1
+          inSlope: 2.2337136
+          outSlope: 2.2337136
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.06502889
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      sampleCount: 75
+    roundsPerMinute: 300
+    autoFire: 0
+    inputBufferTime: 0.05
+    shootAudioClips:
+    - {fileID: 8300000, guid: 5ff5bd936a30a904da907f35c8dd382e, type: 3}
+    minMaxPitch:
+      min: 0.8
+      max: 0.9
+    overHeatAudioClip: {fileID: 8300000, guid: b3c4117d9d2775948b26557916a1468a, type: 3}
+    overHeatMinMaxPitch:
+      min: 1.25
+      max: 1.5
+  heatSinkStats:
+    heatSinkSize: 1
+    heatDecayDelay: 0.5
+    heatDecayPower: 0.1
+    heatDecayPowerMultiplier: 1
+    overheatDecayDelay: 0.65
+    overheatDecayPower: 0.075
+    overheatDecayPowerMultiplier: 1
+    decayMultiplierAtMaxHeat: 10

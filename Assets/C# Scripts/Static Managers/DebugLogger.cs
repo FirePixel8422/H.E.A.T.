@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 
 
@@ -10,19 +11,19 @@ public static class DebugLogger
     private const string ScriptingDefineSymbol = "Enable_Debug_Logging";
 
     [System.Diagnostics.Conditional(ScriptingDefineSymbol)]
-    public static void Log(string message)
+    public static void Log(object message)
     {
         Debug.Log(message);
     }
 
     [System.Diagnostics.Conditional(ScriptingDefineSymbol)]
-    public static void LogWarning(string message)
+    public static void LogWarning(object message)
     {
         Debug.LogWarning(message);
     }
 
     [System.Diagnostics.Conditional(ScriptingDefineSymbol)]
-    public static void LogError(string message)
+    public static void LogError(object message)
     {
         Debug.LogError(message);
     }

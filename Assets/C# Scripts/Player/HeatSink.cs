@@ -12,6 +12,7 @@ public class HeatSink
 
     [Tooltip("The amount of heat the gun has accumulated, from 0 to stats.heatSinkSize. stats.heatSinkSize means the gun is overheated.")]
     [SerializeField] private float heatAmount = 0f;
+    public float HeatPercentage => heatAmount / stats.heatSinkSize;
 
     [Space(10)]
 
