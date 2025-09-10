@@ -1,0 +1,145 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Walk
+  m_Mask: 01000000000000000000000001000000010000000000000000000000000000000000000001000000010000000000000000000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: BodyMesh
+    m_Weight: 1
+  - m_Path: characters3d.com___Hips
+    m_Weight: 1
+  - m_Path: characters3d.com___Hips/characters3d.com___L_Upper_Leg
+    m_Weight: 1
+  - m_Path: characters3d.com___Hips/characters3d.com___L_Upper_Leg/characters3d.com___L_Lower_Leg
+    m_Weight: 1
+  - m_Path: characters3d.com___Hips/characters3d.com___L_Upper_Leg/characters3d.com___L_Lower_Leg/characters3d.com___L_Foot
+    m_Weight: 1
+  - m_Path: characters3d.com___Hips/characters3d.com___L_Upper_Leg/characters3d.com___L_Lower_Leg/characters3d.com___L_Foot/characters3d.com___L_Toes
+    m_Weight: 1
+  - m_Path: characters3d.com___Hips/characters3d.com___L_Upper_Leg/characters3d.com___L_Lower_Leg/characters3d.com___L_Foot/characters3d.com___L_Toes/characters3d.com___L_Toes_Tip
+    m_Weight: 1
+  - m_Path: characters3d.com___Hips/characters3d.com___R_Upper_Leg
+    m_Weight: 1
+  - m_Path: characters3d.com___Hips/characters3d.com___R_Upper_Leg/characters3d.com___R_Lower_Leg
+    m_Weight: 1
+  - m_Path: characters3d.com___Hips/characters3d.com___R_Upper_Leg/characters3d.com___R_Lower_Leg/characters3d.com___R_Foot
+    m_Weight: 1
+  - m_Path: characters3d.com___Hips/characters3d.com___R_Upper_Leg/characters3d.com___R_Lower_Leg/characters3d.com___R_Foot/characters3d.com___R_Toes
+    m_Weight: 1
+  - m_Path: characters3d.com___Hips/characters3d.com___R_Upper_Leg/characters3d.com___R_Lower_Leg/characters3d.com___R_Foot/characters3d.com___R_Toes/characters3d.com___R_Toes_Tip
+    m_Weight: 1
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Index_Proximal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Index_Proximal/characters3d.com___L_Index_Intermediate
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Index_Proximal/characters3d.com___L_Index_Intermediate/characters3d.com___L_Index_Distal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Index_Proximal/characters3d.com___L_Index_Intermediate/characters3d.com___L_Index_Distal/characters3d.com___L_Index_Distal_Tip
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Little_Proximal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Little_Proximal/characters3d.com___L_Little_Intermediate
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Little_Proximal/characters3d.com___L_Little_Intermediate/characters3d.com___L_Little_Distal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Little_Proximal/characters3d.com___L_Little_Intermediate/characters3d.com___L_Little_Distal/characters3d.com___L_Little_Distal_Tip
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Middle_Proximal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Middle_Proximal/characters3d.com___L_Middle_Intermediate
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Middle_Proximal/characters3d.com___L_Middle_Intermediate/characters3d.com___L_Middle_Distal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Middle_Proximal/characters3d.com___L_Middle_Intermediate/characters3d.com___L_Middle_Distal/characters3d.com___L_Middle_Distal_Tip
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Ring_Proximal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Ring_Proximal/characters3d.com___L_Ring_Intermediate
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Ring_Proximal/characters3d.com___L_Ring_Intermediate/characters3d.com___L_Ring_Distal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Ring_Proximal/characters3d.com___L_Ring_Intermediate/characters3d.com___L_Ring_Distal/characters3d.com___L_Ring_Distal_Tip
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Thumb_Proximal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Thumb_Proximal/characters3d.com___L_Thumb_Intermediate
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Thumb_Proximal/characters3d.com___L_Thumb_Intermediate/characters3d.com___L_Thumb_Distal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___L_Shoulder/characters3d.com___L_Upper_Arm/characters3d.com___L_Lower_Arm/characters3d.com___L_Hand/characters3d.com___L_Thumb_Proximal/characters3d.com___L_Thumb_Intermediate/characters3d.com___L_Thumb_Distal/characters3d.com___L_Thumb_Distal_Tip
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___Neck
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___Neck/characters3d.com___Head
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___Neck/characters3d.com___Head/characters3d.com___Head_Tip
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Index_Proximal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Index_Proximal/characters3d.com___R_Index_Intermediate
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Index_Proximal/characters3d.com___R_Index_Intermediate/characters3d.com___R_Index_Distal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Index_Proximal/characters3d.com___R_Index_Intermediate/characters3d.com___R_Index_Distal/characters3d.com___R_Index_Distal_Tip
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Little_Proximal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Little_Proximal/characters3d.com___R_Little_Intermediate
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Little_Proximal/characters3d.com___R_Little_Intermediate/characters3d.com___R_Little_Distal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Little_Proximal/characters3d.com___R_Little_Intermediate/characters3d.com___R_Little_Distal/characters3d.com___R_Little_Distal_Tip
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Middle_Proximal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Middle_Proximal/characters3d.com___R_Middle_Intermediate
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Middle_Proximal/characters3d.com___R_Middle_Intermediate/characters3d.com___R_Middle_Distal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Middle_Proximal/characters3d.com___R_Middle_Intermediate/characters3d.com___R_Middle_Distal/characters3d.com___R_Middle_Distal_Tip
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Ring_Proximal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Ring_Proximal/characters3d.com___R_Ring_Intermediate
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Ring_Proximal/characters3d.com___R_Ring_Intermediate/characters3d.com___R_Ring_Distal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Ring_Proximal/characters3d.com___R_Ring_Intermediate/characters3d.com___R_Ring_Distal/characters3d.com___R_Ring_Distal_Tip
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Thumb_Proximal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Thumb_Proximal/characters3d.com___R_Thumb_Intermediate
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Thumb_Proximal/characters3d.com___R_Thumb_Intermediate/characters3d.com___R_Thumb_Distal
+    m_Weight: 0
+  - m_Path: characters3d.com___Hips/characters3d.com___Spine/characters3d.com___Chest/characters3d.com___Upper_Chest/characters3d.com___R_Shoulder/characters3d.com___R_Upper_Arm/characters3d.com___R_Lower_Arm/characters3d.com___R_Hand/characters3d.com___R_Thumb_Proximal/characters3d.com___R_Thumb_Intermediate/characters3d.com___R_Thumb_Distal/characters3d.com___R_Thumb_Distal_Tip
+    m_Weight: 0
