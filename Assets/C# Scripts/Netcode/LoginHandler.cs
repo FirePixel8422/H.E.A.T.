@@ -1,6 +1,7 @@
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 
@@ -12,6 +13,7 @@ namespace FirePixel.Networking
         [SerializeField] private string mainMenuSceneName = "MainMenu";
 
         private AsyncOperation mainSceneLoadOperation;
+        [SerializeField] private UnityEvent onCompleted;
 
 
         private async void Awake()
@@ -20,7 +22,8 @@ namespace FirePixel.Networking
 
             mainSceneLoadOperation.completed += (_) =>
             {
-                SceneManager.UnLoadSceneAsync(StartScreenSceneName);
+                onCompleted?.Invoke();
+                //SceneManager.UnLoadSceneAsync(StartScreenSceneName);
             };
 
             await UnityServices.InitializeAsync();
