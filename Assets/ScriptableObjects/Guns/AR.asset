@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b0b7c3e06db8a14b87487cb5b20ad5f, type: 3}
-  m_Name: AKM
+  m_Name: AR
   m_EditorClassIdentifier: 
   coreStats:
-    damage: 15
+    damage: 10
     headShotMultiplier: 1.5
-    maxEffectiveRange: 20
+    maxEffectiveRange: 22.5
     damageFallOffCurve:
       curve:
         serializedVersion: 2
@@ -51,20 +51,22 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       sampleCount: 75
-    bulletSize: 0.05
+    bulletSize: 0.065
     bulletHoleFXSize:
-      min: 0.175
-      max: 0.2
+      min: 0.15
+      max: 0.175
     bulletHoleFXLifetime: 12.5
     projectileCount: 1
-    burstShots: 2
-    burstShotInterval: 0.115
-    heatPerShot: 0.1
+    burstShots: 0
+    burstShotInterval: 0.1
+    heatPerShot: 0.03
+    shootIntensityGainMultplier: 6.375
+    shootIntensityDescreaseMultplier: 31.875
     hipFireRecoilPerShot: 2
     timeToMinRecoil: 2.5
     recoilForce:
-      x: 25
-      y: 50
+      x: 30
+      y: 100
     hipFireRecoilMultiplierCurve:
       curve:
         serializedVersion: 2
@@ -110,20 +112,91 @@ MonoBehaviour:
         m_RotationOrder: 4
       sampleCount: 75
     adsRecoilPattern:
-      x: 0
+    - x: 0
       y: 0
-    recoilRecoveryDelay: 0.125
+    - x: 0.02
+      y: 0.1
+    - x: -0.02
+      y: 0.22
+    - x: -0.06
+      y: 0.22000003
+    - x: 0.02
+      y: 0.089999974
+    - x: -0.030000001
+      y: 0.04000002
+    - x: -0.04
+      y: 0.089999974
+    - x: -0.019999996
+      y: 0.04000002
+    - x: 0
+      y: 0.060000002
+    - x: -0.030000001
+      y: 0.050000012
+    - x: 0.030000001
+      y: 0.049999952
+    - x: -0.02000001
+      y: 0.04000002
+    - x: -0.03999999
+      y: 0.03999996
+    - x: 0.030000001
+      y: 0.07000005
+    - x: -0.040000007
+      y: 0.029999971
+    - x: 0.040000007
+      y: 0.09000003
+    - x: -0.02000001
+      y: 0.049999952
+    - x: -0.029999986
+      y: 0.04000008
+    - x: -0.049999997
+      y: 0.01999998
+    - x: 0.019999996
+      y: 0.089999914
+    - x: 0.00999999
+      y: 0.07000005
+    - x: 0.060000002
+      y: 0.09000003
+    - x: -0.030000001
+      y: 0.01999998
+    - x: 0.07000001
+      y: 0.029999971
+    - x: -0.09
+      y: 0.05000007
+    - x: 0.03999999
+      y: 0.029999971
+    - x: 0.030000001
+      y: 0.03999996
+    - x: -0.030000001
+      y: 0.049999952
+    - x: 0.07000001
+      y: -0.00999999
+    - x: -0.030000001
+      y: 0.060000062
+    - x: 0.030000001
+      y: 0.029999971
+    - x: 0.019999996
+      y: -0.01999998
+    - x: 0.050000004
+      y: -0.01999998
+    - x: 0.07
+      y: 0.09000003
+    invertX: 1
+    adsRecoilMultiplier:
+      x: 10
+      y: 10
+    adsRecoilDecayMultiplier: 25
+    recoilRecoveryDelay: 0.33
     recoilRecovery:
-      x: 0.5
-      y: 0.5
-    maxSpread: 0.05
+      x: 15
+      y: 50
+    maxSpread: 0.075
     spreadCurve:
       curve:
         serializedVersion: 2
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 0.1
+          value: 0.15
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -131,13 +204,13 @@ MonoBehaviour:
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 0.3
-          value: 0.2
-          inSlope: 0.2120412
-          outSlope: 0.2120412
+          time: 0.2
+          value: 0.15
+          inSlope: 0.0042411094
+          outSlope: 0.0042411094
           tangentMode: 0
           weightedMode: 0
-          inWeight: 0.29154617
+          inWeight: 0.9918181
           outWeight: 0.33333334
         - serializedVersion: 3
           time: 0.925
@@ -152,24 +225,24 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       sampleCount: 75
-    roundsPerMinute: 110
-    autoFire: 0
-    inputBufferTime: 0.1
+    roundsPerMinute: 600
+    autoFire: 1
+    inputBufferTime: 0
     shootAudioClips:
     - {fileID: 8300000, guid: 5dbc74a65da58144aa0a20190bcd4909, type: 3}
     minMaxPitch:
-      min: 0.9
-      max: 1.1
+      min: 0.6
+      max: 0.8
     overHeatAudioClip: {fileID: 8300000, guid: b3c4117d9d2775948b26557916a1468a, type: 3}
     overHeatMinMaxPitch:
       min: 0.9
       max: 1.1
   heatSinkStats:
     heatSinkSize: 1
-    heatDecayDelay: 0.5
-    heatDecayPower: 0.175
+    heatDecayDelay: 0.25
+    heatDecayPower: 0.1
     heatDecayPowerMultiplier: 1
     overheatDecayDelay: 0.65
-    overheatDecayPower: 0.15
+    overheatDecayPower: 0.075
     overheatDecayPowerMultiplier: 1
-    decayMultiplierAtMaxHeat: 5
+    decayMultiplierAtMaxHeat: 10

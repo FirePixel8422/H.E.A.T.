@@ -13,6 +13,7 @@ public class GunCore : NetworkBehaviour
 
     [SerializeField] private RecoilHandler recoilHandler;
     [SerializeField] private HeatSink heatSink;
+    [SerializeField] private GunShakeHandler gunShakeHandler;
 
     [SerializeField] private Transform shootPointTransform;
     [SerializeField] private AudioSource gunShotSource;
@@ -72,6 +73,8 @@ public class GunCore : NetworkBehaviour
         {
             cam = GetComponentInChildren<Camera>();
             DecalVfxManager.Instance.Init(cam);
+
+            gunShakeHandler.Init();
         }
 
         SwapGun(0);
@@ -145,7 +148,8 @@ public class GunCore : NetworkBehaviour
         ProcessShooting();
         ProcessRecoilAndHeat(deltaTime);
 
-        recoilHandler.OnUpdate(coreStats.recoilForce);
+        recoilHandler.OnUpdate(coreStats.recoilForce * deltaTime);
+        gunShakeHandler.OnUpdate(deltaTime);
 
         if (coreStats.autoFire == false)
         {
@@ -202,7 +206,9 @@ public class GunCore : NetworkBehaviour
         {
             recoilHandler.StabilizeRecoil(coreStats.recoilRecovery * deltaTime);
 
-            shootingIntensity -= deltaTime;
+            coreStats.DecreaseADSRecoil(deltaTime);
+
+            shootingIntensity -= deltaTime / coreStats.shootIntensityDescreaseMultplier;
             if (shootingIntensity < 0f)
             {
                 shootingIntensity = 0f;
@@ -223,11 +229,13 @@ public class GunCore : NetworkBehaviour
     /// </summary>
     private void PrepareShot(int projectileCount)
     {
-        shootingIntensity += coreStats.ShootInterval;
+        shootingIntensity += coreStats.ShootInterval / coreStats.shootIntensityGainMultplier;
+
+        gunShakeHandler.AddShake(coreStats.ShootInterval);
 
         //float2 recoil = new float2(0, coreStats.GetHipFireRecoil(shootingIntensity));
-        float2 recoil = coreStats.GetADSRecoil(shootingIntensity);
-        recoilHandler.AddRecoil(recoil);
+        float2 recoil = coreStats.GetADSRecoil();
+        StartCoroutine(recoilHandler.AddRecoil(recoil, coreStats.ShootInterval));
 
         heatSink.AddHeat(coreStats.heatPerShot, out float previousHeatPercentage);
 
@@ -242,7 +250,7 @@ public class GunCore : NetworkBehaviour
 
         for (int i = 0; i < projectileCount; i++)
         {
-            float2 spreadOffset = RandomApproxPointInCircle(coreStats.GetHipFireSpread(previousHeatPercentage));
+            float2 spreadOffset = float2.zero;// RandomApproxPointInCircle(coreStats.GetHipFireSpread(previousHeatPercentage));
 
             Vector3 rayDirWithSpread = math.normalize(ray.direction + camRight * spreadOffset.x + camUp * spreadOffset.y);
 

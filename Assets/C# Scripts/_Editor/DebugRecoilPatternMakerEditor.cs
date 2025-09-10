@@ -28,6 +28,7 @@ public class DebugRecoilPatternMakerEditor : Editor
         {
             _ = recoilMaker.SaveRecoilPatternToFile();
         }
+        GUILayout.Space(10);
 
         if (Application.isPlaying && GUILayout.Button("Create Visual Recoilpattern"))
         {
@@ -47,11 +48,11 @@ public class DebugRecoilPatternMakerEditor : Editor
 
         if (GUILayout.Button("Load Recoilpattern From ScriptableObject"))
         {
-            _ = recoilMaker.LoadRecoilPatternFromScriptableObject();
+            recoilMaker.LoadRecoilPatternFromScriptableObject();
         }
         if (GUILayout.Button("Save Recoilpattern To ScriptableObject"))
         {
-            _ = recoilMaker.LoadRecoilPatternFromScriptableObject();
+            recoilMaker.SaveRecoilPatternToScriptableObject();
         }
     }
 }

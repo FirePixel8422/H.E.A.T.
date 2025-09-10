@@ -30,14 +30,14 @@ public class DebugRecoilPatternMaker : MonoBehaviour
         source = GetComponent<AudioSource>();
     }
 
-    public async Task LoadRecoilPatternFromScriptableObject()
+    public void LoadRecoilPatternFromScriptableObject()
     {
-
+        recoilPatternData.recoilPoints = toSaveLoadGunDataObject.GetCoreStats().adsRecoilPattern;
     }
 
-    public async Task SaveRecoilPatternToScriptableObject()
+    public void SaveRecoilPatternToScriptableObject()
     {
-
+        toSaveLoadGunDataObject.SetGunStatsADSRecoilPattern(recoilPatternData.recoilPoints, recoilPatternData.totalTime);
     }
 
 
@@ -105,6 +105,8 @@ public class DebugRecoilPatternMaker : MonoBehaviour
     }
     private IEnumerator ShootingSequence()
     {
+        float elapsed = 0;
+
         float2 cRecoil = float2.zero;
 
         int recoilPointCount = recoilPatternData.recoilPoints.Length;
@@ -119,7 +121,13 @@ public class DebugRecoilPatternMaker : MonoBehaviour
             GameObject obj = Instantiate(recoilPartPrefab, transform);
             obj.transform.localPosition = new Vector3(cRecoil.x, cRecoil.y, 0);
             obj.transform.localScale = Vector3.one * recoilPartScale;
+
+            elapsed += shootingSequenceInterval;
         }
+
+        recoilPatternData.totalTime = elapsed;
+
+        DebugLogger.Log("Shooting sequence took: " + elapsed);
     }
 
 

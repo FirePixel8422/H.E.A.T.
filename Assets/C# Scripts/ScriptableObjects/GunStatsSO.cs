@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 
@@ -20,4 +21,13 @@ public class GunStatsSO : ScriptableObject
     {
         return heatSinkStats;
     }
+
+#if UNITY_EDITOR
+    public void SetGunStatsADSRecoilPattern(float2[] pattern, float patternTime)
+    {
+        coreStats.adsRecoilPattern = pattern;
+        coreStats.shootIntensityGainMultplier = patternTime;
+        coreStats.shootIntensityDescreaseMultplier = patternTime * 5;
+    }
+#endif
 }

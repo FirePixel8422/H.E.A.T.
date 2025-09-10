@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -29,19 +30,23 @@ public class RecoilHandler
     /// <summary>
     /// Ready recoil to be added to the camera transform.
     /// </summary>
-    public void AddRecoil(float2 recoil)
+    public IEnumerator AddRecoil(float2 recoil, float shootInterval)
     {
-        toAddRecoil += recoil;
+        toAddRecoil += recoil * 1.5f;
+
+        yield return new WaitForSeconds(shootInterval * 0.5f);
+
+        toAddRecoil -= recoil * 0.5f;
     }
 
     // Called after the gun executes its OnUpdate
-    public void OnUpdate(float2 recoilForce)
+    public void OnUpdate(float2 recoilForceThisFrame)
     {
         if (toAddRecoil.IsZero()) return;
 
         float2 addedRecoil = toAddRecoil - new float2(
-            Mathf.MoveTowards(toAddRecoil.x, 0f, recoilForce.x * Time.deltaTime),
-            Mathf.MoveTowards(toAddRecoil.y, 0f, recoilForce.y * Time.deltaTime)
+            Mathf.MoveTowards(toAddRecoil.x, 0f, recoilForceThisFrame.x),
+            Mathf.MoveTowards(toAddRecoil.y, 0f, recoilForceThisFrame.y)
         );
 
         toAddRecoil -= addedRecoil;

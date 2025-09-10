@@ -1,5 +1,7 @@
+using Mono.Cecil.Cil;
 using Unity.Mathematics;
 using Unity.Netcode;
+using UnityEditor;
 using UnityEngine;
 
 
@@ -52,6 +54,9 @@ public struct GunCoreStats
     [Header("How much heat to add to the heatsink per shot")]
     public float heatPerShot;
 
+    [Header("How long the recoilPattern is")]
+    public float shootIntensityGainMultplier;
+    public float shootIntensityDescreaseMultplier;
 
     [Header("How much recoil to add per shot")]
     [SerializeField] private float hipFireRecoilPerShot;
@@ -72,34 +77,35 @@ public struct GunCoreStats
     }
 
     [Header("Scoped in recoil pattern and whether to smooth between points")]
-    [SerializeField] private float2[] adsRecoilPattern;
-    [SerializeField] private bool interpolateADSPattern;
+    public float2[] adsRecoilPattern;
 
-    public void SetADSRecoilPattern(float2[] pattern)
-    {
-        adsRecoilPattern = pattern;
-    }
-    public float2 GetADSRecoil(float recoilPatternPercent)
-    {
-        int patternLength = adsRecoilPattern.Length;
-        recoilPatternPercent.Saturated();
+    [SerializeField] private bool invertX;
+    [SerializeField] private float2 adsRecoilMultiplier;
+    [SerializeField] private float adsRecoilDecayMultiplier;
 
-        if (interpolateADSPattern)
+    private float cADSRecoilIdFloat;
+
+    public float2 GetADSRecoil()
+    {
+        int patternPointId = math.clamp((int)math.floor(cADSRecoilIdFloat), 0, adsRecoilPattern.Length - 1);
+
+        cADSRecoilIdFloat += 1;
+
+        if (invertX)
         {
-            int patternPointId = (int)math.round(recoilPatternPercent * (patternLength - 1));
+            float2 recoil = adsRecoilPattern[patternPointId];
+            recoil.x = -recoil.x;
 
-            return adsRecoilPattern[patternPointId];
+            return recoil * adsRecoilMultiplier;
         }
         else
         {
-            float floatIndex = recoilPatternPercent * (patternLength - 1);
-
-            int indexA = (int)math.floor(floatIndex);
-            int indexB = math.min(indexA + 1, patternLength - 1);
-
-            float t = floatIndex - indexA;
-            return math.lerp(adsRecoilPattern[indexA], adsRecoilPattern[indexB], t);
+            return adsRecoilPattern[patternPointId] * adsRecoilMultiplier;
         }
+    }
+    public void DecreaseADSRecoil(float deltaTime)
+    {
+        cADSRecoilIdFloat = math.clamp(cADSRecoilIdFloat - deltaTime * adsRecoilDecayMultiplier, 0, adsRecoilPattern.Length);
     }
 
     [Header("The time that needs to pass while not shooting for the recoil to stabilize")]
@@ -189,10 +195,17 @@ public struct GunCoreStats
 
         heatPerShot = 0.1f,
 
+        shootIntensityGainMultplier = 1,
+        shootIntensityDescreaseMultplier = 1,
+
         hipFireRecoilPerShot = 0.1f,
         hipFireRecoilMultiplierCurve = SampledAnimationCurve.Default(),
 
         adsRecoilPattern = new float2[0],
+        cADSRecoilIdFloat = 0,
+        invertX = false,
+        adsRecoilMultiplier = new float2(1, 1),
+        adsRecoilDecayMultiplier = 10,
 
         recoilForce = new float2(25, 50),
         timeToMinRecoil = 7.5f,
