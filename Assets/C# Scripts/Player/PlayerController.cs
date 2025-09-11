@@ -183,7 +183,7 @@ public class PlayerController : NetworkBehaviour
         int layerId = LayerMask.NameToLayer("Gun");
         gunHolder.layer = layerId;
 
-        foreach (Transform child in gunHolder.transform)
+        foreach (Transform child in gunHolder.transform.GetAllChildren())
         {
             child.gameObject.layer = layerId;
         }
@@ -356,4 +356,8 @@ public class PlayerController : NetworkBehaviour
     {
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
+
+#if UNITY_EDITOR
+    [SerializeField] private bool overrideAllowMovementControls;
+#endif
 }

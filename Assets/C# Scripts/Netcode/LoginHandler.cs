@@ -22,9 +22,9 @@ namespace FirePixel.Networking
             {
                 mainSceneLoadOperation.allowSceneActivation = true;
 
-                SceneManager.UnLoadSceneAsync(startScreenSceneName);
+                SceneManager.UnLoadSceneAsync(startScreenSceneName);    
 
-                this.FindObjectOfType<LoginCallbackReciever>().onLoginCompleted?.Invoke();
+                this.FindObjectOfType<LoginCallbackReciever>()?.onLoginCompleted?.Invoke();
             };
 
             await UnityServices.InitializeAsync();

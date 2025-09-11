@@ -1,6 +1,7 @@
 ﻿using FirePixel.Networking;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Mathematics;
 using Unity.Netcode;
@@ -316,5 +317,21 @@ public static class ExtensionMethods
     public static void Saturated(this ref float value)
     {
         value = math.saturate(value);
+    }
+
+    public static List<Transform> GetAllChildren(this Transform parent)
+    {
+        List<Transform> children = new List<Transform>();
+        CollectChildren(parent, children);
+        return children;
+    }
+
+    private static void CollectChildren(Transform parent, List<Transform> list)
+    {
+        foreach (Transform child in parent)
+        {
+            list.Add(child);
+            CollectChildren(child, list); // recurse deeper
+        }
     }
 }
