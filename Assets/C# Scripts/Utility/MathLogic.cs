@@ -24,15 +24,44 @@ public static class MathLogic
         return math.abs(value.x) + math.abs(value.y) + math.abs(value.z);
     }
 
+    public static bool IsZero(this float3 value)
+    {
+        return value.x == 0f && value.y == 0f && value.z == 0f;
+    }
+    public static bool IsZero(this float2 value)
+    {
+        return value.x == 0f && value.y == 0f;
+    }
+    public static bool IsZero(this int3 value)
+    {
+        return value.x == 0f && value.y == 0f && value.z == 0f;
+    }
+    public static bool IsZero(this int2 value)
+    {
+        return value.x == 0f && value.y == 0f;
+    }
+
+    /// <summary>
+    /// Clamps float between 0 and 1.
+    /// </summary>
+    public static void Saturated(this ref float value)
+    {
+        value = math.saturate(value);
+    }
+
     /// <summary>
     /// Clamp float to 0 or more
     /// </summary>
+    [BurstCompile(DisableSafetyChecks = true)]
     public static float ClampMin0(float value)
     {
         return 0 > value ? 0 : value;
     }
 
 
+    /// <summary>
+    /// Move float <paramref name="current"/> to <paramref name="target"/> with max step of <paramref name="maxDelta"/>
+    /// </summary>
     [BurstCompile(DisableSafetyChecks = true)]
     public static float MoveTowards(float current, float target, float maxDelta)
     {
@@ -49,4 +78,46 @@ public static class MathLogic
         if (input == 2) return 2;
         return 1 << (input - 1); // 2^(input-1)
     }
+}
+
+
+public static class Float3
+{
+    public static float3 Zero => new float3(0f, 0f, 0f);
+    public static float3 One => new float3(1f, 1f, 1f);
+    public static float3 Up => new float3(0f, 1f, 0f);
+    public static float3 Down => new float3(0f, -1f, 0f);
+    public static float3 Left => new float3(-1f, 0f, 0f);
+    public static float3 Right => new float3(1f, 0f, 0f);
+    public static float3 Forward => new float3(0f, 0f, 1f);
+    public static float3 Backward => new float3(0f, 0f, -1f);
+}
+public static class Float2
+{
+    public static float2 Zero => new float2(0f, 0f);
+    public static float2 One => new float2(1f, 1f);
+    public static float2 Left => new float2(-1f, 0f);
+    public static float2 Right => new float2(1f, 0f);
+    public static float2 Up => new float2(0f, 1f);
+    public static float2 Down => new float2(0f, -1f);
+}
+public struct Int3
+{
+    public static int3 Zero => new int3(0, 0, 0);
+    public static int3 One => new int3(1, 1, 1);
+    public static int3 Up => new int3(0, 1, 0);
+    public static int3 Down => new int3(0, -1, 0);
+    public static int3 Left => new int3(-1, 0, 0);
+    public static int3 Right => new int3(1, 0, 0);
+    public static int3 Forward => new int3(0, 0, 1);
+    public static int3 Backward => new int3(0, 0, -1);
+}
+public struct Int2
+{
+    public static int2 Zero => new int2(0, 0);
+    public static int2 One => new int2(1, 1);
+    public static int2 Left => new int2(-1, 0);
+    public static int2 Right => new int2(1, 0);
+    public static int2 Up => new int2(0, 1);
+    public static int2 Down => new int2(0, -1);
 }

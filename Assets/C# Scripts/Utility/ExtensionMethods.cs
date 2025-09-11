@@ -43,7 +43,7 @@ public static class ExtensionMethods
     #endregion
 
 
-    #region SetParent
+    #region Transform Logic
 
     public static void SetParent(this Transform trans, Transform parent, bool keepLocalPos, bool keepLocalRot)
     {
@@ -90,10 +90,26 @@ public static class ExtensionMethods
         }
     }
 
+    public static List<Transform> GetAllChildren(this Transform parent)
+    {
+        List<Transform> children = new List<Transform>();
+        CollectChildren(parent, children);
+        return children;
+    }
+
+    private static void CollectChildren(Transform parent, List<Transform> list)
+    {
+        foreach (Transform child in parent)
+        {
+            list.Add(child);
+            CollectChildren(child, list); // recurse deeper
+        }
+    }
+
     #endregion
 
 
-    #region TryGetComponent(s)
+    #region (Try)GetComponent(s)
 
     public static bool TryGetComponents<T>(this Transform trans, out T[] components) where T : UnityEngine.Object
     {
@@ -141,9 +157,7 @@ public static class ExtensionMethods
         return component != null;
     }
 
-    #endregion
-
-
+    // Unity 6s new FindobjectOfType is stupid
     public static T FindObjectOfType<T>(this UnityEngine.Object obj) where T : UnityEngine.Object
     {
         return UnityEngine.Object.FindFirstObjectByType<T>();
@@ -156,6 +170,8 @@ public static class ExtensionMethods
 
         return UnityEngine.Object.FindObjectsByType<T>(findObjectsInactive, sortMode);
     }
+
+    #endregion
 
 
     #region HasComponent
@@ -300,38 +316,5 @@ public static class ExtensionMethods
     {
         action = actionAsset.FindAction(actionName);
         return action != null;
-    }
-
-    public static bool IsZero(this float3 value)
-    {
-        return value.x == 0f && value.y == 0f && value.z == 0f;
-    }
-    public static bool IsZero(this float2 value)
-    {
-        return value.x == 0f && value.y == 0f;
-    }
-
-    /// <summary>
-    /// Clamps float between 0 and 1.
-    /// </summary>
-    public static void Saturated(this ref float value)
-    {
-        value = math.saturate(value);
-    }
-
-    public static List<Transform> GetAllChildren(this Transform parent)
-    {
-        List<Transform> children = new List<Transform>();
-        CollectChildren(parent, children);
-        return children;
-    }
-
-    private static void CollectChildren(Transform parent, List<Transform> list)
-    {
-        foreach (Transform child in parent)
-        {
-            list.Add(child);
-            CollectChildren(child, list); // recurse deeper
-        }
     }
 }
