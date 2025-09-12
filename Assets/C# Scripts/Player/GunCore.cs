@@ -3,24 +3,31 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using FirePixel.Networking;
+using System.Runtime.CompilerServices;
+using Unity.Properties;
 
 
 
 public class GunCore : NetworkBehaviour
 {
+    [SerializeField] private Transform gunParentTransform;
+    [SerializeField] private GunRefHolder gunRefHolder;
+
+    [Header("Data Driven Gun Parts")]
     [SerializeField] private GunStatsSO gunStatsSO;
     [SerializeField] private GunCoreStats coreStats;
 
     [SerializeField] private RecoilHandler recoilHandler;
     [SerializeField] private HeatSink heatSink;
     [SerializeField] private GunShakeHandler gunShakeHandler;
+    [SerializeField] private GunVisualHandler gunEmmisionHandler;
 
+    [Header("Additional Refs")]
     [SerializeField] private Transform shootPointTransform;
     [SerializeField] private AudioSource gunShotSource;
     [SerializeField] private AudioSource gunOverheatSource;
 
     private Camera cam;
-    private GunVisualHandler gunEmmisionHandler;
 
     private bool CanShoot => timeSinceLastShot >= coreStats.ShootInterval;
 
@@ -65,35 +72,60 @@ public class GunCore : NetworkBehaviour
     }
 
 
-    private void OnEnable() => UpdateScheduler.RegisterUpdate(OnUpdate);
-    private void OnDisable() => UpdateScheduler.UnregisterUpdate(OnUpdate);
+    private void OnEnable()
+    {
+        UpdateScheduler.RegisterUpdate(OnUpdate);
+        UpdateScheduler.RegisterFixedUpdate(OnFixedUpdate);
+    }
+    private void OnDisable()
+    {
+        UpdateScheduler.UnregisterUpdate(OnUpdate);
+        UpdateScheduler.UnregisterFixedUpdate(OnFixedUpdate);
+    }
 
     public override void OnNetworkSpawn()
     {
+#if UNITY_EDITOR
+        if (overrideIsOwner) return;
+#endif
+
         if (IsOwner)
         {
             cam = GetComponentInChildren<Camera>();
             DecalVfxManager.Instance.Init(cam);
 
-            gunShakeHandler.Init();
-        }
+            gunShakeHandler.Init(gunParentTransform);
 
-        SwapGun(0);
+            SwapGun(0);
+        }
     }
+
+#if UNITY_EDITOR
+    private void Start()
+    {
+        if (overrideIsOwner)
+        {
+            cam = GetComponentInChildren<Camera>();
+            DecalVfxManager.Instance.Init(cam);
+
+            gunShakeHandler.Init(gunParentTransform);
+
+            SwapGun(0);
+        }
+    }
+#endif
 
 
     #region SwapGun
 
     private void SwapGun(int gunId)
     {
-        GunManager.Instance.GetGunStats(gunId, out coreStats, out heatSink.stats);
+        SetupNewGunData(gunId);
+        SwapGun_ServerRPC(ClientManager.LocalClientGameId, gunId);
 
         timeSinceLastShot = coreStats.ShootInterval;
         burstShotTimer = coreStats.burstShotInterval;
 
-        gunEmmisionHandler = GetComponentInChildren<GunVisualHandler>();
-
-        SwapGun_ServerRPC(ClientManager.LocalClientGameId, gunId);
         UpdateVisualHeatEmmision_ServerRPC(0);
     }
 
@@ -108,9 +140,14 @@ public class GunCore : NetworkBehaviour
     {
         if (rpcTargets.IsTarget == false) return;
 
-        GunManager.Instance.GetGunStats(gunId, out coreStats, out heatSink.stats);
+        SetupNewGunData(gunId);
+    }
 
-        gunEmmisionHandler = GetComponentInChildren<GunVisualHandler>();
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void SetupNewGunData(int gunId)
+    {
+        GunManager.Instance.SwapGun(gunParentTransform, gunId, IsOwner, ref gunRefHolder, out coreStats, out heatSink.stats, out gunShakeHandler.stats);
+        gunEmmisionHandler.Init(gunRefHolder.EmissionMatInstance);
     }
 
     #endregion
@@ -126,7 +163,8 @@ public class GunCore : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.V))
         {
-            GunManager.Instance.GetNextGunStats(out coreStats, out heatSink.stats, out int gunId);
+            GunManager.Instance.SwapToNextGun(gunParentTransform, IsOwner, ref gunRefHolder, out coreStats, out heatSink.stats, out gunShakeHandler.stats, out int gunId);
+            gunEmmisionHandler.Init(gunRefHolder.EmissionMatInstance);
 
             timeSinceLastShot = coreStats.ShootInterval;
             burstShotTimer = coreStats.burstShotInterval;
@@ -154,14 +192,6 @@ public class GunCore : NetworkBehaviour
         ProcessShooting();
         ProcessRecoilAndHeat(deltaTime);
 
-        if (gunEmmisionHandler != null)
-        {
-            float heatPercent = heatSink.HeatPercentage;
-
-            UpdateVisualHeatEmmision_ServerRPC(heatPercent);
-            gunEmmisionHandler.UpdateHeatEmission(heatPercent);
-        }
-
         recoilHandler.OnUpdate(coreStats.recoilForce * deltaTime);
         gunShakeHandler.OnUpdate(deltaTime);
 
@@ -172,6 +202,47 @@ public class GunCore : NetworkBehaviour
 
         timeSinceLastShot += deltaTime;
         inputBufferTimer -= deltaTime;
+    }
+
+
+
+
+
+
+
+
+
+
+
+    /// <summary>
+    /// FIX THIS
+    /// FIX THIS
+    /// FIX THIS
+    /// FIX THIS
+    /// FIX THIS
+    /// FIX THIS
+    /// FIX THIS
+    /// </summary>
+    /// //UPDATE HAS TO BE AFTER UPDATE NOT BEFROE
+    /// 
+    //ALSO UPDATE UPDATE LOGIC SCHEDULEMENT LIKE ITS DONE IN PLAYERMOVEMENT
+    //DONT UPDATE FOR NON OWNERS
+
+    private void OnFixedUpdate()
+    {
+#if UNITY_EDITOR
+        if (IsOwner == false && overrideIsOwner == false) return;
+#else
+        if (IsOwner == false) return;
+#endif
+
+        if (gunEmmisionHandler != null)
+        {
+            float heatPercent = heatSink.HeatPercentage;
+
+            UpdateVisualHeatEmmision_ServerRPC(heatPercent);
+            gunEmmisionHandler.UpdateHeatEmission(heatPercent);
+        }
     }
 
 

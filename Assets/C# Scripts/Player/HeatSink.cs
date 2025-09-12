@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,9 +5,10 @@ using UnityEngine.UI;
 [System.Serializable]
 public class HeatSink
 {
+    public HeatSinkStats stats;
+
     [SerializeField] private Image heatBar;
     [SerializeField] private Animator anim;
-    public HeatSinkStats stats;
 
     [Tooltip("The amount of heat the gun has accumulated, from 0 to stats.heatSinkSize. stats.heatSinkSize means the gun is overheated.")]
     [SerializeField] private float heatAmount = 0f;
@@ -19,12 +19,6 @@ public class HeatSink
     private float overheatCooldownTimer = 0f;
     public bool Overheated { get; private set; }
     private bool recoveringFromOverheat;
-
-
-    public void Init(HeatSinkStats _stats)
-    {
-        stats = _stats;
-    }
 
 
     /// <summary>

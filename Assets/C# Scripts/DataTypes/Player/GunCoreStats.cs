@@ -1,10 +1,10 @@
-using Mono.Cecil.Cil;
 using Unity.Mathematics;
-using Unity.Netcode;
-using UnityEditor;
 using UnityEngine;
 
 
+/// <summary>
+/// Core stats of any Gun (Recoil, spread, damage, RPM, reloadTime, falloff, etc)
+/// </summary>
 [System.Serializable]
 public struct GunCoreStats
 {

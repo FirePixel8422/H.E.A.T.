@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b0b7c3e06db8a14b87487cb5b20ad5f, type: 3}
   m_Name: Machine Gun
   m_EditorClassIdentifier: 
+  gunPrefab: {fileID: 1023205569163206758, guid: 4b07b6d66a4e04544bc5f5591b3f340f,
+    type: 3}
   coreStats:
     damage: 10
     headShotMultiplier: 1.5
@@ -51,6 +53,8 @@ MonoBehaviour:
     burstShots: 0
     burstShotInterval: 0.1
     heatPerShot: 0.035
+    shootIntensityGainMultplier: 1
+    shootIntensityDescreaseMultplier: 1
     hipFireRecoilPerShot: 2
     timeToMinRecoil: 3
     recoilForce:
@@ -92,8 +96,15 @@ MonoBehaviour:
         m_RotationOrder: 4
       sampleCount: 75
     adsRecoilPattern:
-      x: 0
+    - x: 0
       y: 0
+    - x: 0
+      y: 0
+    invertX: 0
+    adsRecoilMultiplier:
+      x: 1
+      y: 1
+    adsRecoilDecayMultiplier: 10
     recoilRecoveryDelay: 0.15
     recoilRecovery:
       x: 0.5
@@ -155,3 +166,12 @@ MonoBehaviour:
     overheatDecayPower: 0.085
     overheatDecayPowerMultiplier: 1
     decayMultiplierAtMaxHeat: 8
+  shakeStats:
+    shakePitch: 5
+    shakeYaw: 2
+    shakeBuildUp: 20
+    shakeDecay: 10
+    pullBackDistance: 0.1
+    pullBackBuildUp: 25
+    pullBackDecay: 12
+    pullBackPitchKick: 300

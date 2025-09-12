@@ -1,19 +1,12 @@
 using UnityEngine;
 
+
 [System.Serializable]
 public class GunShakeHandler
 {
-    [SerializeField] private Transform gunParentTransform;
-    [SerializeField] private float shakePitch = 5f;        // random pitch kick
-    [SerializeField] private float shakeYaw = 2f;          // random yaw sway
-    [SerializeField] private float shakeBuildUp = 20f;     // snap into recoil
-    [SerializeField] private float shakeDecay = 10f;       // smooth reset
+    public GunShakeStats stats;
 
-    [Header("Pullback")]
-    [SerializeField] private float pullBackDistance = 0.1f; // local Z offset
-    [SerializeField] private float pullBackBuildUp = 25f;
-    [SerializeField] private float pullBackDecay = 12f;
-    [SerializeField] private float pullBackPitchKick = 3f;  // extra upward rotation from pullback
+    private Transform gunParentTransform;
 
     private Vector3 currentShakeRot;
     private Vector3 targetShakeRot;
@@ -24,32 +17,37 @@ public class GunShakeHandler
     private Quaternion startRot;
     private Vector3 startPos;
 
-    public void Init()
+
+    public void Init(Transform _gunParentTransform)
     {
+        gunParentTransform = _gunParentTransform;
+
+#if UNITY_EDITOR
         if (gunParentTransform == null)
         {
             DebugLogger.LogError("GunShakeHandler: gunParentTransform is not set!");
             return;
         }
+#endif
 
         startRot = gunParentTransform.localRotation;
         startPos = gunParentTransform.localPosition;
     }
 
     /// <summary>
-    /// Call when firing to kick the weapon in rotation + position
+    /// Call when firing to kick the weapon in rotation and position
     /// </summary>
     public void AddShake(float shakeMultiplier)
     {
         // rotational shake
         targetShakeRot = new Vector3(
-            -Random.Range(0f, shakePitch * shakeMultiplier),  // pitch up
-            Random.Range(-shakeYaw, shakeYaw * shakeMultiplier),
+            -Random.Range(0f, stats.shakePitch * shakeMultiplier),  // pitch up
+            Random.Range(-stats.shakeYaw, stats.shakeYaw * shakeMultiplier),
             0f
         );
 
         // positional pullback
-        targetPullback = pullBackDistance * shakeMultiplier;
+        targetPullback = stats.pullBackDistance * shakeMultiplier;
     }
 
     public void OnUpdate(float deltaTime)
@@ -58,35 +56,33 @@ public class GunShakeHandler
         currentShakeRot = Vector3.Lerp(
             currentShakeRot,
             targetShakeRot,
-            deltaTime * shakeBuildUp
+            deltaTime * stats.shakeBuildUp
         );
 
         targetShakeRot = Vector3.Lerp(
             targetShakeRot,
             Vector3.zero,
-            deltaTime * shakeDecay
+            deltaTime * stats.shakeDecay
         );
 
         // --- Position ---
         currentPullback = Mathf.Lerp(
             currentPullback,
             targetPullback,
-            deltaTime * pullBackBuildUp
+            deltaTime * stats.pullBackBuildUp
         );
 
         targetPullback = Mathf.Lerp(
             targetPullback,
             0f,
-            deltaTime * pullBackDecay
+            deltaTime * stats.pullBackDecay
         );
 
-        // --- Coupling: pullback also pitches the gun upward ---
+        // Pullback also pitches the gun upward
         Vector3 finalRot = currentShakeRot;
-        finalRot.x -= currentPullback * pullBackPitchKick * 100f;
-        // (multiply by 100 to turn small z-movement into a nice angle, tweak as needed)
+        finalRot.x -= currentPullback * stats.pullBackPitchKick;
 
         // Apply final transform
-        gunParentTransform.localRotation = startRot * Quaternion.Euler(finalRot);
-        gunParentTransform.localPosition = startPos + Vector3.back * currentPullback;
+        gunParentTransform.SetLocalPositionAndRotation(startPos + Vector3.back * currentPullback, startRot * Quaternion.Euler(finalRot));
     }
 }

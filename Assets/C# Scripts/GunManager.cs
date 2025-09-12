@@ -1,5 +1,5 @@
+using System.Globalization;
 using UnityEngine;
-using FirePixel.Networking;
 
 
 public class GunManager : MonoBehaviour
@@ -11,31 +11,34 @@ public class GunManager : MonoBehaviour
     }
 
 
-
     [SerializeField] public GunStatsSO[] guns;
     private int currentGunId;
 
     /// <summary>
-    /// Get gun stats by gunId.
+    /// Swap gun and get gunstats by gunId.
     /// </summary>
-    public void GetGunStats(int gunId, out GunCoreStats coreStats, out HeatSinkStats heatSinkStats)
+    public void SwapGun(Transform gunParentTransform, int gunId, bool isOwner, ref GunRefHolder gunRefHolder, out GunCoreStats coreStats, out HeatSinkStats heatSinkStats, out GunShakeStats shakeStats)
     {
         currentGunId = gunId;
 
+        if (gunRefHolder != null)
+        {
+            gunRefHolder.DestroyGun();
+        }
+
         GunStatsSO targetGun = guns[gunId];
 
-        coreStats = targetGun.GetCoreStats();
-        heatSinkStats = targetGun.GetHeatSinkStats();
+        gunRefHolder = Instantiate(targetGun.GunPrefab, gunParentTransform);
+        gunRefHolder.Init(isOwner);
+
+        targetGun.GetGunStats(out coreStats, out heatSinkStats, out shakeStats);
     }
 
-    public void GetNextGunStats(out GunCoreStats coreStats, out HeatSinkStats heatSinkStats, out int gunId)
+    public void SwapToNextGun(Transform gunParentTransform, bool isOwner, ref GunRefHolder gunRefHolder, out GunCoreStats coreStats, out HeatSinkStats heatSinkStats, out GunShakeStats shakeStats, out int gunId)
     {
         currentGunId = (currentGunId + 1) % guns.Length;
         gunId = currentGunId;
 
-        GunStatsSO targetGun = guns[gunId];
-
-        coreStats = targetGun.GetCoreStats();
-        heatSinkStats = targetGun.GetHeatSinkStats();
+        SwapGun(gunParentTransform, gunId, isOwner, ref gunRefHolder, out coreStats, out heatSinkStats, out shakeStats);
     }
 }

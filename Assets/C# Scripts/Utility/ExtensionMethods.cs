@@ -1,10 +1,12 @@
 ﻿using FirePixel.Networking;
+using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Mathematics;
 using Unity.Netcode;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -87,6 +89,14 @@ public static class ExtensionMethods
         if (!keepLocalScale)
         {
             trans.localScale = Vector3.one;
+        }
+    }
+
+    public static void DestroyAllChildren(this Transform parent)
+    {
+        foreach (Transform child in parent)
+        {
+            GameObject.Destroy(child.gameObject);
         }
     }
 

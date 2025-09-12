@@ -175,9 +175,13 @@ public class PlayerController : NetworkBehaviour
     {
         ManageUpdateCallbacks(true);
 
-        if (IsOwner == false) return;
-
         Cursor.lockState = CursorLockMode.Locked;
+
+#if UNITY_EDITOR
+        if (IsOwner == false && overrideIsOwner == false) return;
+#else
+        if (IsOwner == false) return;
+#endif
 
         // set gun to correct FOV independent and always in front layer ("Gun")
         int layerId = LayerMask.NameToLayer("Gun");
@@ -192,6 +196,17 @@ public class PlayerController : NetworkBehaviour
     private bool registeredForUpdates = false;
     private void ManageUpdateCallbacks(bool register)
     {
+#if UNITY_EDITOR
+        if (overrideIsOwner)
+        {
+            if (registeredForUpdates == register) return;
+
+            UpdateScheduler.ManageFixedUpdate(OnFixedUpdate, register);
+            registeredForUpdates = register;
+
+            return;
+        }
+#endif
         if (IsSpawned == false) return;
 
         if (IsOwner)
@@ -210,7 +225,7 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
-    #endregion
+#endregion
 
 
     /// <summary>
@@ -323,25 +338,9 @@ public class PlayerController : NetworkBehaviour
     #endregion
 
 
-
-    private Vector3 interpolationStartPos;
-    private Vector3 interpolationTargetPos;
-    private Quaternion interpolationStartRot;
-    private Quaternion interpolationTargetRot;
-    private Quaternion interpolationStartCamRot;
-    private Quaternion interpolationTargetCamRot;
-    private float interpolationStartTime;
-    private float interpolationDuration = 0.1f;
-
     private void OnUpdate()
     {
         return;
-        float t = (Time.time - interpolationStartTime) / interpolationDuration;
-        t = Mathf.Clamp01(t);
-
-        transform.position = Vector3.Lerp(interpolationStartPos, interpolationTargetPos, t);
-        transform.rotation = Quaternion.Slerp(interpolationStartRot, interpolationTargetRot, t);
-        cameraTransform.localRotation = Quaternion.Slerp(interpolationStartCamRot, interpolationTargetCamRot, t);
     }
 
     public override void OnDestroy()
@@ -358,6 +357,6 @@ public class PlayerController : NetworkBehaviour
     }
 
 #if UNITY_EDITOR
-    [SerializeField] private bool overrideAllowMovementControls;
+    [SerializeField] private bool overrideIsOwner;
 #endif
 }

@@ -2,7 +2,9 @@
 using UnityEngine;
 
 
-
+/// <summary>
+/// Heatsink Stats for any gun (heatBarSize, decaySpeed, overHeatDecaySpeed, decayCurve)
+/// </summary>
 [System.Serializable]
 public struct HeatSinkStats : INetworkSerializable
 {

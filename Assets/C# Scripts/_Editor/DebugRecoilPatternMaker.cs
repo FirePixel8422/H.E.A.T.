@@ -31,7 +31,9 @@ public class DebugRecoilPatternMaker : MonoBehaviour
 
     public void LoadRecoilPatternFromScriptableObject()
     {
-        recoilPatternData.recoilPoints = toSaveLoadGunDataObject.GetCoreStats().adsRecoilPattern;
+        toSaveLoadGunDataObject.GetGunStats(out GunCoreStats stats, out _, out _);
+
+        recoilPatternData.recoilPoints = stats.adsRecoilPattern;
     }
 
     public void SaveRecoilPatternToScriptableObject()
