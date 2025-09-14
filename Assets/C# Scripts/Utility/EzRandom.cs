@@ -71,7 +71,6 @@ public static class EzRandom
         return random.NextFloat(value.min, value.max);
     }
 
-
     public static Vector3 Range(Vector3 min, Vector3 max)
     {
         Vector3 vec;

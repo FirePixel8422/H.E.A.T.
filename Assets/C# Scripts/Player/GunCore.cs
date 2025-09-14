@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using FirePixel.Networking;
 using System.Runtime.CompilerServices;
-using Unity.Properties;
 
 
 
@@ -95,6 +94,7 @@ public class GunCore : NetworkBehaviour
             DecalVfxManager.Instance.Init(cam);
 
             gunShakeHandler.Init(gunParentTransform);
+            gunEmmisionHandler.Init();
 
             SwapGun(0);
         }
@@ -109,6 +109,7 @@ public class GunCore : NetworkBehaviour
             DecalVfxManager.Instance.Init(cam);
 
             gunShakeHandler.Init(gunParentTransform);
+            gunEmmisionHandler.Init();
 
             SwapGun(0);
         }
@@ -147,7 +148,7 @@ public class GunCore : NetworkBehaviour
     private void SetupNewGunData(int gunId)
     {
         GunManager.Instance.SwapGun(gunParentTransform, gunId, IsOwner, ref gunRefHolder, out coreStats, out heatSink.stats, out gunShakeHandler.stats);
-        gunEmmisionHandler.Init(gunRefHolder.EmissionMatInstance);
+        gunEmmisionHandler.SwapGun(gunRefHolder.EmissionMatInstance);
     }
 
     #endregion
@@ -164,7 +165,7 @@ public class GunCore : NetworkBehaviour
         if (Input.GetKeyDown(KeyCode.V))
         {
             GunManager.Instance.SwapToNextGun(gunParentTransform, IsOwner, ref gunRefHolder, out coreStats, out heatSink.stats, out gunShakeHandler.stats, out int gunId);
-            gunEmmisionHandler.Init(gunRefHolder.EmissionMatInstance);
+            gunEmmisionHandler.SwapGun(gunRefHolder.EmissionMatInstance);
 
             timeSinceLastShot = coreStats.ShootInterval;
             burstShotTimer = coreStats.burstShotInterval;
@@ -322,7 +323,7 @@ public class GunCore : NetworkBehaviour
         float2 recoil = coreStats.GetADSRecoil();
         StartCoroutine(recoilHandler.AddRecoil(recoil, coreStats.ShootInterval));
 
-        heatSink.AddHeat(coreStats.heatPerShot, out float previousHeatPercentage);
+        heatSink.AddHeat(coreStats.heatPerShot, out float prevHeatPercentage, out float newHeatPercentage);
 
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
@@ -417,7 +418,7 @@ public class GunCore : NetworkBehaviour
     private void ShootEffects(BulletHoleMessage[] bulletHoleMessages)
     {
         int randomAudioId = EzRandom.Range(0, coreStats.shootAudioClips.Length);
-        float randomPitch = EzRandom.Range(coreStats.minMaxPitch);
+        float randomPitch = EzRandom.Range(MathLogic.Lerp(coreStats.minMaxPitch, coreStats.minMaxPitchAtMaxHeat, heatSink.HeatPercentage));
 
         gunShotSource.PlayClipWithPitch(coreStats.shootAudioClips[randomAudioId], randomPitch);
 
@@ -427,9 +428,9 @@ public class GunCore : NetworkBehaviour
 
 
     [ServerRpc(RequireOwnership = false)]
-    private void Shoot_ServerRPC(int clientGameId, BulletHoleMessage[] bulletHoleMessages)
+    private void Shoot_ServerRPC(int fromClientGameId, BulletHoleMessage[] bulletHoleMessages)
     {
-        Shoot_ClientRPC(bulletHoleMessages, GameIdRPCTargets.SendToOppositeClient(clientGameId));
+        Shoot_ClientRPC(bulletHoleMessages, GameIdRPCTargets.SendToOppositeClient(fromClientGameId));
     }
 
     [ClientRpc(RequireOwnership = false)]

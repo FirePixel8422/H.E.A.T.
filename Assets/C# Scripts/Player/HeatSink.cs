@@ -25,16 +25,15 @@ public class HeatSink
     /// Called by GunCore when a shot is fired. Adds heat equivelent to coreStats.addedHeat.
     /// </summary>
     /// <returns>The heat percentage from 0-1 before adding the new heat</returns>
-    public void AddHeat(float addedHeat, out float previousHeatPercentage)
+    public void AddHeat(float addedHeat, out float prevHeatPercentage, out float newHeatPercentage)
     {
-        previousHeatPercentage = heatAmount / stats.heatSinkSize;
-        // StopAllCoroutines(); // Remove this coroutine call
-
+        prevHeatPercentage = HeatPercentage;
         heatAmount += addedHeat;
+        newHeatPercentage = HeatPercentage;
 
-        heatBar.fillAmount = heatAmount / stats.heatSinkSize;
+        heatBar.fillAmount = newHeatPercentage;
 
-        if (heatAmount >= stats.heatSinkSize)
+        if (newHeatPercentage >= 1)
         {
             heatAmount = stats.heatSinkSize;
 

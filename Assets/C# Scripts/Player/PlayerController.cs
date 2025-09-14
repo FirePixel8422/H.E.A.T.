@@ -62,11 +62,12 @@ public class PlayerController : NetworkBehaviour
     [Header("Jump and Gravity Settings")]
 
     [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundMask;
     [SerializeField] private float jumpForce = 5;
     [SerializeField] private float fallGravityMultiplier = 5;
 
     [SerializeField] private float groundCheckRadius = 0.05f;
-    private bool IsGrounded => Physics.CheckSphere(groundCheck.position, groundCheckRadius);
+    private bool IsGrounded => Physics.CheckSphere(groundCheck.position, groundCheckRadius, groundMask);
 
     #endregion
 

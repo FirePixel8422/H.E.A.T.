@@ -6,19 +6,25 @@ public class GunVisualHandler
 {
     [SerializeField] private HDRGradient heatGradient;
 
-    private Material matInstance;
+    [SerializeField] private Material emissionMatInstance;
     private int emissionId;
 
 
-    public void Init(Material _matInstance)
+    public void Init()
     {
-        matInstance = _matInstance;
         emissionId = Shader.PropertyToID("_EmissionColor");
+    }
+
+    public void SwapGun(Material _matInstance)
+    {
+        emissionMatInstance = _matInstance;
     }
 
     public void UpdateHeatEmission(float percent)
     {
+        if (emissionMatInstance == null) return;
+
         Color heatColor = heatGradient.gradient.Evaluate(percent);
-        matInstance.SetColor(emissionId, heatColor);
+        emissionMatInstance.SetColor(emissionId, heatColor);
     }
 }

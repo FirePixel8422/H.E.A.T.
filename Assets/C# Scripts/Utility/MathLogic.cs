@@ -78,6 +78,11 @@ public static class MathLogic
         if (input == 2) return 2;
         return 1 << (input - 1); // 2^(input-1)
     }
+
+    public static MinMaxFloat Lerp(MinMaxFloat a, MinMaxFloat b, float t)
+    {
+        return new MinMaxFloat(math.lerp(a.min, b.max, t), math.lerp(a.max, b.max, t));
+    }
 }
 
 
