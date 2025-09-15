@@ -10,6 +10,7 @@ namespace FirePixel.Networking
     {
         public static Lobby CurrentLobby { get; private set; }
         public static string LobbyId => CurrentLobby.Id;
+        public static string LobbyCode => CurrentLobby.Data["joinCode"].Value;
 
 
 

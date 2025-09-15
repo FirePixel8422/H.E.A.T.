@@ -5,7 +5,7 @@
 public class GunRefHolder : MonoBehaviour
 {
 #pragma warning disable UDR0001
-    public static GunRefHolder OwnerInstance;
+    public static GunRefHolder LocalInstance;
     public static GunRefHolder OpponentInstance;
 #pragma warning restore UDR0001
 
@@ -26,7 +26,7 @@ public class GunRefHolder : MonoBehaviour
     {
         if (localClientIsOwner)
         {
-            OwnerInstance = this;
+            LocalInstance = this;
         }
         else
         {

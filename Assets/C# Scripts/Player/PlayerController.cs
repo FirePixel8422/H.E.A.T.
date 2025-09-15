@@ -9,6 +9,12 @@ using UnityEngine.InputSystem;
 [Tooltip("Controls player movement, jumping, crouchInput, and camera look. Handles Rigidbody physics for movement and gravity. Sends player transforms to the server and synchronizes them with clients.")]
 public class PlayerController : NetworkBehaviour
 {
+#pragma warning disable UDR0001
+    public static PlayerController LocalInstance;
+    public static PlayerController OpponentInstance;
+#pragma warning restore UDR0001
+
+
     #region Movement
 
     [Header("Movement Settings")]
@@ -179,10 +185,19 @@ public class PlayerController : NetworkBehaviour
         Cursor.lockState = CursorLockMode.Locked;
 
 #if UNITY_EDITOR
-        if (IsOwner == false && overrideIsOwner == false) return;
+        if (IsOwner == false && overrideIsOwner == false)
+        {
+            OpponentInstance = this;
+            return;
+        }
 #else
-        if (IsOwner == false) return;
+        if (IsOwner == false)
+        {
+            OpponentInstance = this;
+            return;
+        }
 #endif
+        LocalInstance = this;
 
         // set gun to correct FOV independent and always in front layer ("Gun")
         int layerId = LayerMask.NameToLayer("Gun");

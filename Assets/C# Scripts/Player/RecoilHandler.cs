@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.Burst;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -7,8 +8,8 @@ using UnityEngine;
 [System.Serializable]
 public class RecoilHandler
 {
-    [Header("Transform used for camera movement and now also for recoil")]
-    [SerializeField] private Transform cameraTransform;
+    [Header("Transform used for camera recoil")]
+    [SerializeField] private Transform recoilTransform;
 
     [Space(10)]
 
@@ -22,8 +23,22 @@ public class RecoilHandler
     public void OnMouseMovement(Vector2 mouseMovement)
     {
         // Only counter if the movement is opposing the recoil
-        if (mouseMovement.y < 0f) recoil.y = Mathf.MoveTowards(recoil.y, 0f, -mouseMovement.y);
-        if (mouseMovement.x != 0f) recoil.x = Mathf.MoveTowards(recoil.x, 0f, Mathf.Abs(mouseMovement.x));
+        if (mouseMovement.y < 0f)
+        {
+            float newRecoilY = Mathf.MoveTowards(recoil.y, 0f, -mouseMovement.y);
+            recoil.y = newRecoilY;
+        }
+
+        if (mouseMovement.x != 0f)
+        {
+            float newRecoilX = Mathf.MoveTowards(recoil.x, 0f, math.abs(mouseMovement.x));
+            float recoilXDiff = recoil.x - newRecoilX;
+
+            PlayerController.LocalInstance.transform.Rotate(Vector3.up * recoilXDiff);
+            recoilTransform.Rotate(-Vector3.up * recoilXDiff);
+
+            recoil.x = newRecoilX;
+        }
     }
 
 
@@ -50,12 +65,15 @@ public class RecoilHandler
         );
 
         toAddRecoil -= addedRecoil;
-
-        // Apply recoil (pitch = vertical, yaw = horizontal)
-        cameraTransform.Rotate(Vector3.left, addedRecoil.y);    // vertical
-        cameraTransform.Rotate(Vector3.up, addedRecoil.x);      // horizontal
-
         recoil += addedRecoil;
+
+        Vector3 currentEuler = recoilTransform.localEulerAngles;
+        Vector3 newRotation = new Vector3(
+            currentEuler.x - addedRecoil.y,
+            currentEuler.y + addedRecoil.x,
+            0f
+        );
+        recoilTransform.localEulerAngles = newRotation;
     }
 
 
@@ -63,20 +81,46 @@ public class RecoilHandler
     /// <summary>
     /// Called every frame when gun has not shot long enough, so recoil start recovering.
     /// </summary>
-    public void StabilizeRecoil(float2 maxRecoilRecovery)
+    public void StabilizeRecoil(float maxRecoilRecovery)
     {
-        if (recoil.IsZero()) return;
+        if (recoil.IsZero())
+        {
+            // Reset transform
+            Vector3 cEuler = recoilTransform.localEulerAngles;
+            cEuler.NormalizeAsEuler();
 
-        // Recover up to maxRecoilRecovery
-        float2 recoilRecovery = recoil - new float2(
-            Mathf.MoveTowards(recoil.x, 0, maxRecoilRecovery.x),
-            Mathf.MoveTowards(recoil.y, 0, maxRecoilRecovery.y)
-        );
+            Vector3 fixedRotation = VectorLogic.InstantMoveTowards(cEuler, new Vector3(cEuler.x, 0, 0), maxRecoilRecovery);
+            recoilTransform.localEulerAngles = fixedRotation;
+
+            return;
+        }
+
+        float2 recoilRecovery = GetRecoilRecovery(recoil, float2.zero, maxRecoilRecovery);
 
         recoil -= recoilRecovery;
 
-        // Apply the recoil recovery (down == transform.right)
-        cameraTransform.Rotate(Vector3.right, recoilRecovery.y); // vertical down
-        cameraTransform.Rotate(Vector3.down, recoilRecovery.x);  // horizontal back
+        // Apply the recoil recovery
+        Vector3 currentEuler = recoilTransform.localEulerAngles;
+        Vector3 newRotation = new Vector3(
+            currentEuler.x + recoilRecovery.y,  // positive because we're recovering
+            currentEuler.y - recoilRecovery.x,  // negative because we're recovering
+            0f
+        );
+        recoilTransform.localEulerAngles = newRotation;
+    }
+
+
+    [BurstCompile(DisableSafetyChecks = true)]
+    public static float2 GetRecoilRecovery(float2 from, float2 to, float maxStep)
+    {
+        float2 direction = from - to;
+        float distance = math.length(direction);
+
+        if (distance <= maxStep)
+        {
+            return math.normalize(direction) * distance;
+        }
+
+        return math.normalize(direction) * maxStep;
     }
 }

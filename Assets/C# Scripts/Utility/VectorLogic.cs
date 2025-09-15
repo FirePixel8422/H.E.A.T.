@@ -72,6 +72,24 @@ public static class VectorLogic
         return value * scale;
     }
 
+    /// <summary>
+    /// Normalize each cord in the vector by wrapping rotation (-360 if above 180 degrees)
+    /// </summary>
+    public static void NormalizeAsEuler(this ref Vector3 value)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            if (value[i] > 180)
+            {
+                value[i] -= 360;
+            }
+            else if (value[i] < -180)
+            {
+                value[i] += 360;
+            }
+        }
+    }
+
 
     /// <summary>
     /// Turn 3d vector into 2d vector

@@ -111,7 +111,7 @@ public struct GunCoreStats
     [Header("The time that needs to pass while not shooting for the recoil to stabilize")]
     public float recoilRecoveryDelay;
     [Header("How much recoil to recover per second while not shooting")]
-    public float2 recoilRecovery;
+    public float recoilRecovery;
 
 
     [Header("How much the bullet can maximally offset from actual shot point")]

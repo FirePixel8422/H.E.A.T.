@@ -638,9 +638,7 @@ MonoBehaviour:
       y: 0
     adsRecoilDecayMultiplier: 0
     recoilRecoveryDelay: 0
-    recoilRecovery:
-      x: 0
-      y: 0
+    recoilRecovery: 0
     maxSpread: 0
     spreadCurve:
       curve:
@@ -657,12 +655,15 @@ MonoBehaviour:
     minMaxPitch:
       min: 0
       max: 0
+    minMaxPitchAtMaxHeat:
+      min: 0
+      max: 0
     overHeatAudioClip: {fileID: 0}
     overHeatMinMaxPitch:
       min: 0
       max: 0
   recoilHandler:
-    cameraTransform: {fileID: 6012974010948853806}
+    recoilTransform: {fileID: 6012974010948853806}
   heatSink:
     stats:
       heatSinkSize: 0
@@ -718,6 +719,7 @@ MonoBehaviour:
         m_ColorSpace: 0
         m_NumColorKeys: 5
         m_NumAlphaKeys: 2
+    emissionMatInstance: {fileID: 0}
   shootPointTransform: {fileID: 0}
   gunShotSource: {fileID: 5837324410720302518}
   gunOverheatSource: {fileID: 6957241378848993016}
@@ -2029,7 +2031,7 @@ GameObject:
   - component: {fileID: 8797678985547001680}
   - component: {fileID: 1732793575751869812}
   m_Layer: 7
-  m_Name: Main Camera
+  m_Name: RecoilTransform (MainCam)
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
