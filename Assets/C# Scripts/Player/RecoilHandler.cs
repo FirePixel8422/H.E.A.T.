@@ -13,8 +13,13 @@ public class RecoilHandler
 
     [Space(10)]
 
-    private float2 toAddRecoil;
-    private float2 recoil;
+    public float2 toAddRecoil;
+    public float2 recoil;
+
+    public float2 addedRecoil;
+    public float2 removedRecoil;
+    public float2 neutralizedRecoil;
+    public float2 totalRecoilRecov;
 
 
     /// <summary>
@@ -25,20 +30,34 @@ public class RecoilHandler
         // Only counter if the movement is opposing the recoil
         if (mouseMovement.y < 0f)
         {
-            float newRecoilY = Mathf.MoveTowards(recoil.y, 0f, -mouseMovement.y);
-            recoil.y = newRecoilY;
+            float recoilY = recoil.y;
+            recoil.y = Mathf.MoveTowards(recoil.y, 0f, -mouseMovement.y);
+
+            neutralizedRecoil.y += recoilY - recoil.y;
         }
 
         if (mouseMovement.x != 0f)
         {
-            float newRecoilX = Mathf.MoveTowards(recoil.x, 0f, math.abs(mouseMovement.x));
-            float recoilXDiff = recoil.x - newRecoilX;
+            float recoilX = recoil.x;
+            recoil.x = Mathf.MoveTowards(recoil.x, 0f, math.abs(mouseMovement.x));
 
-            PlayerController.LocalInstance.transform.Rotate(Vector3.up * recoilXDiff);
-            recoilTransform.Rotate(-Vector3.up * recoilXDiff);
+            float recoilRecovery = recoilX - recoil.x;
 
-            recoil.x = newRecoilX;
+            PlayerController.LocalInstance.transform.Rotate(Vector3.up * recoilRecovery);
+
+
+            Vector3 currentEuler = recoilTransform.localEulerAngles;
+            Vector3 newRotation = new Vector3(
+                currentEuler.x,
+                currentEuler.y - recoilRecovery,
+                0f
+            );
+            recoilTransform.localEulerAngles = newRotation;
+
+            neutralizedRecoil.x += recoilRecovery;
         }
+
+        totalRecoilRecov = removedRecoil + neutralizedRecoil;
     }
 
 
@@ -67,6 +86,8 @@ public class RecoilHandler
         toAddRecoil -= addedRecoil;
         recoil += addedRecoil;
 
+        this.addedRecoil += addedRecoil;
+
         Vector3 currentEuler = recoilTransform.localEulerAngles;
         Vector3 newRotation = new Vector3(
             currentEuler.x - addedRecoil.y,
@@ -85,12 +106,14 @@ public class RecoilHandler
     {
         if (recoil.IsZero())
         {
-            // Reset transform
-            Vector3 cEuler = recoilTransform.localEulerAngles;
-            cEuler.NormalizeAsEuler();
+            return;
 
-            Vector3 fixedRotation = VectorLogic.InstantMoveTowards(cEuler, new Vector3(cEuler.x, 0, 0), maxRecoilRecovery);
-            recoilTransform.localEulerAngles = fixedRotation;
+            // Reset transform
+            Quaternion cRot = recoilTransform.localRotation;
+            Vector3 cEuler = recoilTransform.localEulerAngles;
+
+            Quaternion fixedRotation = Quaternion.RotateTowards(cRot, Quaternion.Euler(new Vector3(cEuler.x, 0, 0)), maxRecoilRecovery);
+            recoilTransform.localRotation = fixedRotation;
 
             return;
         }
@@ -98,6 +121,8 @@ public class RecoilHandler
         float2 recoilRecovery = GetRecoilRecovery(recoil, float2.zero, maxRecoilRecovery);
 
         recoil -= recoilRecovery;
+        this.removedRecoil += recoilRecovery;
+        totalRecoilRecov = removedRecoil + neutralizedRecoil;
 
         // Apply the recoil recovery
         Vector3 currentEuler = recoilTransform.localEulerAngles;

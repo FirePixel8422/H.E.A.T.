@@ -562,7 +562,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2369081872
+  GlobalObjectIdHash: 2728525203
   InScenePlacedSourceGlobalObjectIdHash: 2369081872
   DeferredDespawnTick: 0
   Ownership: 1
@@ -664,6 +664,24 @@ MonoBehaviour:
       max: 0
   recoilHandler:
     recoilTransform: {fileID: 6012974010948853806}
+    toAddRecoil:
+      x: 0
+      y: 0
+    recoil:
+      x: 0
+      y: 0
+    addedRecoil:
+      x: 0
+      y: 0
+    removedRecoil:
+      x: 0
+      y: 0
+    neutralizedRecoil:
+      x: 0
+      y: 0
+    totalRecoilRecov:
+      x: 0
+      y: 0
   heatSink:
     stats:
       heatSinkSize: 0
