@@ -562,7 +562,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2728525203
+  GlobalObjectIdHash: 2369081872
   InScenePlacedSourceGlobalObjectIdHash: 2369081872
   DeferredDespawnTick: 0
   Ownership: 1
@@ -662,8 +662,11 @@ MonoBehaviour:
     overHeatMinMaxPitch:
       min: 0
       max: 0
+  camHandler:
+    mainCamera: {fileID: 4769577523386625857}
+    gunCamera: {fileID: 4245517809260214837}
+    mainCamMaxTiltAngle: 90
   recoilHandler:
-    recoilTransform: {fileID: 6012974010948853806}
     toAddRecoil:
       x: 0
       y: 0
@@ -918,9 +921,7 @@ MonoBehaviour:
   jumpForce: 3
   fallGravityMultiplier: 5
   groundCheckRadius: 0.05
-  cameraTransform: {fileID: 6012974010948853806}
   gunHolder: {fileID: 8568243580743899453}
-  maxTiltAngle: 90
   mouseSensitivity: 0.1
   overrideIsOwner: 0
 --- !u!114 &7952861885439663320

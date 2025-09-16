@@ -8,18 +8,23 @@ using UnityEngine;
 [System.Serializable]
 public class RecoilHandler
 {
-    [Header("Transform used for camera recoil")]
-    [SerializeField] private Transform recoilTransform;
+    private CameraHandler camHandler;
 
     [Space(10)]
 
     public float2 toAddRecoil;
     public float2 recoil;
 
-    public float2 addedRecoil;
+    public float2 _addedRecoil;
     public float2 removedRecoil;
     public float2 neutralizedRecoil;
     public float2 totalRecoilRecov;
+
+
+    public void Init(CameraHandler camHandler)
+    {
+        this.camHandler = camHandler;
+    }
 
 
     /// <summary>
@@ -28,10 +33,10 @@ public class RecoilHandler
     public void OnMouseMovement(Vector2 mouseMovement)
     {
         // Only counter if the movement is opposing the recoil
-        if (mouseMovement.y < 0f)
+        if (mouseMovement.y != 0f)
         {
             float recoilY = recoil.y;
-            recoil.y = Mathf.MoveTowards(recoil.y, 0f, -mouseMovement.y);
+            recoil.y = Mathf.MoveTowards(recoil.y, 0f, math.abs(mouseMovement.y));
 
             neutralizedRecoil.y += recoilY - recoil.y;
         }
@@ -45,14 +50,8 @@ public class RecoilHandler
 
             PlayerController.LocalInstance.transform.Rotate(Vector3.up * recoilRecovery);
 
-
-            Vector3 currentEuler = recoilTransform.localEulerAngles;
-            Vector3 newRotation = new Vector3(
-                currentEuler.x,
-                currentEuler.y - recoilRecovery,
-                0f
-            );
-            recoilTransform.localEulerAngles = newRotation;
+            Vector3 toAddEuler = new Vector3(0, -recoilRecovery, 0f);
+            camHandler.AddRotationToMain(toAddEuler);
 
             neutralizedRecoil.x += recoilRecovery;
         }
@@ -78,23 +77,25 @@ public class RecoilHandler
     {
         if (toAddRecoil.IsZero()) return;
 
-        float2 addedRecoil = toAddRecoil - new float2(
+        float2 maxAddedRecoil = toAddRecoil - new float2(
             Mathf.MoveTowards(toAddRecoil.x, 0f, recoilForceThisFrame.x),
             Mathf.MoveTowards(toAddRecoil.y, 0f, recoilForceThisFrame.y)
         );
 
-        toAddRecoil -= addedRecoil;
-        recoil += addedRecoil;
+        toAddRecoil -= maxAddedRecoil;
+        recoil += maxAddedRecoil;
 
-        this.addedRecoil += addedRecoil;
+        _addedRecoil += maxAddedRecoil;
 
-        Vector3 currentEuler = recoilTransform.localEulerAngles;
-        Vector3 newRotation = new Vector3(
-            currentEuler.x - addedRecoil.y,
-            currentEuler.y + addedRecoil.x,
-            0f
-        );
-        recoilTransform.localEulerAngles = newRotation;
+        Vector3 toAddEuler = new Vector3(-maxAddedRecoil.y, maxAddedRecoil.x, 0f);
+        Vector3 addedRecoil = camHandler.AddRotationToMain(toAddEuler);
+
+
+
+
+        // Fix Recoil to stop recovering recoil that is not added do to looking up
+
+        //recoil += new float2(-addedRecoil.x, addedRecoil.y);
     }
 
 
@@ -104,34 +105,16 @@ public class RecoilHandler
     /// </summary>
     public void StabilizeRecoil(float maxRecoilRecovery)
     {
-        if (recoil.IsZero())
-        {
-            return;
-
-            // Reset transform
-            Quaternion cRot = recoilTransform.localRotation;
-            Vector3 cEuler = recoilTransform.localEulerAngles;
-
-            Quaternion fixedRotation = Quaternion.RotateTowards(cRot, Quaternion.Euler(new Vector3(cEuler.x, 0, 0)), maxRecoilRecovery);
-            recoilTransform.localRotation = fixedRotation;
-
-            return;
-        }
+        if (recoil.IsZero()) return;
 
         float2 recoilRecovery = GetRecoilRecovery(recoil, float2.zero, maxRecoilRecovery);
 
         recoil -= recoilRecovery;
-        this.removedRecoil += recoilRecovery;
+        removedRecoil += recoilRecovery;
         totalRecoilRecov = removedRecoil + neutralizedRecoil;
 
-        // Apply the recoil recovery
-        Vector3 currentEuler = recoilTransform.localEulerAngles;
-        Vector3 newRotation = new Vector3(
-            currentEuler.x + recoilRecovery.y,  // positive because we're recovering
-            currentEuler.y - recoilRecovery.x,  // negative because we're recovering
-            0f
-        );
-        recoilTransform.localEulerAngles = newRotation;
+        Vector3 toAddEuler = new Vector3(recoilRecovery.y, -recoilRecovery.x, 0f);
+        camHandler.AddRotationToMain(toAddEuler);
     }
 
 

@@ -16,6 +16,7 @@ public class GunCore : NetworkBehaviour
     [SerializeField] private GunStatsSO gunStatsSO;
     [SerializeField] private GunCoreStats coreStats;
 
+    [SerializeField] private CameraHandler camHandler;
     [SerializeField] private RecoilHandler recoilHandler;
     [SerializeField] private HeatSink heatSink;
     [SerializeField] private GunShakeHandler gunShakeHandler;
@@ -26,7 +27,7 @@ public class GunCore : NetworkBehaviour
     [SerializeField] private AudioSource gunShotSource;
     [SerializeField] private AudioSource gunOverheatSource;
 
-    private Camera cam;
+    private Camera mainCam;
 
     private bool CanShoot => timeSinceLastShot >= coreStats.ShootInterval;
 
@@ -35,7 +36,7 @@ public class GunCore : NetworkBehaviour
 
     private bool shootButtonHeld;
     private bool adsButtonHeld;
-    private bool IsScaopedIn => adsButtonHeld && heatSink.Overheated == false;
+    private bool IsScopedIn => adsButtonHeld && heatSink.Overheated == false;
 
     private float timeSinceLastShot;
     private float timeSinceShootButtonPress;
@@ -90,14 +91,18 @@ public class GunCore : NetworkBehaviour
 
         if (IsOwner)
         {
-            cam = GetComponentInChildren<Camera>();
-            DecalVfxManager.Instance.Init(cam);
+            mainCam = GetComponentInChildren<Camera>();
+            DecalVfxManager.Instance.Init(mainCam);
 
             gunShakeHandler.Init(gunParentTransform);
             gunEmmisionHandler.Init();
 
+            recoilHandler.Init(camHandler);
+            GetComponent<PlayerController>().Init(camHandler);
+
             SwapGun(0);
         }
+
     }
 
 #if UNITY_EDITOR
@@ -105,8 +110,8 @@ public class GunCore : NetworkBehaviour
     {
         if (overrideIsOwner)
         {
-            cam = GetComponentInChildren<Camera>();
-            DecalVfxManager.Instance.Init(cam);
+            mainCam = GetComponentInChildren<Camera>();
+            DecalVfxManager.Instance.Init(mainCam);
 
             gunShakeHandler.Init(gunParentTransform);
             gunEmmisionHandler.Init();
@@ -325,10 +330,10 @@ public class GunCore : NetworkBehaviour
 
         heatSink.AddHeat(coreStats.heatPerShot, out float prevHeatPercentage, out float newHeatPercentage);
 
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
 
-        Vector3 camRight = cam.transform.right;
-        Vector3 camUp = cam.transform.up;
+        Vector3 mainCamRight = mainCam.transform.right;
+        Vector3 mainCamUp = mainCam.transform.up;
 
         float DEBUG_damageThisShot = 0;
 
@@ -338,7 +343,7 @@ public class GunCore : NetworkBehaviour
         {
             float2 spreadOffset = float2.zero;// RandomApproxPointInCircle(coreStats.GetHipFireSpread(previousHeatPercentage));
 
-            Vector3 rayDirWithSpread = math.normalize(ray.direction + camRight * spreadOffset.x + camUp * spreadOffset.y);
+            Vector3 rayDirWithSpread = math.normalize(ray.direction + mainCamRight * spreadOffset.x + mainCamUp * spreadOffset.y);
 
             // Shoot an invisble sphere to detect a hit
             if (Physics.SphereCast(ray.origin, coreStats.bulletSize, rayDirWithSpread, out RaycastHit hit))

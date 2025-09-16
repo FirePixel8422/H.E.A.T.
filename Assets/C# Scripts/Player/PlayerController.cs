@@ -1,6 +1,5 @@
 using FirePixel.Networking;
 using System.Runtime.CompilerServices;
-using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -80,18 +79,11 @@ public class PlayerController : NetworkBehaviour
 
     #region Camera Stuff
 
-    [Header("Camera and Look Settings")]
-    [SerializeField] private Transform cameraTransform;
-    private Camera mainCam;
+    private CameraHandler camHandler;
 
+    [Header("Gun layer setup and Look Settings")]
     [SerializeField] private GameObject gunHolder;
-    [SerializeField] private float maxTiltAngle = 90;
     [SerializeField] private float mouseSensitivity = 1;
-
-    public void SetCameraFOV(float value)
-    {
-        mainCam.fieldOfView = value;
-    }
 
     #endregion
 
@@ -147,16 +139,7 @@ public class PlayerController : NetworkBehaviour
     {
         Vector2 mouseMovement = ctx.ReadValue<Vector2>();
 
-        Vector3 camEuler = cameraTransform.eulerAngles;
-        camEuler.x -= mouseMovement.y * mouseSensitivity;
-
-        // Normalize angle from 0-360 to -180 to 180
-        if (camEuler.x > 180f)
-            camEuler.x -= 360f;
-
-        camEuler.x = math.clamp(camEuler.x, -maxTiltAngle, maxTiltAngle);
-
-        cameraTransform.eulerAngles = camEuler;
+        camHandler.MainCamLocalEulerPitch += -mouseMovement.y * mouseSensitivity;
 
         transform.Rotate(Vector3.up, mouseMovement.x * mouseSensitivity);
 
@@ -171,11 +154,29 @@ public class PlayerController : NetworkBehaviour
     private void OnEnable() => ManageUpdateCallbacks(true);
     private void OnDisable() => ManageUpdateCallbacks(false);
 
-    private void Start()
+    public void Init(CameraHandler camHandler)
     {
+        this.camHandler = camHandler;
+
         rb = GetComponent<Rigidbody>();
-        mainCam = cameraTransform.GetComponent<Camera>();
         stateMachine = GetComponent<NetworkStateMachine>();
+
+        return;
+
+        float temp = camHandler.MainCamLocalEulerPitch;
+
+        DebugLogger.Log(camHandler.MainCamLocalEulerPitch);
+
+        camHandler.MainCamLocalEulerPitch = 0;
+        DebugLogger.Log(camHandler.MainCamLocalEulerPitch);
+
+        camHandler.MainCamLocalEulerPitch += 10;
+        DebugLogger.Log(camHandler.MainCamLocalEulerPitch);
+
+        camHandler.MainCamLocalEulerPitch *= 10;
+        DebugLogger.Log(camHandler.MainCamLocalEulerPitch);
+
+        camHandler.MainCamLocalEulerPitch = temp;
     }
 
     public override void OnNetworkSpawn()
@@ -279,7 +280,7 @@ public class PlayerController : NetworkBehaviour
         }
 
         // Send transform data to server
-        SendPlayerTransforms_ServerRPC(transform.position, cameraTransform.localEulerAngles.x, transform.eulerAngles.y);
+        SendPlayerTransforms_ServerRPC(transform.position, camHandler.MainCamLocalEulerPitch, transform.eulerAngles.y);
     }
 
 
@@ -334,21 +335,8 @@ public class PlayerController : NetworkBehaviour
     {
         if (IsOwner) return;
 
-        //// Save current state as interpolation starting point
-        //interpolationStartPos = transform.position;
-        //interpolationStartRot = transform.rotation;
-        //interpolationStartCamRot = cameraTransform.localRotation;
-
-        //// Apply target
-        //interpolationTargetPos = pos;
-        //interpolationTargetRot = Quaternion.Euler(0f, yaw, 0f);
-        //interpolationTargetCamRot = Quaternion.Euler(pitch, 0f, 0f);
-
-        //interpolationStartTime = Time.time;
-        //interpolationDuration = 0.1f; // match your send rate
-
         transform.SetPositionAndRotation(pos, Quaternion.Euler(0f, yaw, 0f));
-        cameraTransform.localEulerAngles = new Vector3(pitch, 0f, 0f);
+        camHandler.MainCamLocalEulerPitch = pitch;
     }
 
     #endregion

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Mathematics;
+using UnityEngine;
 
 
 
@@ -8,8 +9,25 @@ public class CameraHandler
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Camera gunCamera;
 
-    [SerializeField] private mainCamMaxTiltAngle
+    [SerializeField] private float mainCamMaxTiltAngle = 90;
 
+    /// <summary>
+    /// Main Camera localEulerAngles.x (get and set)
+    /// </summary>
+    public float MainCamLocalEulerPitch
+    {
+        get => mainCamera.transform.localEulerAngles.x;
+        set
+        {
+            Vector3 euler = mainCamera.transform.localEulerAngles;
+            euler.x = value;
+            euler.NormalizeAsEuler();
+
+            euler.x = math.clamp(euler.x, -mainCamMaxTiltAngle, mainCamMaxTiltAngle);
+
+            mainCamera.transform.localEulerAngles = euler;
+        }
+    }
 
     public void SetFOV(float fov)
     {
@@ -23,13 +41,19 @@ public class CameraHandler
 
     }
 
-    public void SendRotationToMain(Quaternion rot)
+    /// <summary>
+    /// Adds a rotation to main camera and returns the actual change in rotation as euler (after the <see cref="mainCamMaxTiltAngle"/>)
+    /// </summary>
+    public Vector3 AddRotationToMain(Vector3 toAddEuler)
     {
-        Vector3 euler = rot.eulerAngles;
-        euler.x = 
+        Vector3 cEuler = mainCamera.transform.localEulerAngles;
+        Vector3 newEuler = cEuler + toAddEuler;
+        newEuler.NormalizeAsEuler();
 
-        camEuler.x = math.clamp(camEuler.x, -maxTiltAngle, maxTiltAngle);
+        newEuler.x = math.clamp(newEuler.x, -mainCamMaxTiltAngle, mainCamMaxTiltAngle);
 
-        mainCamera.transform.rotation = 
+        mainCamera.transform.localEulerAngles = newEuler;
+
+        return newEuler - cEuler;
     }
 }
