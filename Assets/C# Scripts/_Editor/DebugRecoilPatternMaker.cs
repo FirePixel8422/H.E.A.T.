@@ -20,7 +20,6 @@ public class DebugRecoilPatternMaker : MonoBehaviour
     private AudioSource source;
 
     private const string RecoilSavesPath = "Editor/RecoilPatterns/";
-    public const string RecoilPatternParentName = "RecoilPatternVisuals >>DEBUG<<";
 
 
 
@@ -31,7 +30,7 @@ public class DebugRecoilPatternMaker : MonoBehaviour
 
     public void LoadRecoilPatternFromScriptableObject()
     {
-        toSaveLoadGunDataObject.GetGunStats(out GunCoreStats stats, out _, out _);
+        toSaveLoadGunDataObject.GetGunStats(out GunCoreStats stats, out _, out _, out _);
 
         recoilPatternData.recoilPoints = stats.adsRecoilPattern;
     }

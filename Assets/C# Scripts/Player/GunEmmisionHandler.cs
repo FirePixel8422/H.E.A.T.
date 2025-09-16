@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 [System.Serializable]
-public class GunVisualHandler
+public class GunEmmisionHandler
 {
     [SerializeField] private HDRGradient heatGradient;
 
