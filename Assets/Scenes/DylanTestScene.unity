@@ -1898,7 +1898,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 19f99f994c8f5554187ad386169753ca, type: 3}
---- !u!1001 &7987563372009078270
+--- !u!1001 &6380510647653766381
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -1906,60 +1906,60 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 8545535986285968598, guid: 3c8432fc3d4302346bde8993e348863d,
-        type: 3}
-      propertyPath: m_Name
-      value: HeatKnife
-      objectReference: {fileID: 0}
-    - target: {fileID: 9069131551816820332, guid: 3c8432fc3d4302346bde8993e348863d,
+    - target: {fileID: 394523980737339922, guid: 3c8432fc3d4302346bde8993e348863d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.6326447
+      value: 1.76
       objectReference: {fileID: 0}
-    - target: {fileID: 9069131551816820332, guid: 3c8432fc3d4302346bde8993e348863d,
+    - target: {fileID: 394523980737339922, guid: 3c8432fc3d4302346bde8993e348863d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.057560813
+      value: 1.28
       objectReference: {fileID: 0}
-    - target: {fileID: 9069131551816820332, guid: 3c8432fc3d4302346bde8993e348863d,
+    - target: {fileID: 394523980737339922, guid: 3c8432fc3d4302346bde8993e348863d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.7961187
+      value: 6.09
       objectReference: {fileID: 0}
-    - target: {fileID: 9069131551816820332, guid: 3c8432fc3d4302346bde8993e348863d,
+    - target: {fileID: 394523980737339922, guid: 3c8432fc3d4302346bde8993e348863d,
         type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 9069131551816820332, guid: 3c8432fc3d4302346bde8993e348863d,
+    - target: {fileID: 394523980737339922, guid: 3c8432fc3d4302346bde8993e348863d,
         type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9069131551816820332, guid: 3c8432fc3d4302346bde8993e348863d,
+    - target: {fileID: 394523980737339922, guid: 3c8432fc3d4302346bde8993e348863d,
         type: 3}
       propertyPath: m_LocalRotation.y
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 9069131551816820332, guid: 3c8432fc3d4302346bde8993e348863d,
+    - target: {fileID: 394523980737339922, guid: 3c8432fc3d4302346bde8993e348863d,
         type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: 9069131551816820332, guid: 3c8432fc3d4302346bde8993e348863d,
+    - target: {fileID: 394523980737339922, guid: 3c8432fc3d4302346bde8993e348863d,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9069131551816820332, guid: 3c8432fc3d4302346bde8993e348863d,
+    - target: {fileID: 394523980737339922, guid: 3c8432fc3d4302346bde8993e348863d,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9069131551816820332, guid: 3c8432fc3d4302346bde8993e348863d,
+    - target: {fileID: 394523980737339922, guid: 3c8432fc3d4302346bde8993e348863d,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1023005224027601064, guid: 3c8432fc3d4302346bde8993e348863d,
+        type: 3}
+      propertyPath: m_Name
+      value: HeatKnife
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1972,7 +1972,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 1460328907}
   - {fileID: 1436576295}
-  - {fileID: 7987563372009078270}
   - {fileID: 5476263977007762553}
   - {fileID: 852750377094292823}
   - {fileID: 1247025022}
@@ -1993,3 +1992,4 @@ SceneRoots:
   - {fileID: 104114476}
   - {fileID: 487229933}
   - {fileID: 5106489}
+  - {fileID: 6380510647653766381}
