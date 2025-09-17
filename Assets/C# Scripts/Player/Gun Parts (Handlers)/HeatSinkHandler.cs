@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 
 [System.Serializable]
-public class HeatSink
+public class HeatSinkHandler
 {
     public HeatSinkStats stats;
 

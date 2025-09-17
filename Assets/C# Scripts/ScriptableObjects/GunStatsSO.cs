@@ -14,15 +14,17 @@ public class GunStatsSO : ScriptableObject
     [SerializeField] private GunCoreStats coreStats = GunCoreStats.Default;
     [SerializeField] private HeatSinkStats heatSinkStats = HeatSinkStats.Default;
     [SerializeField] private GunShakeStats shakeStats = GunShakeStats.Default;
+    [SerializeField] private GunSwayStats swayStats = GunSwayStats.Default;
 
 
-    public void GetGunStats(out GunCoreStats _coreStats, out HeatSinkStats _heatSinkStats, out GunShakeStats _shakeStats)
+    public void GetGunStats(out GunCoreStats coreStats, out HeatSinkStats heatSinkStats, out GunShakeStats shakeStats, out GunSwayStats swayStats)
     {
-        coreStats.BakeAllCurves();
+        this.coreStats.BakeAllCurves();
         
-        _coreStats = coreStats;
-        _heatSinkStats = heatSinkStats;
-        _shakeStats = shakeStats;
+        coreStats = this.coreStats;
+        heatSinkStats = this.heatSinkStats;
+        shakeStats = this.shakeStats;
+        swayStats = this.swayStats;
     }
 
 #if UNITY_EDITOR

@@ -15,12 +15,6 @@ public class RecoilHandler
     public float2 toAddRecoil;
     public float2 recoil;
 
-    public float2 _addedRecoil;
-    public float2 removedRecoil;
-    public float2 neutralizedRecoil;
-    public float2 totalRecoilRecov;
-
-
     public void Init(CameraHandler camHandler)
     {
         this.camHandler = camHandler;
@@ -35,10 +29,7 @@ public class RecoilHandler
         // Only counter if the movement is opposing the recoil
         if (mouseMovement.y != 0f)
         {
-            float recoilY = recoil.y;
             recoil.y = Mathf.MoveTowards(recoil.y, 0f, math.abs(mouseMovement.y));
-
-            neutralizedRecoil.y += recoilY - recoil.y;
         }
 
         if (mouseMovement.x != 0f)
@@ -52,11 +43,7 @@ public class RecoilHandler
 
             Vector3 toAddEuler = new Vector3(0, -recoilRecovery, 0f);
             camHandler.AddRotationToMain(toAddEuler);
-
-            neutralizedRecoil.x += recoilRecovery;
         }
-
-        totalRecoilRecov = removedRecoil + neutralizedRecoil;
     }
 
 
@@ -85,8 +72,6 @@ public class RecoilHandler
         toAddRecoil -= maxAddedRecoil;
         recoil += maxAddedRecoil;
 
-        _addedRecoil += maxAddedRecoil;
-
         Vector3 toAddEuler = new Vector3(-maxAddedRecoil.y, maxAddedRecoil.x, 0f);
         Vector3 addedRecoil = camHandler.AddRotationToMain(toAddEuler);
 
@@ -110,8 +95,6 @@ public class RecoilHandler
         float2 recoilRecovery = GetRecoilRecovery(recoil, float2.zero, maxRecoilRecovery);
 
         recoil -= recoilRecovery;
-        removedRecoil += recoilRecovery;
-        totalRecoilRecov = removedRecoil + neutralizedRecoil;
 
         Vector3 toAddEuler = new Vector3(recoilRecovery.y, -recoilRecovery.x, 0f);
         camHandler.AddRotationToMain(toAddEuler);

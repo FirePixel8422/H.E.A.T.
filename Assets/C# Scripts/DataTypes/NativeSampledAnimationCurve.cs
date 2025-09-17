@@ -9,10 +9,13 @@ using UnityEngine;
 /// </summary>
 [BurstCompile]
 [System.Serializable]
-public struct SampledAnimationCurve
+public struct NativeSampledAnimationCurve
 {
     [Header("Curve HAS to go from time 0 to time 1")]
     [SerializeField] private AnimationCurve curve;
+
+    [Header("Curve X this value is what gets baked into the curve output")]
+    [SerializeField] private float valueMultiplier;
 
     [Header("More samples = more accurate, but more memory usage")]
     [Range(2, 500)]
@@ -39,7 +42,7 @@ public struct SampledAnimationCurve
         for (int i = 0; i < sampleCount; i++)
         {
             float t = (float)i / (sampleCount - 1);
-            bakedCurve[i] = curve.Evaluate(t);
+            bakedCurve[i] = curve.Evaluate(t) * valueMultiplier;
         }
     }
 
@@ -74,15 +77,12 @@ public struct SampledAnimationCurve
     }
 
 
-    public static SampledAnimationCurve Default()
+    public static NativeSampledAnimationCurve Default => new NativeSampledAnimationCurve()
     {
-        SampledAnimationCurve curve = new SampledAnimationCurve
-        {
-            curve = AnimationCurve.Linear(1, 1, 0, 0),
-            sampleCount = 50,
-        };
-        return curve;
-    }
+        curve = AnimationCurve.Linear(1, 1, 0, 0),
+        valueMultiplier = 1,
+        sampleCount = 50,
+    };
 
 
     public void Dispose()

@@ -1,4 +1,5 @@
 ﻿using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -8,6 +9,12 @@ public class CameraHandler
 {
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Camera gunCamera;
+
+    [SerializeField] private float baseFOV;
+
+    public Camera MainCamera => mainCamera;
+    public Camera GunCamera => gunCamera;
+
 
     [SerializeField] private float mainCamMaxTiltAngle = 90;
 
@@ -31,8 +38,15 @@ public class CameraHandler
 
     public void SetFOV(float fov)
     {
+        baseFOV = fov;
         mainCamera.fieldOfView = fov;
         gunCamera.fieldOfView = fov;
+    }
+
+    public void SetFOVZoomMultiplier(float fovMultiplier)
+    {
+        mainCamera.fieldOfView = baseFOV * fovMultiplier;
+        gunCamera.fieldOfView = baseFOV * fovMultiplier;
     }
 
 

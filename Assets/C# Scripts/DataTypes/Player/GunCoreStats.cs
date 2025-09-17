@@ -19,7 +19,7 @@ public struct GunCoreStats
     [SerializeField] private float maxEffectiveRange;
 
     [Header("How many sample to give the damage falloff curve")]
-    [SerializeField] private SampledAnimationCurve damageFallOffCurve;
+    [SerializeField] private NativeSampledAnimationCurve damageFallOffCurve;
 
     /// <summary>
     /// Get damage output and account for headShot and damage falloff
@@ -67,7 +67,7 @@ public struct GunCoreStats
     public float2 recoilForce;
 
     [Header("How many sample to give the recoil multiplier curve")]
-    [SerializeField] private SampledAnimationCurve hipFireRecoilMultiplierCurve;
+    [SerializeField] private NativeSampledAnimationCurve hipFireRecoilMultiplierCurve;
 
     public float GetHipFireRecoil(float recoilPatternPercent)
     {
@@ -118,7 +118,7 @@ public struct GunCoreStats
     public float maxSpread;
 
     [Header(">>DEBUG<<, the baked spread curve, used for the actual spread calculation instead of the animation curve")]
-    [SerializeField] private SampledAnimationCurve spreadCurve;
+    [SerializeField] private NativeSampledAnimationCurve spreadCurve;
 
     /// <summary>
     /// Get weapon spread
@@ -155,7 +155,7 @@ public struct GunCoreStats
 
 
     /// <summary>
-    /// Bake all curves from the editor AnimationCurve to the internal float array.
+    /// Bake all curves from the AnimationCurve to the internal float array.
     /// </summary>
     public void BakeAllCurves()
     {
@@ -183,7 +183,7 @@ public struct GunCoreStats
         headShotMultiplier = 1.5f,
 
         maxEffectiveRange = 25,
-        damageFallOffCurve = SampledAnimationCurve.Default(),
+        damageFallOffCurve = NativeSampledAnimationCurve.Default,
 
         bulletSize = 0.05f,
         bulletHoleFXSize = new MinMaxFloat(0.15f, 0.2f),
@@ -200,7 +200,7 @@ public struct GunCoreStats
         shootIntensityDescreaseMultplier = 1,
 
         hipFireRecoilPerShot = 0.1f,
-        hipFireRecoilMultiplierCurve = SampledAnimationCurve.Default(),
+        hipFireRecoilMultiplierCurve = NativeSampledAnimationCurve.Default,
 
         adsRecoilPattern = new float2[0],
         cADSRecoilIdFloat = 0,
@@ -215,7 +215,7 @@ public struct GunCoreStats
         recoilRecovery = 0.5f,
 
         maxSpread = 0.25f,
-        spreadCurve = SampledAnimationCurve.Default(),
+        spreadCurve = NativeSampledAnimationCurve.Default,
 
         inputBufferTime = 0,
 

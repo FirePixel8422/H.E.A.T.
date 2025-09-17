@@ -9,18 +9,22 @@ using System.Runtime.CompilerServices;
 
 public class GunCore : NetworkBehaviour
 {
+    [Header("")]
     [SerializeField] private Transform gunParentTransform;
     [SerializeField] private GunRefHolder gunRefHolder;
+    [SerializeField] private PlayerController playerController;
 
     [Header("Data Driven Gun Parts")]
     [SerializeField] private GunStatsSO gunStatsSO;
     [SerializeField] private GunCoreStats coreStats;
 
     [SerializeField] private CameraHandler camHandler;
+    [SerializeField] private ADSHandler adsHandler;
     [SerializeField] private RecoilHandler recoilHandler;
-    [SerializeField] private HeatSink heatSink;
+    [SerializeField] private HeatSinkHandler heatSink;
     [SerializeField] private GunShakeHandler gunShakeHandler;
-    [SerializeField] private GunVisualHandler gunEmmisionHandler;
+    [SerializeField] private GunSwayHandler gunSwayHandler;
+    [SerializeField] private GunEmmisionHandler gunEmmisionHandler;
 
     [Header("Additional Refs")]
     [SerializeField] private Transform shootPointTransform;
@@ -49,6 +53,8 @@ public class GunCore : NetworkBehaviour
     public const float DecalProjectorPivotMultiplier = 0.0125f;
 
 
+    #region Input Callbacks
+
     public void OnShoot(InputAction.CallbackContext ctx)
     {
         // Get the shoot button state (held true or released false)
@@ -71,6 +77,10 @@ public class GunCore : NetworkBehaviour
         recoilHandler.OnMouseMovement(ctx.ReadValue<Vector2>());
     }
 
+    #endregion
+
+
+    #region Initialization
 
     private void OnEnable()
     {
@@ -91,16 +101,7 @@ public class GunCore : NetworkBehaviour
 
         if (IsOwner)
         {
-            mainCam = GetComponentInChildren<Camera>();
-            DecalVfxManager.Instance.Init(mainCam);
-
-            gunShakeHandler.Init(gunParentTransform);
-            gunEmmisionHandler.Init();
-
-            recoilHandler.Init(camHandler);
-            GetComponent<PlayerController>().Init(camHandler);
-
-            SwapGun(0);
+            Init();
         }
 
     }
@@ -110,16 +111,27 @@ public class GunCore : NetworkBehaviour
     {
         if (overrideIsOwner)
         {
-            mainCam = GetComponentInChildren<Camera>();
-            DecalVfxManager.Instance.Init(mainCam);
-
-            gunShakeHandler.Init(gunParentTransform);
-            gunEmmisionHandler.Init();
-
-            SwapGun(0);
+            Init();
         }
     }
 #endif
+
+    private void Init()
+    {
+        mainCam = camHandler.MainCamera;
+        DecalVfxManager.Instance.Init(mainCam);
+
+        gunShakeHandler.Init(gunParentTransform);
+        recoilHandler.Init(camHandler);
+        gunEmmisionHandler.Init();
+
+        playerController = GetComponent<PlayerController>();
+        playerController.Init(camHandler);
+
+        SwapGun(0);
+    }
+
+    #endregion
 
 
     #region SwapGun
@@ -152,8 +164,12 @@ public class GunCore : NetworkBehaviour
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void SetupNewGunData(int gunId)
     {
-        GunManager.Instance.SwapGun(gunParentTransform, gunId, IsOwner, ref gunRefHolder, out coreStats, out heatSink.stats, out gunShakeHandler.stats);
+        coreStats.Dispose();
+
+        GunManager.Instance.SwapGun(gunParentTransform, gunId, IsOwner, ref gunRefHolder, out coreStats, out heatSink.stats, out gunShakeHandler.stats, out GunSwayStats swayStats);
+        
         gunEmmisionHandler.SwapGun(gunRefHolder.EmissionMatInstance);
+        gunSwayHandler.SwapGun(swayStats);
     }
 
     #endregion
@@ -169,8 +185,12 @@ public class GunCore : NetworkBehaviour
 
         if (Input.GetKeyDown(KeyCode.V))
         {
-            GunManager.Instance.SwapToNextGun(gunParentTransform, IsOwner, ref gunRefHolder, out coreStats, out heatSink.stats, out gunShakeHandler.stats, out int gunId);
+            coreStats.Dispose();
+
+            GunManager.Instance.SwapToNextGun(gunParentTransform, IsOwner, ref gunRefHolder, out coreStats, out heatSink.stats, out gunShakeHandler.stats, out GunSwayStats swayStats, out int gunId);
+
             gunEmmisionHandler.SwapGun(gunRefHolder.EmissionMatInstance);
+            gunSwayHandler.SwapGun(swayStats);
 
             timeSinceLastShot = coreStats.ShootInterval;
             burstShotTimer = coreStats.burstShotInterval;
@@ -454,6 +474,8 @@ public class GunCore : NetworkBehaviour
         base.OnDestroy();
 
         coreStats.Dispose();
+        adsHandler.Dispose();
+        gunSwayHandler.Dispose();
     }
 
 

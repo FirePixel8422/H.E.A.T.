@@ -590,6 +590,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   gunParentTransform: {fileID: 724888127564520829}
   gunRefHolder: {fileID: 0}
+  playerController: {fileID: 0}
   gunStatsSO: {fileID: 11400000, guid: 518d03d1b3accf542ac1f9ac07310f10, type: 2}
   coreStats:
     damage: 0
@@ -602,6 +603,7 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
+      valueMultiplier: 0
       sampleCount: 0
     bulletSize: 0
     bulletHoleFXSize:
@@ -626,6 +628,7 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
+      valueMultiplier: 0
       sampleCount: 0
     adsRecoilPattern:
     - x: 0
@@ -647,6 +650,7 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
+      valueMultiplier: 0
       sampleCount: 0
     roundsPerMinute: 0
     autoFire: 0
@@ -666,23 +670,66 @@ MonoBehaviour:
     mainCamera: {fileID: 4769577523386625857}
     gunCamera: {fileID: 4245517809260214837}
     mainCamMaxTiltAngle: 90
+  adsHandler:
+    fovMultplierCurve:
+      curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: -0.19999999
+          outSlope: -0.19999999
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 1
+          value: 0.8
+          inSlope: -0.225
+          outSlope: -0.225
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 2
+          value: 0.55
+          inSlope: -0.1625
+          outSlope: -0.1625
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 4
+          value: 0.4
+          inSlope: -0.056250002
+          outSlope: -0.056250002
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        - serializedVersion: 3
+          time: 8
+          value: 0.25
+          inSlope: -0.0375
+          outSlope: -0.0375
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0.33333334
+          outWeight: 0.33333334
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      valueMultiplier: 1
+      sampleCount: 250
   recoilHandler:
     toAddRecoil:
       x: 0
       y: 0
     recoil:
-      x: 0
-      y: 0
-    addedRecoil:
-      x: 0
-      y: 0
-    removedRecoil:
-      x: 0
-      y: 0
-    neutralizedRecoil:
-      x: 0
-      y: 0
-    totalRecoilRecov:
       x: 0
       y: 0
   heatSink:
@@ -708,6 +755,19 @@ MonoBehaviour:
       pullBackBuildUp: 0
       pullBackDecay: 0
       pullBackPitchKick: 0
+  gunSwayHandler:
+    swayTransform: {fileID: 0}
+    stats:
+      visualSwayStrengthMax: 0
+      spreadMultplierCurve:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        valueMultiplier: 0
+        sampleCount: 0
   gunEmmisionHandler:
     heatGradient:
       gradient:

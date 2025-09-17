@@ -17,7 +17,7 @@ public class GunManager : MonoBehaviour
     /// <summary>
     /// Swap gun and get gunstats by gunId.
     /// </summary>
-    public void SwapGun(Transform gunParentTransform, int gunId, bool isOwner, ref GunRefHolder gunRefHolder, out GunCoreStats coreStats, out HeatSinkStats heatSinkStats, out GunShakeStats shakeStats)
+    public void SwapGun(Transform gunParentTransform, int gunId, bool isOwner, ref GunRefHolder gunRefHolder, out GunCoreStats coreStats, out HeatSinkStats heatSinkStats, out GunShakeStats shakeStats, out GunSwayStats swayStats)
     {
         currentGunId = gunId;
 
@@ -31,14 +31,14 @@ public class GunManager : MonoBehaviour
         gunRefHolder = Instantiate(targetGun.GunPrefab, gunParentTransform);
         gunRefHolder.Init(isOwner);
 
-        targetGun.GetGunStats(out coreStats, out heatSinkStats, out shakeStats);
+        targetGun.GetGunStats(out coreStats, out heatSinkStats, out shakeStats, out swayStats);
     }
 
-    public void SwapToNextGun(Transform gunParentTransform, bool isOwner, ref GunRefHolder gunRefHolder, out GunCoreStats coreStats, out HeatSinkStats heatSinkStats, out GunShakeStats shakeStats, out int gunId)
+    public void SwapToNextGun(Transform gunParentTransform, bool isOwner, ref GunRefHolder gunRefHolder, out GunCoreStats coreStats, out HeatSinkStats heatSinkStats, out GunShakeStats shakeStats, out GunSwayStats swayStats, out int gunId)
     {
         currentGunId = (currentGunId + 1) % guns.Length;
         gunId = currentGunId;
 
-        SwapGun(gunParentTransform, gunId, isOwner, ref gunRefHolder, out coreStats, out heatSinkStats, out shakeStats);
+        SwapGun(gunParentTransform, gunId, isOwner, ref gunRefHolder, out coreStats, out heatSinkStats, out shakeStats, out swayStats);
     }
 }
