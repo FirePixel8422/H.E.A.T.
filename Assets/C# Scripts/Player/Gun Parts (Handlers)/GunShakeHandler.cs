@@ -4,9 +4,9 @@ using UnityEngine;
 [System.Serializable]
 public class GunShakeHandler
 {
-    public GunShakeStats stats;
+    [SerializeField] private Transform gunParentTransform;
 
-    private Transform gunParentTransform;
+    public GunShakeStats stats;
 
     private Vector3 currentShakeRot;
     private Vector3 targetShakeRot;
@@ -18,10 +18,8 @@ public class GunShakeHandler
     private Vector3 startPos;
 
 
-    public void Init(Transform _gunParentTransform)
+    public void Init()
     {
-        gunParentTransform = _gunParentTransform;
-
 #if UNITY_EDITOR
         if (gunParentTransform == null)
         {
@@ -37,8 +35,10 @@ public class GunShakeHandler
     /// <summary>
     /// Call when firing to kick the weapon in rotation and position
     /// </summary>
-    public void AddShake(float shakeMultiplier)
+    public void AddShake(float shakeMultiplier, float zoomedInPercentage)
     {
+        shakeMultiplier *= Mathf.Lerp(1, stats.adsMultplier, zoomedInPercentage);
+
         // rotational shake
         targetShakeRot = new Vector3(
             -Random.Range(0f, stats.shakePitch * shakeMultiplier),  // pitch up
@@ -50,39 +50,39 @@ public class GunShakeHandler
         targetPullback = stats.pullBackDistance * shakeMultiplier;
     }
 
-    public void OnUpdate(float deltaTime)
+    public void OnUpdate(float deltaTime, float zoomedInPercentage)
     {
-        // --- Rotation ---
+        float multiplier = Mathf.Lerp(1, stats.adsMultplier, zoomedInPercentage);
+
         currentShakeRot = Vector3.Lerp(
             currentShakeRot,
             targetShakeRot,
-            deltaTime * stats.shakeBuildUp
+            deltaTime * stats.shakeBuildUp * multiplier
         );
 
         targetShakeRot = Vector3.Lerp(
             targetShakeRot,
             Vector3.zero,
-            deltaTime * stats.shakeDecay
+            deltaTime * stats.shakeDecay * multiplier
         );
 
-        // --- Position ---
         currentPullback = Mathf.Lerp(
             currentPullback,
             targetPullback,
-            deltaTime * stats.pullBackBuildUp
+            deltaTime * stats.pullBackBuildUp * multiplier
         );
 
         targetPullback = Mathf.Lerp(
             targetPullback,
             0f,
-            deltaTime * stats.pullBackDecay
+            deltaTime * stats.pullBackDecay * multiplier
         );
 
         // Pullback also pitches the gun upward
         Vector3 finalRot = currentShakeRot;
-        finalRot.x -= currentPullback * stats.pullBackPitchKick;
+        finalRot.x -= currentPullback * stats.pullBackPitchKick * multiplier;
 
-        // Apply final transform
-        gunParentTransform.SetLocalPositionAndRotation(startPos + Vector3.back * currentPullback, startRot * Quaternion.Euler(finalRot));
+        // Update Transform
+        gunParentTransform.SetLocalPositionAndRotation(startPos + Vector3.back * currentPullback * multiplier, startRot * Quaternion.Euler(finalRot));
     }
 }

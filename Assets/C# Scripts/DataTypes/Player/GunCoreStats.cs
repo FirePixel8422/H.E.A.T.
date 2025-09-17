@@ -58,34 +58,23 @@ public struct GunCoreStats
     public float shootIntensityGainMultplier;
     public float shootIntensityDescreaseMultplier;
 
-    [Header("How much recoil to add per shot")]
-    [SerializeField] private float hipFireRecoilPerShot;
-    [Header("Time shooting to reach the last value of the recoilMultiplierCurve")]
-    [SerializeField] private float timeToMinRecoil;
-
     [Header("How Aggressive recoil is added, higher is more 'clicky' recoil")]
     public float2 recoilForce;
-
-    [Header("How many sample to give the recoil multiplier curve")]
-    [SerializeField] private NativeSampledAnimationCurve hipFireRecoilMultiplierCurve;
-
-    public float GetHipFireRecoil(float recoilPatternPercent)
-    {
-        recoilPatternPercent.Saturated();
-
-        return hipFireRecoilMultiplierCurve.Evaluate(Mathf.Clamp(recoilPatternPercent, 0, timeToMinRecoil) / timeToMinRecoil) * hipFireRecoilPerShot;
-    }
 
     [Header("Scoped in recoil pattern and whether to smooth between points")]
     public float2[] adsRecoilPattern;
 
     [SerializeField] private bool invertX;
+
+    [SerializeField] private float2 hipRecoilMultiplier;
+    [SerializeField] private float hipRecoilDecayMultiplier;
+
     [SerializeField] private float2 adsRecoilMultiplier;
     [SerializeField] private float adsRecoilDecayMultiplier;
 
     private float cADSRecoilIdFloat;
 
-    public float2 GetADSRecoil()
+    public float2 GetRecoil(float zoomedInPercent)
     {
         int patternPointId = math.clamp((int)math.floor(cADSRecoilIdFloat), 0, adsRecoilPattern.Length - 1);
 
@@ -96,16 +85,18 @@ public struct GunCoreStats
             float2 recoil = adsRecoilPattern[patternPointId];
             recoil.x = -recoil.x;
 
-            return recoil * adsRecoilMultiplier;
+            return recoil * math.lerp(adsRecoilMultiplier, hipRecoilMultiplier, zoomedInPercent);
         }
         else
         {
-            return adsRecoilPattern[patternPointId] * adsRecoilMultiplier;
+            return adsRecoilPattern[patternPointId] * math.lerp(adsRecoilMultiplier, hipRecoilMultiplier, zoomedInPercent);
         }
     }
-    public void DecreaseADSRecoil(float deltaTime)
+    public void DecreaseRecoil(float deltaTime, float zoomedInPercentage)
     {
-        cADSRecoilIdFloat = math.clamp(cADSRecoilIdFloat - deltaTime * adsRecoilDecayMultiplier, 0, adsRecoilPattern.Length);
+        float decayMultiplier = math.lerp(hipRecoilDecayMultiplier, adsRecoilDecayMultiplier, zoomedInPercentage);
+
+        cADSRecoilIdFloat = math.clamp(cADSRecoilIdFloat - deltaTime * decayMultiplier, 0, adsRecoilPattern.Length);
     }
 
     [Header("The time that needs to pass while not shooting for the recoil to stabilize")]
@@ -160,7 +151,6 @@ public struct GunCoreStats
     public void BakeAllCurves()
     {
         damageFallOffCurve.Bake();
-        hipFireRecoilMultiplierCurve.Bake();
         spreadCurve.Bake();
     }
 
@@ -170,7 +160,6 @@ public struct GunCoreStats
     public void Dispose()
     {
         damageFallOffCurve.Dispose();
-        hipFireRecoilMultiplierCurve.Dispose();
         spreadCurve.Dispose();
     }
 
@@ -199,17 +188,15 @@ public struct GunCoreStats
         shootIntensityGainMultplier = 1,
         shootIntensityDescreaseMultplier = 1,
 
-        hipFireRecoilPerShot = 0.1f,
-        hipFireRecoilMultiplierCurve = NativeSampledAnimationCurve.Default,
-
         adsRecoilPattern = new float2[0],
         cADSRecoilIdFloat = 0,
         invertX = false,
+        hipRecoilMultiplier = new float2(1, 1),
+        hipRecoilDecayMultiplier = 10,
         adsRecoilMultiplier = new float2(1, 1),
         adsRecoilDecayMultiplier = 10,
 
         recoilForce = new float2(25, 50),
-        timeToMinRecoil = 7.5f,
 
         recoilRecoveryDelay = 0.25f,
         recoilRecovery = 0.5f,

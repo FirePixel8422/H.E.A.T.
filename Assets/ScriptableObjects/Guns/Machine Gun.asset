@@ -43,6 +43,8 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
+      curveSize: 1
+      valueMultiplier: 1
       sampleCount: 75
     bulletSize: 0.05
     bulletHoleFXSize:
@@ -94,6 +96,8 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
+      curveSize: 0
+      valueMultiplier: 1
       sampleCount: 75
     adsRecoilPattern:
     - x: 0
@@ -106,9 +110,7 @@ MonoBehaviour:
       y: 1
     adsRecoilDecayMultiplier: 10
     recoilRecoveryDelay: 0.15
-    recoilRecovery:
-      x: 0.5
-      y: 0.5
+    recoilRecovery: 0.5
     maxSpread: 0.115
     spreadCurve:
       curve:
@@ -144,6 +146,8 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
+      curveSize: 1
+      valueMultiplier: 1
       sampleCount: 75
     roundsPerMinute: 600
     autoFire: 1
@@ -178,3 +182,37 @@ MonoBehaviour:
     pullBackBuildUp: 25
     pullBackDecay: 12
     pullBackPitchKick: 300
+  swayStats:
+    visualSwayStrengthMax: 1
+    spreadMultplierCurve:
+      curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 1
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 1
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      curveSize: 1
+      valueMultiplier: 1
+      sampleCount: 50
+  gunADSStats:
+    zoomMultiplier: 1
+    zoomInTime: 0.175
+    zoomOutTime: 0.125

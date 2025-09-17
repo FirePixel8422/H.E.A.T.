@@ -88,6 +88,7 @@ public class PlayerController : NetworkBehaviour
     #endregion
 
 
+    private GunSwayHandler gunSwayHandler;
     private Rigidbody rb;
     private NetworkStateMachine stateMachine;
 
@@ -144,6 +145,9 @@ public class PlayerController : NetworkBehaviour
         transform.Rotate(Vector3.up, mouseMovement.x * mouseSensitivity);
 
         stateMachine.ShakeGooglyEyes();
+
+        // Update GunSway
+        gunSwayHandler.OnCameraUpdate();
     }
 
     #endregion
@@ -154,29 +158,13 @@ public class PlayerController : NetworkBehaviour
     private void OnEnable() => ManageUpdateCallbacks(true);
     private void OnDisable() => ManageUpdateCallbacks(false);
 
-    public void Init(CameraHandler camHandler)
+    public void Init(CameraHandler camHandler, GunSwayHandler gunSwayHandler)
     {
         this.camHandler = camHandler;
+        this.gunSwayHandler = gunSwayHandler;
 
         rb = GetComponent<Rigidbody>();
         stateMachine = GetComponent<NetworkStateMachine>();
-
-        return;
-
-        float temp = camHandler.MainCamLocalEulerPitch;
-
-        DebugLogger.Log(camHandler.MainCamLocalEulerPitch);
-
-        camHandler.MainCamLocalEulerPitch = 0;
-        DebugLogger.Log(camHandler.MainCamLocalEulerPitch);
-
-        camHandler.MainCamLocalEulerPitch += 10;
-        DebugLogger.Log(camHandler.MainCamLocalEulerPitch);
-
-        camHandler.MainCamLocalEulerPitch *= 10;
-        DebugLogger.Log(camHandler.MainCamLocalEulerPitch);
-
-        camHandler.MainCamLocalEulerPitch = temp;
     }
 
     public override void OnNetworkSpawn()
@@ -213,6 +201,8 @@ public class PlayerController : NetworkBehaviour
     private bool registeredForUpdates = false;
     private void ManageUpdateCallbacks(bool register)
     {
+        if (IsSpawned == false) return;
+
 #if UNITY_EDITOR
         if (overrideIsOwner)
         {
@@ -224,20 +214,11 @@ public class PlayerController : NetworkBehaviour
             return;
         }
 #endif
-        if (IsSpawned == false) return;
-
         if (IsOwner)
         {
             if (registeredForUpdates == register) return;
 
             UpdateScheduler.ManageFixedUpdate(OnFixedUpdate, register);
-            registeredForUpdates = register;
-        }
-        else
-        {
-            if (registeredForUpdates == register) return;
-
-            UpdateScheduler.ManageUpdate(OnUpdate, register);
             registeredForUpdates = register;
         }
     }
@@ -250,8 +231,9 @@ public class PlayerController : NetworkBehaviour
     /// </summary>
     private void OnFixedUpdate()
     {
+        if (rb == null) return;
+
         // Update RigidBody velocity and send Transform Data to ServerRPC
-        
         float rbVelocityY = rb.linearVelocity.y;
 
         Vector3 targetForwardVelocity = GetForwardDirection();
@@ -278,6 +260,9 @@ public class PlayerController : NetworkBehaviour
         {
             rb.AddForce(Vector3.down * fallGravityMultiplier, ForceMode.Acceleration);
         }
+
+        // Update GunSway
+        gunSwayHandler.OnMovementUpdate(rb.linearVelocity.x + rb.linearVelocity.z, IsGrounded);
 
         // Send transform data to server
         SendPlayerTransforms_ServerRPC(transform.position, camHandler.MainCamLocalEulerPitch, transform.eulerAngles.y);
@@ -342,25 +327,21 @@ public class PlayerController : NetworkBehaviour
     #endregion
 
 
-    private void OnUpdate()
-    {
-        return;
-    }
-
     public override void OnDestroy()
     {
-        base.OnDestroy();
+        UpdateScheduler.UnregisterUpdate(OnFixedUpdate);
 
-        UpdateScheduler.UnregisterFixedUpdate(OnFixedUpdate);
-        UpdateScheduler.UnregisterUpdate(OnUpdate);
+        base.OnDestroy();
     }
+
+
+#if UNITY_EDITOR
+
+    [SerializeField] private bool overrideIsOwner;
 
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
-
-#if UNITY_EDITOR
-    [SerializeField] private bool overrideIsOwner;
 #endif
 }

@@ -15,9 +15,10 @@ public class GunStatsSO : ScriptableObject
     [SerializeField] private HeatSinkStats heatSinkStats = HeatSinkStats.Default;
     [SerializeField] private GunShakeStats shakeStats = GunShakeStats.Default;
     [SerializeField] private GunSwayStats swayStats = GunSwayStats.Default;
+    [SerializeField] private GunADSStats gunADSStats = GunADSStats.Default;
 
 
-    public void GetGunStats(out GunCoreStats coreStats, out HeatSinkStats heatSinkStats, out GunShakeStats shakeStats, out GunSwayStats swayStats)
+    public void GetGunStats(out GunCoreStats coreStats, out HeatSinkStats heatSinkStats, out GunShakeStats shakeStats, out GunSwayStats swayStats, out GunADSStats gunADSStats)
     {
         this.coreStats.BakeAllCurves();
         
@@ -25,6 +26,7 @@ public class GunStatsSO : ScriptableObject
         heatSinkStats = this.heatSinkStats;
         shakeStats = this.shakeStats;
         swayStats = this.swayStats;
+        gunADSStats = this.gunADSStats;
     }
 
 #if UNITY_EDITOR
@@ -34,5 +36,7 @@ public class GunStatsSO : ScriptableObject
         coreStats.shootIntensityGainMultplier = patternTime;
         coreStats.shootIntensityDescreaseMultplier = patternTime * 5;
     }
+
+    public GunCoreStats GetGunCoreStats() => coreStats;
 #endif
 }

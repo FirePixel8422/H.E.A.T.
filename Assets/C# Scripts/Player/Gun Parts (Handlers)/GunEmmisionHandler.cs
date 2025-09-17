@@ -6,7 +6,7 @@ public class GunEmmisionHandler
 {
     [SerializeField] private HDRGradient heatGradient;
 
-    [SerializeField] private Material emissionMatInstance;
+    private Material emissionMatInstance;
     private int emissionId;
 
 

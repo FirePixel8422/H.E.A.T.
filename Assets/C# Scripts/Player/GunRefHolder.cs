@@ -20,7 +20,7 @@ public class GunRefHolder : MonoBehaviour
 
 
     /// <summary>
-    /// Setup ref sata and set static Instances
+    /// Setup ref Data and set static Instances
     /// </summary>
     public void Init(bool localClientIsOwner)
     {

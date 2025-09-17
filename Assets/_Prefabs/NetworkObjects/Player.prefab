@@ -540,7 +540,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.85, y: 1, z: 0.85}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8654208601561914458}
@@ -589,8 +589,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   gunParentTransform: {fileID: 724888127564520829}
-  gunRefHolder: {fileID: 0}
-  playerController: {fileID: 0}
   gunStatsSO: {fileID: 11400000, guid: 518d03d1b3accf542ac1f9ac07310f10, type: 2}
   coreStats:
     damage: 0
@@ -616,26 +614,19 @@ MonoBehaviour:
     heatPerShot: 0
     shootIntensityGainMultplier: 0
     shootIntensityDescreaseMultplier: 0
-    hipFireRecoilPerShot: 0
-    timeToMinRecoil: 0
     recoilForce:
       x: 0
       y: 0
-    hipFireRecoilMultiplierCurve:
-      curve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      valueMultiplier: 0
-      sampleCount: 0
     adsRecoilPattern:
     - x: 0
       y: 0
     - x: 0
       y: 0
     invertX: 0
+    hipRecoilMultiplier:
+      x: 0
+      y: 0
+    hipRecoilDecayMultiplier: 0
     adsRecoilMultiplier:
       x: 0
       y: 0
@@ -669,9 +660,10 @@ MonoBehaviour:
   camHandler:
     mainCamera: {fileID: 4769577523386625857}
     gunCamera: {fileID: 4245517809260214837}
+    baseFOV: 90
     mainCamMaxTiltAngle: 90
   adsHandler:
-    fovMultplierCurve:
+    fovMultiplierCurve:
       curve:
         serializedVersion: 2
         m_Curve:
@@ -724,7 +716,15 @@ MonoBehaviour:
         m_PostInfinity: 2
         m_RotationOrder: 4
       valueMultiplier: 1
-      sampleCount: 250
+      sampleCount: 2
+    anim: {fileID: 5199238681142820621}
+    stats:
+      zoomMultiplier: 0
+      zoomInTime: 0
+      zoomOutTime: 0
+      normalAnimationName: 
+      zoomAnimationName: 
+      animLayer: 0
   recoilHandler:
     toAddRecoil:
       x: 0
@@ -746,6 +746,7 @@ MonoBehaviour:
     anim: {fileID: 6297763046934028342}
     heatAmount: 0
   gunShakeHandler:
+    gunParentTransform: {fileID: 2654517494388891251}
     stats:
       shakePitch: 0
       shakeYaw: 0
@@ -755,6 +756,7 @@ MonoBehaviour:
       pullBackBuildUp: 0
       pullBackDecay: 0
       pullBackPitchKick: 0
+      adsMultplier: 0
   gunSwayHandler:
     swayTransform: {fileID: 0}
     stats:
@@ -800,7 +802,6 @@ MonoBehaviour:
         m_ColorSpace: 0
         m_NumColorKeys: 5
         m_NumAlphaKeys: 2
-    emissionMatInstance: {fileID: 0}
   shootPointTransform: {fileID: 0}
   gunShotSource: {fileID: 5837324410720302518}
   gunOverheatSource: {fileID: 6957241378848993016}
@@ -949,6 +950,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 6afc97fc-edd7-423b-96f2-90709392d93d
     m_ActionName: 'Gameplay/CancelRebind[/Keyboard/delete]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7655005037721419446}
+        m_TargetAssemblyTypeName: GunCore, Assembly-CSharp
+        m_MethodName: OnADS
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 2f70bf7a-5041-4ad1-9cc1-502a88b39802
+    m_ActionName: 'Gameplay/SecInteract[/Mouse/rightButton]'
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -1000,6 +1017,7 @@ MonoBehaviour:
   currentAnimation:
   - Idle
   - EyesCurious
+  - PistolHip
   idleAnimation: Idle
   crouchAnimation: Crouching
   crouchWalkAnimation: CrouchWalking
@@ -1329,6 +1347,38 @@ MonoBehaviour:
   otherObjList:
   - {fileID: 3294571926836186955}
   - {fileID: 5226201016357555277}
+--- !u!1 &3771441657200272521
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2654517494388891251}
+  m_Layer: 7
+  m_Name: ShakeHandler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2654517494388891251
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3771441657200272521}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 724888127564520829}
+  m_Father: {fileID: 6012974010948853806}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4400905500031147721
 GameObject:
   m_ObjectHideFlags: 0
@@ -2129,7 +2179,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 724888127564520829}
+  - {fileID: 2654517494388891251}
   - {fileID: 6758666417901858581}
   m_Father: {fileID: 8183323876570374502}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2166,7 +2216,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 90
+  field of view: 49.5
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -2451,7 +2501,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.85, y: 1, z: 0.85}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1580433294610764968}
@@ -2666,12 +2716,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8568243580743899453}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.031693395, z: -0, w: 0.9994977}
-  m_LocalPosition: {x: 0.448, y: -1.098, z: 0.71}
+  m_LocalRotation: {x: -0, y: 0.031689882, z: -0, w: 0.9994978}
+  m_LocalPosition: {x: 1.071, y: -1.12943, z: 1.41687}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6012974010948853806}
+  m_Father: {fileID: 2654517494388891251}
   m_LocalEulerAnglesHint: {x: 0, y: 3.632, z: 0}
 --- !u!1 &8857816670083304056
 GameObject:

@@ -1,18 +1,19 @@
-using Unity.Mathematics;
-using Unity.Netcode;
-using UnityEngine;
-using UnityEngine.InputSystem;
 using FirePixel.Networking;
 using System.Runtime.CompilerServices;
+using Unity.Mathematics;
+using Unity.Netcode;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 
 public class GunCore : NetworkBehaviour
 {
-    [Header("")]
     [SerializeField] private Transform gunParentTransform;
-    [SerializeField] private GunRefHolder gunRefHolder;
-    [SerializeField] private PlayerController playerController;
+
+    private GunRefHolder gunRefHolder;
+    private PlayerController playerController;
 
     [Header("Data Driven Gun Parts")]
     [SerializeField] private GunStatsSO gunStatsSO;
@@ -39,8 +40,6 @@ public class GunCore : NetworkBehaviour
     private bool ShootInputBuffered => shootButtonHeld || inputBufferTimer > 0f;
 
     private bool shootButtonHeld;
-    private bool adsButtonHeld;
-    private bool IsScopedIn => adsButtonHeld && heatSink.Overheated == false;
 
     private float timeSinceLastShot;
     private float timeSinceShootButtonPress;
@@ -68,8 +67,7 @@ public class GunCore : NetworkBehaviour
     }
     public void OnADS(InputAction.CallbackContext ctx)
     {
-        // Get the shoot button state (held true or released false)
-        adsButtonHeld = ctx.ReadValueAsButton();
+        adsHandler.OnZoomInput(ctx.performed);
     }
 
     public void OnMouseMovement(InputAction.CallbackContext ctx)
@@ -82,16 +80,8 @@ public class GunCore : NetworkBehaviour
 
     #region Initialization
 
-    private void OnEnable()
-    {
-        UpdateScheduler.RegisterUpdate(OnUpdate);
-        UpdateScheduler.RegisterFixedUpdate(OnFixedUpdate);
-    }
-    private void OnDisable()
-    {
-        UpdateScheduler.UnregisterUpdate(OnUpdate);
-        UpdateScheduler.UnregisterFixedUpdate(OnFixedUpdate);
-    }
+    private void OnEnable() => ManageUpdateCallbacks(true);
+    private void OnDisable() => ManageUpdateCallbacks(false);
 
     public override void OnNetworkSpawn()
     {
@@ -103,7 +93,6 @@ public class GunCore : NetworkBehaviour
         {
             Init();
         }
-
     }
 
 #if UNITY_EDITOR
@@ -116,17 +105,47 @@ public class GunCore : NetworkBehaviour
     }
 #endif
 
+    private bool registeredForUpdates = false;
+    private void ManageUpdateCallbacks(bool register)
+    {
+        if (IsSpawned == false) return;
+
+#if UNITY_EDITOR
+        if (overrideIsOwner)
+        {
+            if (registeredForUpdates == register) return;
+
+            UpdateScheduler.ManageUpdate(OnUpdate, register);
+            UpdateScheduler.ManageFixedUpdate(OnFixedUpdate, register);
+            registeredForUpdates = register;
+
+            return;
+        }
+#endif
+        if (IsOwner)
+        {
+            if (registeredForUpdates == register) return;
+
+            UpdateScheduler.ManageUpdate(OnUpdate, register);
+            UpdateScheduler.ManageFixedUpdate(OnFixedUpdate, register);
+            registeredForUpdates = register;
+        }
+    }
+
     private void Init()
     {
+        ManageUpdateCallbacks(true);
+
         mainCam = camHandler.MainCamera;
         DecalVfxManager.Instance.Init(mainCam);
 
-        gunShakeHandler.Init(gunParentTransform);
         recoilHandler.Init(camHandler);
+        adsHandler.Init(camHandler);
         gunEmmisionHandler.Init();
+        gunShakeHandler.Init();
 
         playerController = GetComponent<PlayerController>();
-        playerController.Init(camHandler);
+        playerController.Init(camHandler, gunSwayHandler);
 
         SwapGun(0);
     }
@@ -164,12 +183,17 @@ public class GunCore : NetworkBehaviour
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void SetupNewGunData(int gunId)
     {
-        coreStats.Dispose();
+        DisposeGunData();
 
-        GunManager.Instance.SwapGun(gunParentTransform, gunId, IsOwner, ref gunRefHolder, out coreStats, out heatSink.stats, out gunShakeHandler.stats, out GunSwayStats swayStats);
+        GunManager.Instance.SwapGun(gunParentTransform, gunId, IsOwner,
+            ref gunRefHolder,
+            out coreStats, 
+            out heatSink.stats,
+            out gunShakeHandler.stats,
+            out gunSwayHandler.stats,
+            out adsHandler.stats);
         
         gunEmmisionHandler.SwapGun(gunRefHolder.EmissionMatInstance);
-        gunSwayHandler.SwapGun(swayStats);
     }
 
     #endregion
@@ -183,22 +207,34 @@ public class GunCore : NetworkBehaviour
         if (IsOwner == false) return;
 #endif
 
+        //TEMP SWAP TO NEXT GUN FUNCTION
         if (Input.GetKeyDown(KeyCode.V))
         {
-            coreStats.Dispose();
+            DisposeGunData();
 
-            GunManager.Instance.SwapToNextGun(gunParentTransform, IsOwner, ref gunRefHolder, out coreStats, out heatSink.stats, out gunShakeHandler.stats, out GunSwayStats swayStats, out int gunId);
+            GunManager.Instance.SwapToNextGun(gunParentTransform, IsOwner,
+                ref gunRefHolder,
+                out coreStats,
+                out heatSink.stats,
+                out gunShakeHandler.stats,
+                out gunSwayHandler.stats,
+                out adsHandler.stats,
+                out int gunId);
 
             gunEmmisionHandler.SwapGun(gunRefHolder.EmissionMatInstance);
-            gunSwayHandler.SwapGun(swayStats);
 
             timeSinceLastShot = coreStats.ShootInterval;
             burstShotTimer = coreStats.burstShotInterval;
 
             SwapGun_ServerRPC(ClientManager.LocalClientGameId, gunId);
         }
+        //TEMP
+
+
+
 
         float deltaTime = Time.deltaTime;
+        float zoomedInPercentage = adsHandler.ZoomedInPercent;
 
         if (heatSink.Overheated)
         {
@@ -212,14 +248,15 @@ public class GunCore : NetworkBehaviour
                 timeSinceShootButtonPress += deltaTime;
             }
 
-            ProcessBurstShots(deltaTime);
+            ProcessBurstShots(deltaTime, zoomedInPercentage);
         }
 
-        ProcessShooting();
-        ProcessRecoilAndHeat(deltaTime);
+        ProcessShooting(zoomedInPercentage);
+        ProcessRecoilAndHeat(deltaTime, zoomedInPercentage);
 
         recoilHandler.OnUpdate(coreStats.recoilForce * deltaTime);
-        gunShakeHandler.OnUpdate(deltaTime);
+        gunShakeHandler.OnUpdate(deltaTime, zoomedInPercentage);
+        adsHandler.OnUpdate(deltaTime);
 
         if (coreStats.autoFire == false)
         {
@@ -229,30 +266,6 @@ public class GunCore : NetworkBehaviour
         timeSinceLastShot += deltaTime;
         inputBufferTimer -= deltaTime;
     }
-
-
-
-
-
-
-
-
-
-
-
-    /// <summary>
-    /// FIX THIS
-    /// FIX THIS
-    /// FIX THIS
-    /// FIX THIS
-    /// FIX THIS
-    /// FIX THIS
-    /// FIX THIS
-    /// </summary>
-    /// //UPDATE HAS TO BE AFTER UPDATE NOT BEFROE
-    /// 
-    //ALSO UPDATE UPDATE LOGIC SCHEDULEMENT LIKE ITS DONE IN PLAYERMOVEMENT
-    //DONT UPDATE FOR NON OWNERS
 
     private void OnFixedUpdate()
     {
@@ -274,7 +287,7 @@ public class GunCore : NetworkBehaviour
 
     #region Process Shots, Burst Shots And Recoil + Heat
 
-    private void ProcessBurstShots(float deltaTime)
+    private void ProcessBurstShots(float deltaTime, float zoomedInPercentage)
     {
         if (burstShotsLeft <= 0) return;
 
@@ -283,7 +296,7 @@ public class GunCore : NetworkBehaviour
         // Burst shots fire at fixed intervals; this loop handles multiple shots if lagged behind
         while (burstShotTimer <= 0 && burstShotsLeft > 0)
         {
-            PrepareShot(coreStats.projectileCount);
+            PrepareShot(coreStats.projectileCount, zoomedInPercentage);
             burstShotsLeft--;
             burstShotTimer += coreStats.burstShotInterval;
         }
@@ -294,14 +307,14 @@ public class GunCore : NetworkBehaviour
         }
     }
 
-    private void ProcessShooting()
+    private void ProcessShooting(float zoomedInPercentage)
     {
         if (ShootInputBuffered && CanShoot && !heatSink.Overheated)
         {
             // Handles catch-up shots if input was buffered longer than shoot interval
             while (timeSinceShootButtonPress >= coreStats.ShootInterval)
             {
-                PrepareShot(coreStats.projectileCount);
+                PrepareShot(coreStats.projectileCount, zoomedInPercentage);
                 timeSinceShootButtonPress -= coreStats.ShootInterval;
                 timeSinceLastShot = 0;
 
@@ -310,14 +323,14 @@ public class GunCore : NetworkBehaviour
         }
     }
 
-    private void ProcessRecoilAndHeat(float deltaTime)
+    private void ProcessRecoilAndHeat(float deltaTime, float zoomedInPercentage)
     {
         // Only stabilize recoil if no burst is currently firing
         if (timeSinceLastShot > coreStats.recoilRecoveryDelay && burstShotsLeft == 0)
         {
             recoilHandler.StabilizeRecoil(coreStats.recoilRecovery * deltaTime);
 
-            coreStats.DecreaseADSRecoil(deltaTime);
+            coreStats.DecreaseRecoil(deltaTime, zoomedInPercentage);
 
             shootingIntensity -= deltaTime / coreStats.shootIntensityDescreaseMultplier;
             if (shootingIntensity < 0f)
@@ -338,14 +351,14 @@ public class GunCore : NetworkBehaviour
     /// <summary>
     /// Inbetween method for Shoot method for ServerRPC logic
     /// </summary>
-    private void PrepareShot(int projectileCount)
+    private void PrepareShot(int projectileCount, float zoomedInPercentage)
     {
         shootingIntensity += coreStats.ShootInterval / coreStats.shootIntensityGainMultplier;
 
-        gunShakeHandler.AddShake(coreStats.ShootInterval);
+        gunShakeHandler.AddShake(coreStats.ShootInterval, zoomedInPercentage);
 
         //float2 recoil = new float2(0, coreStats.GetHipFireRecoil(shootingIntensity));
-        float2 recoil = coreStats.GetADSRecoil();
+        float2 recoil = coreStats.GetRecoil(zoomedInPercentage);
         StartCoroutine(recoilHandler.AddRecoil(recoil, coreStats.ShootInterval));
 
         heatSink.AddHeat(coreStats.heatPerShot, out float prevHeatPercentage, out float newHeatPercentage);
@@ -471,11 +484,22 @@ public class GunCore : NetworkBehaviour
 
     public override void OnDestroy()
     {
-        base.OnDestroy();
+        UpdateScheduler.UnregisterUpdate(OnUpdate);
+        UpdateScheduler.UnregisterFixedUpdate(OnFixedUpdate);
 
+        DisposeGunData();
+        DisposeHandlerData();
+
+        base.OnDestroy();
+    }
+    private void DisposeGunData()
+    {
         coreStats.Dispose();
-        adsHandler.Dispose();
         gunSwayHandler.Dispose();
+    }
+    private void DisposeHandlerData()
+    {
+        adsHandler.Dispose();
     }
 
 

@@ -6,7 +6,7 @@
 public class GunSwayHandler
 {
     [SerializeField] private Transform swayTransform;
-    [SerializeField] private GunSwayStats stats;
+    public GunSwayStats stats;
 
     /// <summary>
     /// MovementState affects sway, speed percent01 of maxSpeed and IsAirborne are used for sway percentage
@@ -25,7 +25,17 @@ public class GunSwayHandler
         stats.BakeAllCurves();
     }
 
-    public void OnUpdate()
+    /// <summary>
+    /// Updated through PlayerController when the mouse is moved (moving the camera)
+    /// </summary>
+    public void OnCameraUpdate()
+    {
+
+    }
+    /// <summary>
+    /// Updated every FixedUpdate frame after player movement
+    /// </summary>
+    public void OnMovementUpdate(float speedPercentage, bool isGrounded)
     {
 
     }

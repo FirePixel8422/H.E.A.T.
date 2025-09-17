@@ -6,26 +6,75 @@
 public class ADSHandler
 {
     [Header("Maps Scope Multpliers (Time, X1 X2 X4) to a FOV Multiplier (Value)")]
-    [SerializeField] private NativeSampledAnimationCurve fovMultplierCurve = NativeSampledAnimationCurve.Default;
+    [SerializeField] private NativeSampledAnimationCurve fovMultiplierCurve = NativeSampledAnimationCurve.Default;
+
+    [SerializeField] private Animator anim;
+
+    public GunADSStats stats;
+    public float ZoomedInPercent => zoomInTransitionPercent;
 
     private CameraHandler camHandler;
-    private float fovMultiplier;
 
+    private float fovMultiplier = 1;
+    private float prevFovMultiplier = 1;
 
-    public void SetNewScopeMultiplier(float multiplier)
-    {
-        float fovMultiplier = fovMultplierCurve.Evaluate(multiplier);
-    }
+    private float zoomInTransitionPercent;
+    private bool isZoomingIn;
 
 
     public void Init(CameraHandler camHandler)
     {
         this.camHandler = camHandler;
+        fovMultiplierCurve.Bake();
+    }
+
+    public void OnZoomInput(bool performed)
+    {
+        isZoomingIn = performed;
+
+        //COnvert string to animator HAshes????
+        //COnvert string to animator HAshes????
+        //COnvert string to animator HAshes????
+        //COnvert string to animator HAshes????
+        anim.CrossFadeInFixedTime(performed ? stats.zoomAnimationName : stats.normalAnimationName, 0.15f, stats.animLayer);
+    }
+
+    public void OnUpdate(float deltaTime)
+    {
+        if (isZoomingIn)
+        {
+            zoomInTransitionPercent = Mathf.MoveTowards(zoomInTransitionPercent, 1, 1 / stats.zoomInTime * deltaTime);
+
+            fovMultiplier = fovMultiplierCurve.Evaluate(zoomInTransitionPercent * stats.zoomMultiplier);
+        }
+        else
+        {
+            zoomInTransitionPercent = Mathf.MoveTowards(zoomInTransitionPercent, 0, 1 / stats.zoomOutTime * deltaTime);
+
+            fovMultiplier = fovMultiplierCurve.Evaluate(zoomInTransitionPercent * stats.zoomMultiplier);
+        }
+
+        if (fovMultiplier != prevFovMultiplier)
+        {
+            camHandler.SetFOVZoomMultiplier(fovMultiplier);
+        }
+        prevFovMultiplier = fovMultiplier;
     }
 
 
     public void Dispose()
     {
-        fovMultplierCurve.Dispose();
+        fovMultiplierCurve.Dispose();
     }
+
+
+#if UNITY_EDITOR
+
+    [ContextMenu("DEBUG Rebake fov Curve")]
+    public void DEBUGRebakeCurve()
+    {
+        fovMultiplierCurve.Bake();
+    }
+
+#endif
 }

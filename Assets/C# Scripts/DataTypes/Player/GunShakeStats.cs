@@ -26,6 +26,9 @@ public struct GunShakeStats
     [Header("Additional upward pitch applied as the gun pulls back (multiplier).")]
     public float pullBackPitchKick;
 
+    [Header("General multiplier off stats when zoomed in")]
+    public float adsMultplier;
+
 
     /// <summary>
     /// Default values for ShakeSTats
@@ -41,5 +44,7 @@ public struct GunShakeStats
         pullBackBuildUp = 25,
         pullBackDecay = 12,
         pullBackPitchKick = 300,
+
+        adsMultplier = 0.25f,
     };
 }

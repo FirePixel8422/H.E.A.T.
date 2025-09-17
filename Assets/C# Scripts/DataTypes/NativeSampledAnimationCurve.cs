@@ -11,7 +11,7 @@ using UnityEngine;
 [System.Serializable]
 public struct NativeSampledAnimationCurve
 {
-    [Header("Curve HAS to go from time 0 to time 1")]
+    [Header("Curve HAS to start at 0 time")]
     [SerializeField] private AnimationCurve curve;
 
     [Header("Curve X this value is what gets baked into the curve output")]
@@ -22,6 +22,7 @@ public struct NativeSampledAnimationCurve
     [SerializeField] private int sampleCount;
 
     private NativeArray<float> bakedCurve;
+    private float curveSize;
 
 
     /// <summary>
@@ -39,9 +40,11 @@ public struct NativeSampledAnimationCurve
 
         bakedCurve = new NativeArray<float>(sampleCount, Allocator.Persistent);
 
+        curveSize = curve[curve.keys.Length - 1].time;
+
         for (int i = 0; i < sampleCount; i++)
         {
-            float t = (float)i / (sampleCount - 1);
+            float t = (float)i / (sampleCount - 1) * curveSize;
             bakedCurve[i] = curve.Evaluate(t) * valueMultiplier;
         }
     }
@@ -59,7 +62,7 @@ public struct NativeSampledAnimationCurve
         }
 #endif
 
-        return EvaluateWithBurst(bakedCurve, sampleCount, percent);
+        return EvaluateWithBurst(bakedCurve, sampleCount, percent / curveSize);
     }
 
     /// <summary>
@@ -80,6 +83,7 @@ public struct NativeSampledAnimationCurve
     public static NativeSampledAnimationCurve Default => new NativeSampledAnimationCurve()
     {
         curve = AnimationCurve.Linear(1, 1, 0, 0),
+        curveSize = 1,
         valueMultiplier = 1,
         sampleCount = 50,
     };
