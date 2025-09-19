@@ -100,6 +100,9 @@ public static class ExtensionMethods
         }
     }
 
+    /// <summary>
+    /// Get all children recursively
+    /// </summary>
     public static List<Transform> GetAllChildren(this Transform parent)
     {
         List<Transform> children = new List<Transform>();

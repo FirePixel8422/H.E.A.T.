@@ -590,8 +590,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   gunParentTransform: {fileID: 724888127564520829}
-  gunRefHolder: {fileID: 0}
-  gunStatsSO: {fileID: 11400000, guid: 518d03d1b3accf542ac1f9ac07310f10, type: 2}
   coreStats:
     damage: 0
     headShotMultiplier: 0
@@ -603,6 +601,7 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
+      valueMultiplier: 0
       sampleCount: 0
     bulletSize: 0
     bulletHoleFXSize:
@@ -615,33 +614,28 @@ MonoBehaviour:
     heatPerShot: 0
     shootIntensityGainMultplier: 0
     shootIntensityDescreaseMultplier: 0
-    hipFireRecoilPerShot: 0
-    timeToMinRecoil: 0
-    recoilForce:
-      x: 0
-      y: 0
-    hipFireRecoilMultiplierCurve:
-      curve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      sampleCount: 0
     adsRecoilPattern:
     - x: 0
       y: 0
     - x: 0
       y: 0
     invertX: 0
+    hipRecoilMultiplier:
+      x: 0
+      y: 0
     adsRecoilMultiplier:
       x: 0
       y: 0
-    adsRecoilDecayMultiplier: 0
-    recoilRecoveryDelay: 0
-    recoilRecovery:
+    hipRecoilForce:
       x: 0
       y: 0
+    adsRecoilForce:
+      x: 0
+      y: 0
+    hipRecoilRecovery: 0
+    adsRecoilRecovery: 0
+    recoilRecoveryDelay: 0
+    recoilPatternDecayMultiplier: 0
     maxSpread: 0
     spreadCurve:
       curve:
@@ -650,6 +644,7 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
+      valueMultiplier: 0
       sampleCount: 0
     roundsPerMinute: 0
     autoFire: 0
@@ -658,13 +653,62 @@ MonoBehaviour:
     minMaxPitch:
       min: 0
       max: 0
+    minMaxPitchAtMaxHeat:
+      min: 0
+      max: 0
     overHeatAudioClip: {fileID: 0}
     overHeatMinMaxPitch:
       min: 0
       max: 0
+  camHandler:
+    mainCamera: {fileID: 0}
+    gunCamera: {fileID: 0}
+    baseFOV: 0
+    mainCamMaxTiltAngle: 90
+  adsHandler:
+    fovMultiplierCurve:
+      curve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 1
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 1
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      valueMultiplier: 1
+      sampleCount: 50
+    anim: {fileID: 0}
+    stats:
+      zoomMultiplier: 0
+      zoomInTime: 0
+      zoomOutTime: 0
+      normalAnimationName: 
+      zoomAnimationName: 
+      animLayer: 0
   recoilHandler:
-    cameraTransform: {fileID: 6012974010948853806}
-  heatSink:
+    toAddRecoil:
+      x: 0
+      y: 0
+    recoil:
+      x: 0
+      y: 0
+  heatSinkHandler:
     stats:
       heatSinkSize: 0
       heatDecayDelay: 0
@@ -678,15 +722,45 @@ MonoBehaviour:
     anim: {fileID: 6297763046934028342}
     heatAmount: 0
   gunShakeHandler:
+    gunParentTransform: {fileID: 0}
     stats:
-      shakePitch: 0
-      shakeYaw: 0
-      shakeBuildUp: 0
-      shakeDecay: 0
-      pullBackDistance: 0
-      pullBackBuildUp: 0
-      pullBackDecay: 0
-      pullBackPitchKick: 0
+      shakePitch:
+        x: 0
+        y: 0
+      shakeYaw:
+        x: 0
+        y: 0
+      shakeBuildUp:
+        x: 0
+        y: 0
+      shakeDecay:
+        x: 0
+        y: 0
+      pullBackDistance:
+        x: 0
+        y: 0
+      pullBackBuildUp:
+        x: 0
+        y: 0
+      pullBackDecay:
+        x: 0
+        y: 0
+      pullBackPitchKick:
+        x: 0
+        y: 0
+  gunSwayHandler:
+    swayTransform: {fileID: 0}
+    stats:
+      visualSwayStrengthMax: 0
+      spreadMultplierCurve:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        valueMultiplier: 0
+        sampleCount: 0
   gunEmmisionHandler:
     heatGradient:
       gradient:
@@ -867,6 +941,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 6afc97fc-edd7-423b-96f2-90709392d93d
     m_ActionName: 'Gameplay/CancelRebind[/Keyboard/delete]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2f70bf7a-5041-4ad1-9cc1-502a88b39802
+    m_ActionName: 'Gameplay/SecInteract[/Mouse/rightButton]'
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -899,9 +977,6 @@ MonoBehaviour:
   jumpForce: 3
   fallGravityMultiplier: 5
   groundCheckRadius: 0.05
-  cameraTransform: {fileID: 6012974010948853806}
-  gunHolder: {fileID: 8568243580743899453}
-  maxTiltAngle: 90
   mouseSensitivity: 0.1
   overrideIsOwner: 1
 --- !u!114 &7952861885439663320

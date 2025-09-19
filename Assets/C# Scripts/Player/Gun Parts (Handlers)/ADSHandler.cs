@@ -15,8 +15,7 @@ public class ADSHandler
 
     private CameraHandler camHandler;
 
-    private float fovMultiplier = 1;
-    private float prevFovMultiplier = 1;
+    private float prevFovMultiplier = -1;
 
     private float zoomInTransitionPercent;
     private bool isZoomingIn;
@@ -36,11 +35,13 @@ public class ADSHandler
         //COnvert string to animator HAshes????
         //COnvert string to animator HAshes????
         //COnvert string to animator HAshes????
-        anim.CrossFadeInFixedTime(performed ? stats.zoomAnimationName : stats.normalAnimationName, 0.15f, stats.animLayer);
+        anim.CrossFadeInFixedTime(performed ? stats.zoomAnimationName : stats.normalAnimationName, stats.zoomInTime, stats.animLayer);
     }
 
     public void OnUpdate(float deltaTime)
     {
+        float fovMultiplier;
+
         if (isZoomingIn)
         {
             zoomInTransitionPercent = Mathf.MoveTowards(zoomInTransitionPercent, 1, 1 / stats.zoomInTime * deltaTime);

@@ -2763,7 +2763,7 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
+  SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
@@ -2867,6 +2867,8 @@ MonoBehaviour:
   guns:
   - {fileID: 11400000, guid: 345d4e08f6ffca9408ae925d7c9c85a0, type: 2}
   - {fileID: 11400000, guid: 27f968b9b70baf2479d2c0044169a853, type: 2}
+  - {fileID: 11400000, guid: efca6e1d6873b4e4ea917692e2fe765c, type: 2}
+  - {fileID: 11400000, guid: 32d506f0be6f2a64c9a137600b5378e7, type: 2}
 --- !u!1 &773142763
 GameObject:
   m_ObjectHideFlags: 0

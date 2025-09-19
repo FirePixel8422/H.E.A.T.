@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Mathematics;
+using UnityEngine;
 
 
 /// <summary>
@@ -8,26 +9,25 @@
 [System.Serializable]
 public struct GunShakeStats
 {
+    [Header("X coord is for HIP, Y coord is for ADS data")]
+
     [Header("Maximum pitch kick upwards (degrees).")]
-    public float shakePitch;
+    public float2 shakePitch;
     [Header("Maximum yaw kick left/right (degrees).")]
-    public float shakeYaw;
+    public float2 shakeYaw;
     [Header("How quickly the rotation kicks in (higher = snappier).")]
-    public float shakeBuildUp;
+    public float2 shakeBuildUp;
     [Header("How quickly the shake settles back to neutral (higher = faster decay).")]
-    public float shakeDecay;
+    public float2 shakeDecay;
     
     [Header("How far the gun moves backwards when fired.")]
-    public float pullBackDistance;
+    public float2 pullBackDistance;
     [Header("How quickly the pullback is applied (higher = snappier).")]
-    public float pullBackBuildUp;
+    public float2 pullBackBuildUp;
     [Header("How quickly the gun returns to its starting position after pullback.")]
-    public float pullBackDecay;
+    public float2 pullBackDecay;
     [Header("Additional upward pitch applied as the gun pulls back (multiplier).")]
-    public float pullBackPitchKick;
-
-    [Header("General multiplier off stats when zoomed in")]
-    public float adsMultplier;
+    public float2 pullBackPitchKick;
 
 
     /// <summary>
@@ -44,7 +44,5 @@ public struct GunShakeStats
         pullBackBuildUp = 25,
         pullBackDecay = 12,
         pullBackPitchKick = 300,
-
-        adsMultplier = 0.25f,
     };
 }

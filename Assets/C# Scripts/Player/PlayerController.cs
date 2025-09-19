@@ -77,18 +77,11 @@ public class PlayerController : NetworkBehaviour
     #endregion
 
 
-    #region Camera Stuff
-
-    private CameraHandler camHandler;
-
-    [Header("Gun layer setup and Look Settings")]
-    [SerializeField] private GameObject gunHolder;
+    [Header("Normal Sensitivity (Non ADS)")]
     [SerializeField] private float mouseSensitivity = 1;
 
-    #endregion
-
-
     private GunSwayHandler gunSwayHandler;
+    private CameraHandler camHandler;
     private Rigidbody rb;
     private NetworkStateMachine stateMachine;
 
@@ -187,15 +180,6 @@ public class PlayerController : NetworkBehaviour
         }
 #endif
         LocalInstance = this;
-
-        // set gun to correct FOV independent and always in front layer ("Gun")
-        int layerId = LayerMask.NameToLayer("Gun");
-        gunHolder.layer = layerId;
-
-        foreach (Transform child in gunHolder.transform.GetAllChildren())
-        {
-            child.gameObject.layer = layerId;
-        }
     }
 
     private bool registeredForUpdates = false;

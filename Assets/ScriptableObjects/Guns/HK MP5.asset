@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b0b7c3e06db8a14b87487cb5b20ad5f, type: 3}
-  m_Name: Pistol
+  m_Name: HK MP5
   m_EditorClassIdentifier: 
-  gunPrefab: {fileID: 1023205569163206758, guid: 4b07b6d66a4e04544bc5f5591b3f340f,
+  gunPrefab: {fileID: 1023205569163206758, guid: fc0d392c12f8dbc41a2bc974b133a01a,
     type: 3}
   coreStats:
     damage: 10
     headShotMultiplier: 1.5
-    maxEffectiveRange: 15
+    maxEffectiveRange: 22.5
     damageFallOffCurve:
       curve:
         serializedVersion: 2
@@ -62,67 +62,95 @@ MonoBehaviour:
     projectileCount: 1
     burstShots: 0
     burstShotInterval: 0.1
-    heatPerShot: 0.05
-    shootIntensityGainMultplier: 4.0000005
-    shootIntensityDescreaseMultplier: 20.000002
+    heatPerShot: 0.03
+    shootIntensityGainMultplier: 6.375
+    shootIntensityDescreaseMultplier: 31.875
     adsRecoilPattern:
-    - x: 0
-      y: 0.075
-    - x: 0
+    - x: -0.01
+      y: 0.06
+    - x: 0.02
       y: 0.1
+    - x: -0.02
+      y: 0.22
+    - x: -0.06
+      y: 0.22000003
+    - x: 0.02
+      y: 0.089999974
+    - x: -0.030000001
+      y: 0.04000002
+    - x: -0.04
+      y: 0.089999974
+    - x: -0.019999996
+      y: 0.04000002
     - x: 0
-      y: 0.139
-    - x: 0.007
-      y: 0.132
-    - x: -0.044999998
-      y: 0.15500003
-    - x: 0.111
-      y: 0.23799998
-    - x: -0.018
-      y: 0.11900002
-    - x: -0.104
-      y: 0.13300002
-    - x: -0.074
-      y: 0.12199998
-    - x: -0.026
-      y: 0.09099996
-    - x: 0.009000003
-      y: 0.102
-    - x: -0.040000007
-      y: 0.11400008
-    - x: -0.025999993
-      y: 0.09399998
-    - x: 0.048999995
-      y: 0.110000014
-    - x: 0.033000007
-      y: 0.085999966
-    - x: 0.037999995
+      y: 0.060000002
+    - x: -0.030000001
+      y: 0.050000012
+    - x: 0.030000001
       y: 0.049999952
-    - x: 0.046000004
-      y: 0.032000065
-    - x: -0.041
-      y: 0.054999948
-    - x: -0.052
-      y: -0.003000021
-    - x: 0.027000003
-      y: 0.06800008
+    - x: -0.02000001
+      y: 0.04000002
+    - x: -0.03999999
+      y: 0.03999996
+    - x: 0.030000001
+      y: 0.07000005
+    - x: -0.040000007
+      y: 0.029999971
+    - x: 0.040000007
+      y: 0.09000003
+    - x: -0.02000001
+      y: 0.049999952
+    - x: -0.029999986
+      y: 0.04000008
+    - x: -0.049999997
+      y: 0.01999998
+    - x: 0.019999996
+      y: 0.089999914
+    - x: 0.00999999
+      y: 0.07000005
+    - x: 0.060000002
+      y: 0.09000003
+    - x: -0.030000001
+      y: 0.01999998
+    - x: 0.07000001
+      y: 0.029999971
+    - x: -0.09
+      y: 0.05000007
+    - x: 0.03999999
+      y: 0.029999971
+    - x: 0.030000001
+      y: 0.03999996
+    - x: -0.030000001
+      y: 0.049999952
+    - x: 0.07000001
+      y: -0.00999999
+    - x: -0.030000001
+      y: 0.060000062
+    - x: 0.030000001
+      y: 0.029999971
+    - x: 0.019999996
+      y: -0.01999998
+    - x: 0.050000004
+      y: -0.01999998
+    - x: 0.07
+      y: 0.09000003
     invertX: 1
     hipRecoilMultiplier:
-      x: 12
+      x: 25
       y: 30
     adsRecoilMultiplier:
-      x: 7
-      y: 12.5
+      x: 17.5
+      y: 15
     hipRecoilForce:
-      x: 25
-      y: 75
+      x: 30
+      y: 100
     adsRecoilForce:
-      x: 25
-      y: 75
+      x: 30
+      y: 100
     hipRecoilRecovery: 50
     adsRecoilRecovery: 35
-    recoilRecoveryDelay: 0.25
-    recoilPatternDecayMultiplier: 17.5
+    recoilRecoveryDelay: 0.125
+    recoilPatternDecayMultiplier: 25
     maxSpread: 0.075
     spreadCurve:
       curve:
@@ -160,30 +188,21 @@ MonoBehaviour:
         m_RotationOrder: 4
       valueMultiplier: 1
       sampleCount: 75
-    roundsPerMinute: 300
-    autoFire: 0
-    inputBufferTime: 0.05
+    roundsPerMinute: 1100
+    autoFire: 1
+    inputBufferTime: 0
     shootAudioClips:
-    - {fileID: 8300000, guid: 5ff5bd936a30a904da907f35c8dd382e, type: 3}
+    - {fileID: 8300000, guid: 5dbc74a65da58144aa0a20190bcd4909, type: 3}
     minMaxPitch:
-      min: 0.7
+      min: 0.65
       max: 0.8
     minMaxPitchAtMaxHeat:
-      min: 1.6
-      max: 1.8
+      min: 2.25
+      max: 2.5
     overHeatAudioClip: {fileID: 8300000, guid: b3c4117d9d2775948b26557916a1468a, type: 3}
     overHeatMinMaxPitch:
-      min: 1.25
-      max: 1.5
-  heatSinkStats:
-    heatSinkSize: 1
-    heatDecayDelay: 0.5
-    heatDecayPower: 0.1
-    heatDecayPowerMultiplier: 1
-    overheatDecayDelay: 0.65
-    overheatDecayPower: 0.075
-    overheatDecayPowerMultiplier: 1
-    decayMultiplierAtMaxHeat: 10
+      min: 0.9
+      max: 1.1
   shakeStats:
     shakePitch:
       x: 65
@@ -192,14 +211,14 @@ MonoBehaviour:
       x: 15
       y: 55
     shakeBuildUp:
-      x: 20
-      y: 8
+      x: 25
+      y: 12
     shakeDecay:
       x: 5
       y: 15
     pullBackDistance:
-      x: 1
-      y: 1.5
+      x: 1.25
+      y: 1
     pullBackBuildUp:
       x: 25
       y: 12
@@ -207,8 +226,15 @@ MonoBehaviour:
       x: 10
       y: 10
     pullBackPitchKick:
-      x: -150
-      y: -65
+      x: -200
+      y: -85
+  gunADSStats:
+    zoomMultiplier: 2
+    zoomInTime: 0.175
+    zoomOutTime: 0.125
+    normalAnimationName: PistolHip
+    zoomAnimationName: PistolADS
+    animLayer: 2
   swayStats:
     visualSwayStrengthMax: 1
     spreadMultplierCurve:
@@ -238,10 +264,12 @@ MonoBehaviour:
         m_RotationOrder: 4
       valueMultiplier: 1
       sampleCount: 50
-  gunADSStats:
-    zoomMultiplier: 1
-    zoomInTime: 0.175
-    zoomOutTime: 0.125
-    normalAnimationName: PistolHip
-    zoomAnimationName: PistolADS
-    animLayer: 2
+  heatSinkStats:
+    heatSinkSize: 1
+    heatDecayDelay: 0.33
+    heatDecayPower: 0.135
+    heatDecayPowerMultiplier: 1
+    overheatDecayDelay: 0.5
+    overheatDecayPower: 0.115
+    overheatDecayPowerMultiplier: 1
+    decayMultiplierAtMaxHeat: 10

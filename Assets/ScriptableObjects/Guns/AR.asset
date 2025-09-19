@@ -65,9 +65,6 @@ MonoBehaviour:
     heatPerShot: 0.03
     shootIntensityGainMultplier: 6.375
     shootIntensityDescreaseMultplier: 31.875
-    recoilForce:
-      x: 30
-      y: 100
     adsRecoilPattern:
     - x: -0.01
       y: 0.06
@@ -139,15 +136,21 @@ MonoBehaviour:
       y: 0.09000003
     invertX: 1
     hipRecoilMultiplier:
-      x: 8
-      y: 16
-    hipRecoilDecayMultiplier: 10
-    adsRecoilMultiplier:
       x: 20
-      y: 40
-    adsRecoilDecayMultiplier: 25
-    recoilRecoveryDelay: 0.33
-    recoilRecovery: 50
+      y: 25
+    adsRecoilMultiplier:
+      x: 11.5
+      y: 12.5
+    hipRecoilForce:
+      x: 30
+      y: 100
+    adsRecoilForce:
+      x: 20
+      y: 65
+    hipRecoilRecovery: 50
+    adsRecoilRecovery: 35
+    recoilRecoveryDelay: 0.125
+    recoilPatternDecayMultiplier: 25
     maxSpread: 0.075
     spreadCurve:
       curve:
@@ -210,15 +213,30 @@ MonoBehaviour:
     overheatDecayPowerMultiplier: 1
     decayMultiplierAtMaxHeat: 10
   shakeStats:
-    shakePitch: 4
-    shakeYaw: 2.5
-    shakeBuildUp: 20
-    shakeDecay: 10
-    pullBackDistance: 1
-    pullBackBuildUp: 25
-    pullBackDecay: 10
-    pullBackPitchKick: 225
-    adsMultplier: 0.2
+    shakePitch:
+      x: 65
+      y: 40
+    shakeYaw:
+      x: 15
+      y: 55
+    shakeBuildUp:
+      x: 20
+      y: 8
+    shakeDecay:
+      x: 5
+      y: 15
+    pullBackDistance:
+      x: 1
+      y: 1.5
+    pullBackBuildUp:
+      x: 25
+      y: 12
+    pullBackDecay:
+      x: 10
+      y: 10
+    pullBackPitchKick:
+      x: -150
+      y: -65
   swayStats:
     visualSwayStrengthMax: 1
     spreadMultplierCurve:

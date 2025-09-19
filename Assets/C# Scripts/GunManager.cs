@@ -10,7 +10,7 @@ public class GunManager : MonoBehaviour
     }
 
 
-    [SerializeField] public GunStatsSO[] guns;
+    [SerializeField] private GunStatsSO[] guns;
     private int currentGunId;
 
     /// <summary>
@@ -39,18 +39,14 @@ public class GunManager : MonoBehaviour
         targetGun.GetGunStats(out coreStats, out heatSinkStats, out shakeStats, out swayStats, out gunADSStats);
     }
 
-    public void SwapToNextGun(
-        Transform gunParentTransform, bool isOwner, ref GunRefHolder gunRefHolder,
-        out GunCoreStats coreStats,
-        out HeatSinkStats heatSinkStats,
-        out GunShakeStats shakeStats,
-        out GunSwayStats swayStats,
-        out GunADSStats gunADSStats,
-        out int gunId)
+    public int GetNextGunId() 
     {
         currentGunId = (currentGunId + 1) % guns.Length;
-        gunId = currentGunId;
-
-        SwapGun(gunParentTransform, gunId, isOwner, ref gunRefHolder, out coreStats, out heatSinkStats, out shakeStats, out swayStats, out gunADSStats);
+        return currentGunId;
     }
+
+
+#if UNITY_EDITOR
+    public string GetCurrentGunName() => guns[currentGunId].name;
+#endif
 }

@@ -12,10 +12,10 @@ public class GunStatsSO : ScriptableObject
 
     [Header("Stats bound to this gun")]
     [SerializeField] private GunCoreStats coreStats = GunCoreStats.Default;
-    [SerializeField] private HeatSinkStats heatSinkStats = HeatSinkStats.Default;
     [SerializeField] private GunShakeStats shakeStats = GunShakeStats.Default;
-    [SerializeField] private GunSwayStats swayStats = GunSwayStats.Default;
     [SerializeField] private GunADSStats gunADSStats = GunADSStats.Default;
+    [SerializeField] private GunSwayStats swayStats = GunSwayStats.Default;
+    [SerializeField] private HeatSinkStats heatSinkStats = HeatSinkStats.Default;
 
 
     public void GetGunStats(out GunCoreStats coreStats, out HeatSinkStats heatSinkStats, out GunShakeStats shakeStats, out GunSwayStats swayStats, out GunADSStats gunADSStats)

@@ -58,23 +58,32 @@ public struct GunCoreStats
     public float shootIntensityGainMultplier;
     public float shootIntensityDescreaseMultplier;
 
-    [Header("How Aggressive recoil is added, higher is more 'clicky' recoil")]
-    public float2 recoilForce;
-
     [Header("Scoped in recoil pattern and whether to smooth between points")]
     public float2[] adsRecoilPattern;
 
     [SerializeField] private bool invertX;
 
+    [Header("Multipliers on top off the recoil pattern based on ADS state (blended)")]
     [SerializeField] private float2 hipRecoilMultiplier;
-    [SerializeField] private float hipRecoilDecayMultiplier;
-
     [SerializeField] private float2 adsRecoilMultiplier;
-    [SerializeField] private float adsRecoilDecayMultiplier;
+
+    [Header("How Aggressive recoil is added, higher is more 'clicky' recoil")]
+    [SerializeField] private float2 hipRecoilForce;
+    [SerializeField] private float2 adsRecoilForce;
+
+    [Header("How fast to reset added recoil")]
+    [SerializeField] private float hipRecoilRecovery;
+    [SerializeField] private float adsRecoilRecovery;
+
+    [Header("The time that needs to pass while not shooting for the recoil to stabilize")]
+    public float recoilRecoveryDelay;
+
+    [Header("Speed at which recoilPattern resets")]
+    [SerializeField] private float recoilPatternDecayMultiplier;
 
     private float cADSRecoilIdFloat;
 
-    public float2 GetRecoil(float zoomedInPercent)
+    public float2 GetRecoil(float adsPercentage)
     {
         int patternPointId = math.clamp((int)math.floor(cADSRecoilIdFloat), 0, adsRecoilPattern.Length - 1);
 
@@ -85,24 +94,28 @@ public struct GunCoreStats
             float2 recoil = adsRecoilPattern[patternPointId];
             recoil.x = -recoil.x;
 
-            return recoil * math.lerp(adsRecoilMultiplier, hipRecoilMultiplier, zoomedInPercent);
+            return recoil * math.lerp(hipRecoilMultiplier, adsRecoilMultiplier, adsPercentage);
         }
         else
         {
-            return adsRecoilPattern[patternPointId] * math.lerp(adsRecoilMultiplier, hipRecoilMultiplier, zoomedInPercent);
+            return adsRecoilPattern[patternPointId] * math.lerp(hipRecoilMultiplier, adsRecoilMultiplier, adsPercentage);
         }
     }
-    public void DecreaseRecoil(float deltaTime, float zoomedInPercentage)
-    {
-        float decayMultiplier = math.lerp(hipRecoilDecayMultiplier, adsRecoilDecayMultiplier, zoomedInPercentage);
 
-        cADSRecoilIdFloat = math.clamp(cADSRecoilIdFloat - deltaTime * decayMultiplier, 0, adsRecoilPattern.Length);
+    public float2 GetRecoilForce(float adsPercentage)
+    {
+        return math.lerp(hipRecoilForce, adsRecoilForce, adsPercentage);
     }
 
-    [Header("The time that needs to pass while not shooting for the recoil to stabilize")]
-    public float recoilRecoveryDelay;
-    [Header("How much recoil to recover per second while not shooting")]
-    public float recoilRecovery;
+    public float GetRecoilRecovery(float adsPercentage)
+    {
+        return math.lerp(hipRecoilRecovery, adsRecoilRecovery, adsPercentage);
+    }
+
+    public void DecreaseRecoil(float deltaTime)
+    {
+        cADSRecoilIdFloat = math.clamp(cADSRecoilIdFloat - deltaTime * recoilPatternDecayMultiplier, 0, adsRecoilPattern.Length);
+    }
 
 
     [Header("How much the bullet can maximally offset from actual shot point")]
@@ -191,15 +204,17 @@ public struct GunCoreStats
         adsRecoilPattern = new float2[0],
         cADSRecoilIdFloat = 0,
         invertX = false,
-        hipRecoilMultiplier = new float2(1, 1),
-        hipRecoilDecayMultiplier = 10,
-        adsRecoilMultiplier = new float2(1, 1),
-        adsRecoilDecayMultiplier = 10,
 
-        recoilForce = new float2(25, 50),
+        hipRecoilMultiplier = new float2(1, 1),
+        hipRecoilRecovery = 0.5f,
+        adsRecoilMultiplier = new float2(1, 1),
+        adsRecoilRecovery = 0.5f,
+        recoilPatternDecayMultiplier = 50,
+
+        hipRecoilForce = new float2(30, 100),
+        adsRecoilForce = new float2(30, 100),
 
         recoilRecoveryDelay = 0.25f,
-        recoilRecovery = 0.5f,
 
         maxSpread = 0.25f,
         spreadCurve = NativeSampledAnimationCurve.Default,

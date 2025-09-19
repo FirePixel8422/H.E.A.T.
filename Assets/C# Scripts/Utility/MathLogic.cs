@@ -84,20 +84,7 @@ public static class MathLogic
         return new MinMaxFloat(math.lerp(a.min, b.max, t), math.lerp(a.max, b.max, t));
     }
 }
-
-
-public static class Float3
-{
-    public static float3 Zero => new float3(0f, 0f, 0f);
-    public static float3 One => new float3(1f, 1f, 1f);
-    public static float3 Up => new float3(0f, 1f, 0f);
-    public static float3 Down => new float3(0f, -1f, 0f);
-    public static float3 Left => new float3(-1f, 0f, 0f);
-    public static float3 Right => new float3(1f, 0f, 0f);
-    public static float3 Forward => new float3(0f, 0f, 1f);
-    public static float3 Backward => new float3(0f, 0f, -1f);
-}
-public static class Float2
+public struct Float2
 {
     public static float2 Zero => new float2(0f, 0f);
     public static float2 One => new float2(1f, 1f);

@@ -9,17 +9,14 @@ using UnityEngine;
 public class RecoilHandler
 {
     private CameraHandler camHandler;
+    private float2 toAddRecoil;
+    private float2 recoil;
 
-    [Space(10)]
-
-    public float2 toAddRecoil;
-    public float2 recoil;
 
     public void Init(CameraHandler camHandler)
     {
         this.camHandler = camHandler;
     }
-
 
     /// <summary>
     /// Ignore recoil recovery for mouse input that moved the camera down (countering the recoil)

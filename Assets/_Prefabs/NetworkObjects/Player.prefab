@@ -589,7 +589,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   gunParentTransform: {fileID: 724888127564520829}
-  gunStatsSO: {fileID: 11400000, guid: 518d03d1b3accf542ac1f9ac07310f10, type: 2}
   coreStats:
     damage: 0
     headShotMultiplier: 0
@@ -614,9 +613,6 @@ MonoBehaviour:
     heatPerShot: 0
     shootIntensityGainMultplier: 0
     shootIntensityDescreaseMultplier: 0
-    recoilForce:
-      x: 0
-      y: 0
     adsRecoilPattern:
     - x: 0
       y: 0
@@ -626,13 +622,19 @@ MonoBehaviour:
     hipRecoilMultiplier:
       x: 0
       y: 0
-    hipRecoilDecayMultiplier: 0
     adsRecoilMultiplier:
       x: 0
       y: 0
-    adsRecoilDecayMultiplier: 0
+    hipRecoilForce:
+      x: 0
+      y: 0
+    adsRecoilForce:
+      x: 0
+      y: 0
+    hipRecoilRecovery: 0
+    adsRecoilRecovery: 0
     recoilRecoveryDelay: 0
-    recoilRecovery: 0
+    recoilPatternDecayMultiplier: 0
     maxSpread: 0
     spreadCurve:
       curve:
@@ -732,7 +734,7 @@ MonoBehaviour:
     recoil:
       x: 0
       y: 0
-  heatSink:
+  heatSinkHandler:
     stats:
       heatSinkSize: 0
       heatDecayDelay: 0
@@ -748,15 +750,30 @@ MonoBehaviour:
   gunShakeHandler:
     gunParentTransform: {fileID: 2654517494388891251}
     stats:
-      shakePitch: 0
-      shakeYaw: 0
-      shakeBuildUp: 0
-      shakeDecay: 0
-      pullBackDistance: 0
-      pullBackBuildUp: 0
-      pullBackDecay: 0
-      pullBackPitchKick: 0
-      adsMultplier: 0
+      shakePitch:
+        x: 0
+        y: 0
+      shakeYaw:
+        x: 0
+        y: 0
+      shakeBuildUp:
+        x: 0
+        y: 0
+      shakeDecay:
+        x: 0
+        y: 0
+      pullBackDistance:
+        x: 0
+        y: 0
+      pullBackBuildUp:
+        x: 0
+        y: 0
+      pullBackDecay:
+        x: 0
+        y: 0
+      pullBackPitchKick:
+        x: 0
+        y: 0
   gunSwayHandler:
     swayTransform: {fileID: 0}
     stats:
@@ -998,7 +1015,6 @@ MonoBehaviour:
   jumpForce: 3
   fallGravityMultiplier: 5
   groundCheckRadius: 0.05
-  gunHolder: {fileID: 8568243580743899453}
   mouseSensitivity: 0.1
   overrideIsOwner: 0
 --- !u!114 &7952861885439663320
