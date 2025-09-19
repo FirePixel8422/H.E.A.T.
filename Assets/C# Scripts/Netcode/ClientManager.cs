@@ -84,6 +84,11 @@ namespace FirePixel.Networking
         /// </summary>
         public static int GetClientGameId(ulong networkId) => Instance.playerIdDataArray.Value.GetPlayerGameId(networkId);
 
+        /// <summary>
+        /// Turn GameId into Player Username
+        /// </summary>
+        public static string GetPlayerName(int gameId) => Instance.playerIdDataArray.Value.GetUserName(gameId);
+
 
         #region OnConnect, OnDisconnect and OnKicked Callbacks
 

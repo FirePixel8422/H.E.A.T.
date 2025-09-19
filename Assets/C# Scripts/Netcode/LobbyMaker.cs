@@ -76,7 +76,7 @@ namespace FirePixel.Networking
                 }
                 catch (LobbyServiceException e)
                 {
-                    DebugLogger.Log(e.ToString());
+                    DebugLogger.Log("No rejoinable lobby detected:\n" + e.ToString());
                 }
             }
         }
@@ -120,9 +120,9 @@ namespace FirePixel.Networking
         }
 
 
-        public async void CreateLobbyAsync()
+        public async Task<bool> CreateLobbyAsync()
         {
-            invisibleScreenCover.SetActive(true);
+            invisibleScreenCover?.SetActive(true);
             int maxPlayers = GlobalGameSettings.MaxPlayers;
 
             try
@@ -175,19 +175,23 @@ namespace FirePixel.Networking
                 NetworkManager.Singleton.StartHost();
 
                 // Load next scene through network, so all joining clients will also load it automatically
-                SceneManager.LoadSceneOnNetwork_OnServer(nextSceneName);
+                //SceneManager.LoadSceneOnNetwork_OnServer(nextSceneName);
+
+                return true;
             }
             catch (LobbyServiceException e)
             {
-                invisibleScreenCover.SetActive(false);
+                invisibleScreenCover?.SetActive(false);
 
                 DebugLogger.Log(e.ToString());
+
+                return false;
             }
         }
 
-        public async void AutoJoinLobbyAsync()
+        public async Task<bool> AutoJoinLobbyAsync()
         {
-            invisibleScreenCover.SetActive(true);
+            invisibleScreenCover?.SetActive(true);
 
             try
             {
@@ -195,9 +199,7 @@ namespace FirePixel.Networking
 
                 if (lobbyFound == false)
                 {
-                    CreateLobbyAsync();
-
-                    return;
+                    return await CreateLobbyAsync();
                 }
 
                 // Join oldest joinable lobby
@@ -229,11 +231,15 @@ namespace FirePixel.Networking
                     _joinData.HostConnectionData);
 
                 NetworkManager.Singleton.StartClient();
+
+                return true;
             }
             catch (LobbyServiceException e)
             {
-                invisibleScreenCover.SetActive(false);
+                invisibleScreenCover?.SetActive(false);
                 DebugLogger.Log(e.ToString());
+
+                return false;
             }
         }
 
@@ -279,11 +285,11 @@ namespace FirePixel.Networking
             }
         }
 
-        public async void JoinLobbyByIdAsync(string lobbyId)
+        public async Task<bool> JoinLobbyByIdAsync(string lobbyId)
         {
-            if (lobbyId.Length != 22) return;
+            if (lobbyId.Length != 22) return false;
 
-            invisibleScreenCover.SetActive(true);
+            invisibleScreenCover?.SetActive(true);
 
             try
             {
@@ -317,16 +323,20 @@ namespace FirePixel.Networking
                     _joinData.HostConnectionData);
 
                 NetworkManager.Singleton.StartClient();
+
+                return true;
             }
             catch (LobbyServiceException e)
             {
-                invisibleScreenCover.SetActive(false);
+                invisibleScreenCover?.SetActive(false);
 
                 DebugLogger.Log(e.ToString());
+
+                return false;
             }
         }
 
-        public async void RejoinLobbyAsync(string lobbyId)
+        public async Task<bool> RejoinLobbyAsync(string lobbyId)
         {
             try
             {
@@ -355,12 +365,16 @@ namespace FirePixel.Networking
                     _joinData.HostConnectionData);
 
                 NetworkManager.Singleton.StartClient();
+
+                return true;
             }
             catch (Exception e)
             {
-                invisibleScreenCover.SetActive(false);
+                invisibleScreenCover?.SetActive(false);
 
                 DebugLogger.Log(e.ToString());
+
+                return false;
             }
         }
 
