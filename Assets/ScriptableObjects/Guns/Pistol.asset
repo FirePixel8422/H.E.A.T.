@@ -62,22 +62,22 @@ MonoBehaviour:
     projectileCount: 1
     burstShots: 0
     burstShotInterval: 0.1
-    heatPerShot: 0.05
+    heatPerShot: 0.06
     shootIntensityGainMultplier: 4.0000005
     shootIntensityDescreaseMultplier: 20.000002
     adsRecoilPattern:
     - x: 0
-      y: 0.075
+      y: 0.238
     - x: 0
-      y: 0.1
+      y: 0.155
     - x: 0
       y: 0.139
+    - x: 0.111
+      y: 0.11
+    - x: -0.044999998
+      y: 0.1
     - x: 0.007
       y: 0.132
-    - x: -0.044999998
-      y: 0.15500003
-    - x: 0.111
-      y: 0.23799998
     - x: -0.018
       y: 0.11900002
     - x: -0.104
@@ -160,7 +160,7 @@ MonoBehaviour:
         m_RotationOrder: 4
       valueMultiplier: 1
       sampleCount: 75
-    roundsPerMinute: 300
+    roundsPerMinute: 350
     autoFire: 0
     inputBufferTime: 0.05
     shootAudioClips:
@@ -175,15 +175,6 @@ MonoBehaviour:
     overHeatMinMaxPitch:
       min: 1.25
       max: 1.5
-  heatSinkStats:
-    heatSinkSize: 1
-    heatDecayDelay: 0.5
-    heatDecayPower: 0.1
-    heatDecayPowerMultiplier: 1
-    overheatDecayDelay: 0.65
-    overheatDecayPower: 0.075
-    overheatDecayPowerMultiplier: 1
-    decayMultiplierAtMaxHeat: 10
   shakeStats:
     shakePitch:
       x: 65
@@ -209,6 +200,13 @@ MonoBehaviour:
     pullBackPitchKick:
       x: -150
       y: -65
+  gunADSStats:
+    zoomMultiplier: 1
+    zoomInTime: 0.175
+    zoomOutTime: 0.125
+    normalAnimationName: PistolHip
+    zoomAnimationName: PistolADS
+    animLayer: 2
   swayStats:
     visualSwayStrengthMax: 1
     spreadMultplierCurve:
@@ -238,10 +236,12 @@ MonoBehaviour:
         m_RotationOrder: 4
       valueMultiplier: 1
       sampleCount: 50
-  gunADSStats:
-    zoomMultiplier: 1
-    zoomInTime: 0.175
-    zoomOutTime: 0.125
-    normalAnimationName: PistolHip
-    zoomAnimationName: PistolADS
-    animLayer: 2
+  heatSinkStats:
+    heatSinkSize: 1
+    heatDecayDelay: 0.5
+    heatDecayPower: 0.1
+    heatDecayPowerMultiplier: 1
+    overheatDecayDelay: 0.65
+    overheatDecayPower: 0.075
+    overheatDecayPowerMultiplier: 1
+    decayMultiplierAtMaxHeat: 10

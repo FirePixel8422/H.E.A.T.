@@ -3,6 +3,7 @@ using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 using Unity.Mathematics;
+using JetBrains.Annotations;
 
 
 public class DebugRecoilPatternMaker : MonoBehaviour
@@ -26,6 +27,24 @@ public class DebugRecoilPatternMaker : MonoBehaviour
     private void Start()
     {
         source = GetComponent<AudioSource>();
+    }
+
+    private void Update()
+    {
+        int childCount = transform.childCount;
+
+        if (childCount == 0) return;
+
+        Vector3 previousPos = transform.GetChild(0).position;
+
+
+        for (int i = 1; i < childCount; i++)
+        {
+            Vector3 newPos = transform.GetChild(i).position;
+            Debug.DrawLine(previousPos, newPos, new Color(1, 1, 1, 0.5f));
+
+            previousPos = newPos;
+        }
     }
 
     public void LoadRecoilPatternFromScriptableObject()

@@ -120,6 +120,10 @@ namespace FirePixel.Networking
         }
 
 
+        public async void CreateLobbyAsync_Button()
+        {
+            await CreateLobbyAsync();
+        }
         public async Task<bool> CreateLobbyAsync()
         {
             invisibleScreenCover?.SetActive(true);
@@ -175,7 +179,7 @@ namespace FirePixel.Networking
                 NetworkManager.Singleton.StartHost();
 
                 // Load next scene through network, so all joining clients will also load it automatically
-                //SceneManager.LoadSceneOnNetwork_OnServer(nextSceneName);
+                SceneManager.LoadSceneOnNetwork_OnServer(nextSceneName);
 
                 return true;
             }
@@ -189,6 +193,11 @@ namespace FirePixel.Networking
             }
         }
 
+
+        public async void AutoJoinLobbyAsync_Button()
+        {
+            await AutoJoinLobbyAsync();
+        }
         public async Task<bool> AutoJoinLobbyAsync()
         {
             invisibleScreenCover?.SetActive(true);
@@ -285,6 +294,11 @@ namespace FirePixel.Networking
             }
         }
 
+
+        public async void JoinLobbyByIdAsync_Button(string lobbyId)
+        {
+            await JoinLobbyByIdAsync(lobbyId);
+        }
         public async Task<bool> JoinLobbyByIdAsync(string lobbyId)
         {
             if (lobbyId.Length != 22) return false;

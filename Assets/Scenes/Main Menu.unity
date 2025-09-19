@@ -8363,8 +8363,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 661675218}
-        m_TargetAssemblyTypeName: LobbyMaker, Assembly-CSharp
-        m_MethodName: CreateLobbyAsync
+        m_TargetAssemblyTypeName: FirePixel.Networking.LobbyMaker, Assembly-CSharp
+        m_MethodName: CreateLobbyAsync_Button
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

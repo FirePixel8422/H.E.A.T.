@@ -13,7 +13,7 @@ namespace FirePixel.Networking
 
         [SerializeField]
         private string[] funnyNames = new string[]
-            {
+        {
             "JohnDoe",
             "WillowWilson",
             "BijnaMichael",
@@ -25,7 +25,7 @@ namespace FirePixel.Networking
             "HonkiePlonkie",
             "WhyIsThisHere",
             "TheFrenchLikeBaguette",
-            };
+        };
 
 
         private async void Start()
