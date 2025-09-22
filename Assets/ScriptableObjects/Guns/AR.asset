@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b0b7c3e06db8a14b87487cb5b20ad5f, type: 3}
   m_Name: AR
   m_EditorClassIdentifier: 
-  gunPrefab: {fileID: 5484704871031037484, guid: 4b07b6d66a4e04544bc5f5591b3f340f,
+  gunPrefab: {fileID: 6724042961586966176, guid: 4956023eff3505649bd4db2a067373eb,
     type: 3}
   coreStats:
     damage: 10
@@ -236,6 +236,28 @@ MonoBehaviour:
     zoomAnimationName: PistolADS
     animLayer: 2
   swayStats:
+    movementAmplitude:
+      x: 0.015
+      y: 0.001
+    movementFrequency: 2
+    idleAmplitude:
+      x: 0.015
+      y: 0.05
+    idleFrequency: 2.5
+    posSwayMouse:
+      x: 0.0015
+      y: 0.00075
+    eulerSwayMouse:
+      x: 0.001
+      y: 0.001
+    posSwayMove:
+      x: 0.0025
+      y: 0.001
+    eulerSwayMove:
+      x: 0.001
+      y: 0.001
+    offsetSmooth: 12
+    swayRecoverSmooth: 15
     spreadMultplierCurve:
       curve:
         serializedVersion: 2

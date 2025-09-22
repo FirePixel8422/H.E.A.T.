@@ -257,7 +257,7 @@ public class PlayerController : NetworkBehaviour
     private void OnUpdate()
     {
         // Update GunSway
-        gunSwayHandler.OnUpdate(mouseInput, GetForwardDirection(), Mathf.Abs(rb.linearVelocity.x) + Mathf.Abs(rb.linearVelocity.z), IsGrounded, Time.deltaTime);
+        gunSwayHandler.OnUpdate(mouseInput, moveDir, Mathf.Abs(rb.linearVelocity.x) + Mathf.Abs(rb.linearVelocity.z), IsGrounded, Time.deltaTime);
     }
 
 

@@ -88,19 +88,13 @@ public class GunCore : NetworkBehaviour
         if (overrideIsOwner) return;
 #endif
 
-        if (IsOwner)
-        {
-            Init();
-        }
+        Init();
     }
 
 #if UNITY_EDITOR
     private void Start()
     {
-        if (overrideIsOwner)
-        {
-            Init();
-        }
+        Init();
     }
 #endif
 
@@ -135,9 +129,6 @@ public class GunCore : NetworkBehaviour
     {
         ManageUpdateCallbacks(true);
 
-        mainCam = camHandler.MainCamera;
-        DecalVfxManager.Instance.Init(mainCam);
-
         recoilHandler.Init(camHandler);
         adsHandler.Init(camHandler);
         gunEmmisionHandler.Init();
@@ -146,10 +137,16 @@ public class GunCore : NetworkBehaviour
         playerController = GetComponent<PlayerController>();
         playerController.Init(camHandler, gunSwayHandler);
 
-        gunLayer = LayerMask.NameToLayer("Gun");
-        gunHolder.gameObject.layer = gunLayer;
 
-        SwapGun(0);
+        if (IsOwner)
+        {
+            mainCam = camHandler.MainCamera;
+            SwapGun(0);
+            DecalVfxManager.Instance.Init(mainCam);
+
+            gunLayer = LayerMask.NameToLayer("Gun");
+            gunHolder.gameObject.layer = gunLayer;
+        }
     }
 
     #endregion
@@ -225,7 +222,9 @@ public class GunCore : NetworkBehaviour
 
             SwapGun(gunId);
 
+#if UNITY_EDITOR
             MessageHandler.Instance.SendTextLocal("Swapped to: " + GunManager.Instance.GetCurrentGunName());
+#endif
         }
         // TEMP
 

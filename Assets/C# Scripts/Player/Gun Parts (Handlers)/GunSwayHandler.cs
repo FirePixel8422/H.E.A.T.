@@ -8,24 +8,12 @@ public class GunSwayHandler
     [SerializeField] private Transform gunTransform;
     private ADSHandler adsHandler;
 
-    public GunSwayStats stats;
-
-    [Header("Settings")]
-    public float2 movementAmplitude = 0.05f;   // height of the bob
-    public float movementFrequency = 6f;      // speed of the bob
-
-    [Header("Simulates Breathing")]
-    public float2 idleAmplitude = 0.025f;
-    public float idleFrequency = 0.5f;
-
-    [Header("Sway")]
-    public float movementSway = 2;
-
-    public float offsetSmooth = 12f;
-    public float swayRecoverSmooth = 12f;
+    public GunSwayStats stats = GunSwayStats.Default;
 
     private Vector3 startPos;
-    private Vector3 swayOffset;
+    private Vector3 startEuler;
+    private Vector3 swayPosOffset;
+    private Vector3 swayEulerOffset;
     private float bobTimer;
 
 
@@ -37,6 +25,7 @@ public class GunSwayHandler
         this.adsHandler = adsHandler;
 
         startPos = gunTransform.localPosition;
+        startEuler = gunTransform.localEulerAngles;
     }
 
     /// <summary>
@@ -49,33 +38,52 @@ public class GunSwayHandler
 
     public void OnUpdate(Vector2 mouseInput, Vector2 moveDir, float moveSpeed, bool isGrounded, float deltaTime)
     {
-        float zoomPercent = adsHandler.ZoomedInPercent;
+        //DebugLogger.Log(moveDir);
 
-        Vector3 bobbingOffset;
+        float zoomPercent = adsHandler.ZoomedInPercent;
         Vector3 targetPos = startPos;
 
+
+        #region Bobbing Effect
+
+        Vector3 bobbingOffset;
+
         float amplitude =  moveSpeed > 0 ?
-            math.lerp(movementAmplitude.y, movementAmplitude.x, zoomPercent) :
-            math.lerp(idleAmplitude.y, idleAmplitude.x, zoomPercent);
+            math.lerp(stats.movementAmplitude.y, stats.movementAmplitude.x, zoomPercent) :
+            math.lerp(stats.idleAmplitude.y, stats.idleAmplitude.x, zoomPercent);
 
         float frequency = moveSpeed > 0 ?
-            movementFrequency * moveSpeed * deltaTime :
-            idleFrequency * deltaTime;
+            stats.movementFrequency * moveSpeed * deltaTime :
+            stats.idleFrequency * deltaTime;
 
         bobTimer += frequency;
 
         float bobOffset = math.sin(bobTimer) * amplitude;
-
         bobbingOffset = new Vector3(0f, bobOffset, 0f);
 
+        targetPos = VectorLogic.InstantMoveTowards(targetPos, targetPos + bobbingOffset, stats.offsetSmooth * deltaTime);
 
-        swayOffset = VectorLogic.InstantMoveTowards(swayOffset, Vector3.zero, swayRecoverSmooth * deltaTime);
+        #endregion
 
-        swayOffset += new Vector3(-mouseInput.x, -mouseInput.y, 0f) * movementSway;
 
-        targetPos = VectorLogic.InstantMoveTowards(targetPos, targetPos + bobbingOffset + swayOffset, offsetSmooth * deltaTime);
+        #region Sway Effect
 
-        gunTransform.localPosition = targetPos;
+        float posSwayMouse = math.lerp(stats.posSwayMouse.x, stats.posSwayMouse.y, zoomPercent);
+        float eulerSwayMouse = math.lerp(stats.eulerSwayMouse.x, stats.eulerSwayMouse.y, zoomPercent);
+        float posSwayMove = math.lerp(stats.posSwayMove.x, stats.posSwayMove.y, zoomPercent);
+        float eulerSwayMove = math.lerp(stats.eulerSwayMove.x, stats.eulerSwayMove.y, zoomPercent);
+
+        // Lerp previous sway back to 0 and add new mouseInput to sway
+        swayPosOffset = Vector3.Lerp(swayPosOffset, Vector3.zero, stats.swayRecoverSmooth * deltaTime);
+        swayEulerOffset = Vector3.Lerp(swayEulerOffset, Vector3.zero, stats.swayRecoverSmooth * deltaTime);
+
+        swayPosOffset += new Vector3(-mouseInput.x, -mouseInput.y, 0f) * posSwayMouse + new Vector3(-moveDir.x, -moveDir.y, 0) * posSwayMove;
+        swayEulerOffset += new Vector3(-mouseInput.y, mouseInput.x, 0f) * eulerSwayMouse + new Vector3(-moveDir.x, -moveDir.y, 0) * eulerSwayMove;
+
+        #endregion
+
+
+        gunTransform.SetLocalPositionAndRotation(targetPos + swayPosOffset, Quaternion.Euler(startEuler + swayEulerOffset));
     }
 
     public void Dispose()

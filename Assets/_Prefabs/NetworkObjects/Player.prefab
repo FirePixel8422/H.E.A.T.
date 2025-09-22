@@ -662,8 +662,8 @@ MonoBehaviour:
   camHandler:
     mainCamera: {fileID: 4769577523386625857}
     gunCamera: {fileID: 4245517809260214837}
-    baseFOV: 90
-    mainCamMaxTiltAngle: 90
+    baseFOV: 75
+    mainCamMaxTiltAngle: 75
   adsHandler:
     fovMultiplierCurve:
       curve:
@@ -770,7 +770,28 @@ MonoBehaviour:
   gunSwayHandler:
     gunTransform: {fileID: 0}
     stats:
-      adsMultiplier: 0
+      movementAmplitude:
+        x: 0.015
+        y: 0.075
+      movementFrequency: 2
+      idleAmplitude:
+        x: 0.015
+        y: 0.05
+      idleFrequency: 2.5
+      posSwayMouse:
+        x: 0.005
+        y: 0.005
+      eulerSwayMouse:
+        x: 0.001
+        y: 0.001
+      posSwayMove:
+        x: 0.005
+        y: 0.005
+      eulerSwayMove:
+        x: 0.001
+        y: 0.001
+      offsetSmooth: 12
+      swayRecoverSmooth: 15
       spreadMultplierCurve:
         curve:
           serializedVersion: 2
@@ -805,7 +826,21 @@ MonoBehaviour:
     idleAmplitude:
       x: 0.015
       y: 0.05
-    idleFrequency: 2
+    idleFrequency: 2.5
+    posSwayMouse:
+      x: 0
+      y: 0
+    eulerSwayMouse:
+      x: 0
+      y: 0
+    posSwayMove:
+      x: 0
+      y: 0
+    eulerSwayMove:
+      x: 0
+      y: 0
+    offsetSmooth: 12
+    swayRecoverSmooth: 15
   gunEmmisionHandler:
     heatGradient:
       gradient:

@@ -248,7 +248,28 @@ MonoBehaviour:
     zoomAnimationName: PistolADS
     animLayer: 2
   swayStats:
-    adsMultiplier: 0
+    movementAmplitude:
+      x: 0.015
+      y: 0.001
+    movementFrequency: 2
+    idleAmplitude:
+      x: 0.015
+      y: 0.05
+    idleFrequency: 2.5
+    posSwayMouse:
+      x: 0.0015
+      y: 0.00075
+    eulerSwayMouse:
+      x: 0.001
+      y: 0.001
+    posSwayMove:
+      x: 0.0025
+      y: 0.001
+    eulerSwayMove:
+      x: 0.001
+      y: 0.001
+    offsetSmooth: 12
+    swayRecoverSmooth: 15
     spreadMultplierCurve:
       curve:
         serializedVersion: 2

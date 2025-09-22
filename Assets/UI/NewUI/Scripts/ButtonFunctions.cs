@@ -1,8 +1,6 @@
 using FirePixel.Networking;
 using System.Collections;
 using UnityEngine;
-using static UnityEditor.Rendering.CameraUI;
-using UnityEngine.UI;
 using TMPro;
 
 public class ButtonFunctions : MonoBehaviour
