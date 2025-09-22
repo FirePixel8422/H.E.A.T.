@@ -35,7 +35,7 @@ public static class UpdateScheduler
     /// <summary>
     /// Unregister a registerd method for Update()
     /// </summary>
-    public static void UnregisterUpdate(Action action)
+    public static void UnRegisterUpdate(Action action)
     {
         OnUpdate -= action;
     }
@@ -50,7 +50,7 @@ public static class UpdateScheduler
         }
         else
         {
-            UnregisterUpdate(action);
+            UnRegisterUpdate(action);
         }
     }
 
@@ -66,7 +66,7 @@ public static class UpdateScheduler
     /// <summary>
     /// Unregister a registerd method for FixedUpdate()
     /// </summary>
-    public static void UnregisterFixedUpdate(Action action)
+    public static void UnRegisterFixedUpdate(Action action)
     {
         OnFixedUpdate -= action;
     }
@@ -81,7 +81,7 @@ public static class UpdateScheduler
         }
         else
         {
-            UnregisterFixedUpdate(action);
+            UnRegisterFixedUpdate(action);
         }
     }
 

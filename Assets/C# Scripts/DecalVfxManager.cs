@@ -179,7 +179,7 @@ public class DecalVfxManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        UpdateScheduler.UnregisterUpdate(OnUpdate);
+        UpdateScheduler.UnRegisterUpdate(OnUpdate);
         cameraPlanes.DisposeIfCreated();
     }
 }

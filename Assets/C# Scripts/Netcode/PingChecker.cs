@@ -24,7 +24,7 @@ namespace FirePixel.Networking
         }
 
         private void OnEnable() => UpdateScheduler.RegisterFixedUpdate(OnFixedUpdate);
-        private void OnDisable() => UpdateScheduler.UnregisterFixedUpdate(OnFixedUpdate);
+        private void OnDisable() => UpdateScheduler.UnRegisterFixedUpdate(OnFixedUpdate);
 
         private void OnFixedUpdate()
         {

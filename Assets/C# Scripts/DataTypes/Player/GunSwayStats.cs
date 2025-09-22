@@ -3,12 +3,8 @@
 
 [System.Serializable]
 public struct GunSwayStats
-{
-    public float visualSwayStrengthMax;
-
+{        
     public NativeSampledAnimationCurve spreadMultplierCurve;
-
-
 
 
     /// <summary>
@@ -29,7 +25,6 @@ public struct GunSwayStats
 
     public static GunSwayStats Default => new GunSwayStats()
     {
-        visualSwayStrengthMax = 1,
         spreadMultplierCurve = NativeSampledAnimationCurve.Default
     };
 }

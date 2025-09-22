@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 
 public class GunCore : NetworkBehaviour
 {
-    [SerializeField] private Transform gunParentTransform;
+    [SerializeField] private Transform gunHolder;
 
     private GunRefHolder gunRefHolder;
     private PlayerController playerController;
@@ -147,7 +147,7 @@ public class GunCore : NetworkBehaviour
         playerController.Init(camHandler, gunSwayHandler);
 
         gunLayer = LayerMask.NameToLayer("Gun");
-        gunParentTransform.gameObject.layer = gunLayer;
+        gunHolder.gameObject.layer = gunLayer;
 
         SwapGun(0);
     }
@@ -195,7 +195,7 @@ public class GunCore : NetworkBehaviour
     {
         DisposeGunData();
 
-        GunManager.Instance.SwapGun(gunParentTransform, gunId, IsOwner,
+        GunManager.Instance.SwapGun(gunHolder, gunId, IsOwner,
             ref gunRefHolder,
             out coreStats, 
             out heatSinkHandler.stats,
@@ -203,6 +203,7 @@ public class GunCore : NetworkBehaviour
             out gunSwayHandler.stats,
             out adsHandler.stats);
         
+        gunSwayHandler.SwapGun(gunRefHolder.transform);
         gunEmmisionHandler.SwapGun(gunRefHolder.EmissionMatInstance);
     }
 
@@ -482,8 +483,8 @@ public class GunCore : NetworkBehaviour
 
     public override void OnDestroy()
     {
-        UpdateScheduler.UnregisterUpdate(OnUpdate);
-        UpdateScheduler.UnregisterFixedUpdate(OnFixedUpdate);
+        UpdateScheduler.UnRegisterUpdate(OnUpdate);
+        UpdateScheduler.UnRegisterFixedUpdate(OnFixedUpdate);
 
         DisposeGunData();
         DisposeHandlerData();

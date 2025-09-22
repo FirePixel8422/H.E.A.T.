@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b0b7c3e06db8a14b87487cb5b20ad5f, type: 3}
   m_Name: AR
   m_EditorClassIdentifier: 
-  gunPrefab: {fileID: 1023205569163206758, guid: fc0d392c12f8dbc41a2bc974b133a01a,
+  gunPrefab: {fileID: 5484704871031037484, guid: 4b07b6d66a4e04544bc5f5591b3f340f,
     type: 3}
   coreStats:
     damage: 10
@@ -203,15 +203,6 @@ MonoBehaviour:
     overHeatMinMaxPitch:
       min: 0.9
       max: 1.1
-  heatSinkStats:
-    heatSinkSize: 1
-    heatDecayDelay: 0.25
-    heatDecayPower: 0.1
-    heatDecayPowerMultiplier: 1
-    overheatDecayDelay: 0.65
-    overheatDecayPower: 0.075
-    overheatDecayPowerMultiplier: 1
-    decayMultiplierAtMaxHeat: 10
   shakeStats:
     shakePitch:
       x: 65
@@ -237,8 +228,14 @@ MonoBehaviour:
     pullBackPitchKick:
       x: -150
       y: -65
+  gunADSStats:
+    zoomMultiplier: 2
+    zoomInTime: 0.175
+    zoomOutTime: 0.125
+    normalAnimationName: PistolHip
+    zoomAnimationName: PistolADS
+    animLayer: 2
   swayStats:
-    visualSwayStrengthMax: 1
     spreadMultplierCurve:
       curve:
         serializedVersion: 2
@@ -266,10 +263,12 @@ MonoBehaviour:
         m_RotationOrder: 4
       valueMultiplier: 1
       sampleCount: 50
-  gunADSStats:
-    zoomMultiplier: 2
-    zoomInTime: 0.175
-    zoomOutTime: 0.125
-    normalAnimationName: PistolHip
-    zoomAnimationName: PistolADS
-    animLayer: 2
+  heatSinkStats:
+    heatSinkSize: 1
+    heatDecayDelay: 0.25
+    heatDecayPower: 0.1
+    heatDecayPowerMultiplier: 1
+    overheatDecayDelay: 0.65
+    overheatDecayPower: 0.075
+    overheatDecayPowerMultiplier: 1
+    decayMultiplierAtMaxHeat: 10

@@ -55,7 +55,7 @@ public class DebugDataDisplay : MonoBehaviour
 
     private void OnDisable()
     {
-        UpdateScheduler.UnregisterUpdate(OnUpdate);
+        UpdateScheduler.UnRegisterUpdate(OnUpdate);
     }
 
     private void OnUpdate()

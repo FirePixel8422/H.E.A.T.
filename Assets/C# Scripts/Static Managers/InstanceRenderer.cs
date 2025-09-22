@@ -252,7 +252,7 @@ public class InstanceRenderer
         culledInstanceMatrices.Dispose();
         frustumPlanes.Dispose();
 
-        UpdateScheduler.UnregisterUpdate(OnUpdate);
+        UpdateScheduler.UnRegisterUpdate(OnUpdate);
     }
 
 

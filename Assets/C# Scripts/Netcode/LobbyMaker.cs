@@ -27,11 +27,13 @@ namespace FirePixel.Networking
         }
 
 
+        [Header("Scene to load when joining or creating a lobby\nLeave empty for no scene load")]
         [SerializeField] private string nextSceneName = "Pre-MainGame";
         [SerializeField] private GameObject invisibleScreenCover;
         [SerializeField] private GameObject rejoinMenu;
 
         [SerializeField] private float lobbySearchInterval = 3;
+
         private CancellationTokenSource lobbySearchCts;
         private bool inSearchLobbyScreen = false;
 
@@ -178,8 +180,11 @@ namespace FirePixel.Networking
 
                 NetworkManager.Singleton.StartHost();
 
-                // Load next scene through network, so all joining clients will also load it automatically
-                SceneManager.LoadSceneOnNetwork_OnServer(nextSceneName);
+                if (string.IsNullOrEmpty(nextSceneName) == false)
+                {
+                    // Load next scene through network, so all joining clients will also load it automatically
+                    SceneManager.LoadSceneOnNetwork_OnServer(nextSceneName);
+                }
 
                 return true;
             }

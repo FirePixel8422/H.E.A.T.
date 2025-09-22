@@ -588,7 +588,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  gunParentTransform: {fileID: 724888127564520829}
+  gunHolder: {fileID: 724888127564520829}
   coreStats:
     damage: 0
     headShotMultiplier: 0
@@ -727,13 +727,6 @@ MonoBehaviour:
       normalAnimationName: 
       zoomAnimationName: 
       animLayer: 0
-  recoilHandler:
-    toAddRecoil:
-      x: 0
-      y: 0
-    recoil:
-      x: 0
-      y: 0
   heatSinkHandler:
     stats:
       heatSinkSize: 0
@@ -775,9 +768,20 @@ MonoBehaviour:
         x: 0
         y: 0
   gunSwayHandler:
-    swayTransform: {fileID: 0}
+    gunTransform: {fileID: 0}
+    step: 0.01
+    maxStepDistance: 0.06
+    rotationStep: 6
+    maxRotationStep: 8
+    swayEulerRot: {x: 0, y: 0, z: 0}
+    smooth: 10
+    smoothRot: 12
+    speedCurve: 0
+    travelLimit: {x: 0.05, y: 0.025, z: 0.05}
+    bobLimit: {x: 0.025, y: 0.01, z: 0.025}
+    bobExaggeration: 1
+    multiplier: {x: 2.5, y: 1, z: 2.5}
     stats:
-      visualSwayStrengthMax: 0
       spreadMultplierCurve:
         curve:
           serializedVersion: 2

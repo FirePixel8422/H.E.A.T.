@@ -27,7 +27,7 @@ public class TooltipManager : MonoBehaviour
 
 
     public void OnEnable() => UpdateScheduler.RegisterUpdate(OnUpdate);
-    public void OnDisable() => UpdateScheduler.UnregisterUpdate(OnUpdate);
+    public void OnDisable() => UpdateScheduler.UnRegisterUpdate(OnUpdate);
 
     private void Start()
     {

@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using Unity.Netcode;
 using TMPro;
-using FirePixel.Networking;
 
 
 namespace FirePixel.Networking

@@ -44,7 +44,7 @@ public class GunShakeHandler
 
         // rotational shake
         targetShakeRot = new Vector3(
-            -Random.Range(0f, shakePitch) * shakeMultiplier,  // pitch up
+            -shakePitch * shakeMultiplier,  // pitch up
             Random.Range(-shakeYaw, shakeYaw) * shakeMultiplier,
             0f
         );
