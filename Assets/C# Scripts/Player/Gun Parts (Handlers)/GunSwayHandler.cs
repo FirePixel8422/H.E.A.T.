@@ -1,44 +1,43 @@
 ﻿using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.UIElements;
-
 
 
 [System.Serializable]
 public class GunSwayHandler
 {
     [SerializeField] private Transform gunTransform;
-
-    [Header("Sway")]
-    public float step = 0.01f;
-    public float maxStepDistance = 0.06f;
-    private Vector3 swayPos;
-
-    [Header("Sway Rotation")]
-    [SerializeField] private float rotationStep = 4f;
-    [SerializeField] private float maxRotationStep = 5f;
-    [SerializeField] private Vector3 swayEulerRot;
-
-    [SerializeField] private float smooth = 10f;
-    [SerializeField] private float smoothRot = 12f;
-
-    [Header("Bobbing")]
-    [SerializeField] private float speedCurve;
-    private float CurveSin { get => Mathf.Sin(speedCurve); }
-    private float CurveCos { get => Mathf.Cos(speedCurve); }
-
-    [SerializeField] private Vector3 travelLimit = Vector3.one * 0.025f;
-    [SerializeField] private Vector3 bobLimit = Vector3.one * 0.01f;
-    private Vector3 bobPosition;
-
-    [SerializeField] private float bobExaggeration;
-
-    [Header("Bob Rotation")]
-    [SerializeField] private Vector3 multiplier;
-    private Vector3 bobEulerRotation;
+    private ADSHandler adsHandler;
 
     public GunSwayStats stats;
 
+    [Header("Settings")]
+    public float2 movementAmplitude = 0.05f;   // height of the bob
+    public float movementFrequency = 6f;      // speed of the bob
+
+    [Header("Simulates Breathing")]
+    public float2 idleAmplitude = 0.025f;
+    public float idleFrequency = 0.5f;
+
+    [Header("Sway")]
+    public float movementSway = 2;
+
+    public float offsetSmooth = 12f;
+    public float swayRecoverSmooth = 12f;
+
+    private Vector3 startPos;
+    private Vector3 swayOffset;
+    private float bobTimer;
+
+
+    public void SwapGun(Transform gunTransform, ADSHandler adsHandler)
+    {
+        stats.BakeAllCurves();
+
+        this.gunTransform = gunTransform;
+        this.adsHandler = adsHandler;
+
+        startPos = gunTransform.localPosition;
+    }
 
     /// <summary>
     /// MovementState affects sway, speed percent01 of maxSpeed and IsAirborne are used for sway percentage
@@ -48,69 +47,36 @@ public class GunSwayHandler
         return stats.spreadMultplierCurve.Evaluate(percentage);
     }
 
-    public void SwapGun(Transform gunTransform)
+    public void OnUpdate(Vector2 mouseInput, Vector2 moveDir, float moveSpeed, bool isGrounded, float deltaTime)
     {
-        stats.BakeAllCurves();
+        float zoomPercent = adsHandler.ZoomedInPercent;
 
-        this.gunTransform = gunTransform;
+        Vector3 bobbingOffset;
+        Vector3 targetPos = startPos;
+
+        float amplitude =  moveSpeed > 0 ?
+            math.lerp(movementAmplitude.y, movementAmplitude.x, zoomPercent) :
+            math.lerp(idleAmplitude.y, idleAmplitude.x, zoomPercent);
+
+        float frequency = moveSpeed > 0 ?
+            movementFrequency * moveSpeed * deltaTime :
+            idleFrequency * deltaTime;
+
+        bobTimer += frequency;
+
+        float bobOffset = math.sin(bobTimer) * amplitude;
+
+        bobbingOffset = new Vector3(0f, bobOffset, 0f);
+
+
+        swayOffset = VectorLogic.InstantMoveTowards(swayOffset, Vector3.zero, swayRecoverSmooth * deltaTime);
+
+        swayOffset += new Vector3(-mouseInput.x, -mouseInput.y, 0f) * movementSway;
+
+        targetPos = VectorLogic.InstantMoveTowards(targetPos, targetPos + bobbingOffset + swayOffset, offsetSmooth * deltaTime);
+
+        gunTransform.localPosition = targetPos;
     }
-
-    public void OnUpdate(Vector2 mouseInput, Vector2 moveDir, bool isGrounded, float deltaTime)
-    {
-        Sway(mouseInput);
-        SwayRotation(mouseInput);
-        BobOffset(moveDir, isGrounded, deltaTime);
-        BobRotation(moveDir);
-
-        CompositePositionRotation(deltaTime);
-    }
-
-    private void Sway(Vector2 mouseInput)
-    {
-        Vector3 invertLook = mouseInput * -step;
-        invertLook.x = Mathf.Clamp(invertLook.x, -maxStepDistance, maxStepDistance);
-        invertLook.y = Mathf.Clamp(invertLook.y, -maxStepDistance, maxStepDistance);
-
-        swayPos = invertLook;
-    }
-
-    private void SwayRotation(Vector2 mouseInput)
-    {
-        Vector2 invertLook = mouseInput * -rotationStep;
-        invertLook.x = Mathf.Clamp(invertLook.x, -maxRotationStep, maxRotationStep);
-        invertLook.y = Mathf.Clamp(invertLook.y, -maxRotationStep, maxRotationStep);
-        swayEulerRot = new Vector3(invertLook.y, invertLook.x, invertLook.x);
-    }
-
-    private void CompositePositionRotation(float deltaTime)
-    {
-        gunTransform.localPosition = Vector3.Lerp(gunTransform.localPosition, swayPos + bobPosition, deltaTime * smooth);
-        gunTransform.localRotation = Quaternion.Slerp(gunTransform.localRotation, Quaternion.Euler(swayEulerRot) * Quaternion.Euler(bobEulerRotation), deltaTime * smoothRot);
-    }
-
-    private void BobOffset(Vector2 moveDir, bool isGrounded, float deltaTime)
-    {
-        speedCurve += deltaTime * (isGrounded ? (moveDir.x + moveDir.y) * bobExaggeration : 1f) + 0.01f;
-
-        bobPosition.x = (CurveCos * bobLimit.x * (isGrounded ? 1 : 0)) - (moveDir.x * travelLimit.x);
-        bobPosition.y = (CurveSin * bobLimit.y) - (moveDir.y * travelLimit.y);
-        bobPosition.z = -(moveDir.y * travelLimit.z);
-    }
-
-    private void BobRotation(Vector2 moveDir)
-    {
-        if (moveDir == Vector2.zero)
-        {
-            bobEulerRotation = Vector3.zero;
-            return;
-        }
-
-        bobEulerRotation = new Vector3(
-            multiplier.x * math.sin(2 * speedCurve), 
-            multiplier.y * CurveCos, 
-            multiplier.z * CurveCos * moveDir.x);
-    }
-
 
     public void Dispose()
     {

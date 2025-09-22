@@ -62,7 +62,7 @@ MonoBehaviour:
     projectileCount: 1
     burstShots: 0
     burstShotInterval: 0.1
-    heatPerShot: 0.025
+    heatPerShot: 0.0335
     shootIntensityGainMultplier: 2.1818173
     shootIntensityDescreaseMultplier: 10.909086
     adsRecoilPattern:
@@ -248,6 +248,7 @@ MonoBehaviour:
     zoomAnimationName: PistolADS
     animLayer: 2
   swayStats:
+    adsMultiplier: 0
     spreadMultplierCurve:
       curve:
         serializedVersion: 2

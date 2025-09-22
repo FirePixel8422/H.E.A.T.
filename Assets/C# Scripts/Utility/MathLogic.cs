@@ -1,6 +1,6 @@
 ﻿using Unity.Burst;
 using Unity.Mathematics;
-
+using UnityEngine;
 
 
 [BurstCompile(DisableSafetyChecks = true)]
@@ -11,19 +11,26 @@ public static class MathLogic
         float3 difference = value - toSubtract;
         return math.abs(difference.x) + math.abs(difference.y) + math.abs(difference.z);
     }
-
     public static int DistanceFrom(this int3 value, int3 toSubtract)
     {
         int3 difference = value - toSubtract;
         return math.abs(difference.x) + math.abs(difference.y) + math.abs(difference.z);
     }
-
     /// <returns>Absolute of: X + Y + Z</returns>
     public static float AbsoluteSum(this float3 value)
     {
         return math.abs(value.x) + math.abs(value.y) + math.abs(value.z);
     }
 
+
+    public static bool IsZero(this Vector3 value)
+    {
+        return value.x == 0f && value.y == 0f && value.z == 0f;
+    }
+    public static bool IsZero(this Vector2 value)
+    {
+        return value.x == 0f && value.y == 0;
+    }
     public static bool IsZero(this float3 value)
     {
         return value.x == 0f && value.y == 0f && value.z == 0f;

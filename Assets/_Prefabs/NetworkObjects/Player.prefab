@@ -769,28 +769,43 @@ MonoBehaviour:
         y: 0
   gunSwayHandler:
     gunTransform: {fileID: 0}
-    step: 0.01
-    maxStepDistance: 0.06
-    rotationStep: 6
-    maxRotationStep: 8
-    swayEulerRot: {x: 0, y: 0, z: 0}
-    smooth: 10
-    smoothRot: 12
-    speedCurve: 0
-    travelLimit: {x: 0.05, y: 0.025, z: 0.05}
-    bobLimit: {x: 0.025, y: 0.01, z: 0.025}
-    bobExaggeration: 1
-    multiplier: {x: 2.5, y: 1, z: 2.5}
     stats:
+      adsMultiplier: 0
       spreadMultplierCurve:
         curve:
           serializedVersion: 2
-          m_Curve: []
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 1
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 1
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
-        valueMultiplier: 0
-        sampleCount: 0
+        valueMultiplier: 1
+        sampleCount: 50
+    movementAmplitude:
+      x: 0.015
+      y: 0.075
+    movementFrequency: 2
+    idleAmplitude:
+      x: 0.015
+      y: 0.05
+    idleFrequency: 2
   gunEmmisionHandler:
     heatGradient:
       gradient:

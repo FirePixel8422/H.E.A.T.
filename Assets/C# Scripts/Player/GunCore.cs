@@ -203,7 +203,7 @@ public class GunCore : NetworkBehaviour
             out gunSwayHandler.stats,
             out adsHandler.stats);
         
-        gunSwayHandler.SwapGun(gunRefHolder.transform);
+        gunSwayHandler.SwapGun(gunRefHolder.transform, adsHandler);
         gunEmmisionHandler.SwapGun(gunRefHolder.EmissionMatInstance);
     }
 
