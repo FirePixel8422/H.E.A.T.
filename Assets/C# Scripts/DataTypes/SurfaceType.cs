@@ -3,8 +3,8 @@
 
 public enum SurfaceType : byte
 {
-    None,
+    Metal,
     Stone,
     Wood,
-    Metal,
+    None,
 }

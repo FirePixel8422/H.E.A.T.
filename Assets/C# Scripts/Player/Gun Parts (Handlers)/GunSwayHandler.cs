@@ -49,8 +49,8 @@ public class GunSwayHandler
         Vector3 bobbingOffset;
 
         float amplitude =  moveSpeed > 0 ?
-            math.lerp(stats.movementAmplitude.y, stats.movementAmplitude.x, zoomPercent) :
-            math.lerp(stats.idleAmplitude.y, stats.idleAmplitude.x, zoomPercent);
+            math.lerp(stats.movementAmplitude.x, stats.movementAmplitude.y, zoomPercent) :
+            math.lerp(stats.idleAmplitude.x, stats.idleAmplitude.y, zoomPercent);
 
         float frequency = moveSpeed > 0 ?
             stats.movementFrequency * moveSpeed * deltaTime :

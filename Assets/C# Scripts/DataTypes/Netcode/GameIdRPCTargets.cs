@@ -46,6 +46,16 @@ namespace FirePixel.Networking
             };
         }
 
+        public static GameIdRPCTargets SendToOppositeOfLocalClient()
+        {
+            int opponentGameId = (ClientManager.LocalClientGameId == 0) ? 1 : 0;
+
+            return new GameIdRPCTargets
+            {
+                targetGameIds = new int[] { opponentGameId }
+            };
+        }
+
         public static GameIdRPCTargets SendToAllButClient(int clientGameId)
         {
             int playerCount = ClientManager.PlayerCount;

@@ -6,6 +6,8 @@ using UnityEngine;
 [System.Serializable]
 public struct GunSwayStats
 {
+    [Header("X coord is for HIP, Y coord is for ADS data")]
+
     [Header("Settings")]
     public float2 movementAmplitude;
     public float movementFrequency;

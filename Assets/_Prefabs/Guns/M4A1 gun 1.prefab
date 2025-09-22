@@ -68,8 +68,47 @@ PrefabInstance:
       propertyPath: m_Name
       value: M4A1 gun 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2480468476454893792, guid: 0a9ddce9026c353458a2c1e3dba7fe2c,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 58e1b7655e7f84f48ab30a6d6a436f5b, type: 2}
+    - target: {fileID: 5962797510816068560, guid: 0a9ddce9026c353458a2c1e3dba7fe2c,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 58e1b7655e7f84f48ab30a6d6a436f5b, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0a9ddce9026c353458a2c1e3dba7fe2c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -7490018373462821997}
   m_SourcePrefab: {fileID: 100100000, guid: 0a9ddce9026c353458a2c1e3dba7fe2c, type: 3}
+--- !u!1 &214074725121125438 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0a9ddce9026c353458a2c1e3dba7fe2c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1025098905302782319}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-7490018373462821997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 214074725121125438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c923460df06e0048a743d98b5dc486a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GunRefHolder
+  emissionRendererObj: {fileID: 7291409841394841637}
+--- !u!23 &7291409841394841637 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -1510490814552823478, guid: 0a9ddce9026c353458a2c1e3dba7fe2c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1025098905302782319}
+  m_PrefabAsset: {fileID: 0}

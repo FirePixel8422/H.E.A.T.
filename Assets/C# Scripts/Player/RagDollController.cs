@@ -1,36 +1,51 @@
 using Unity.Netcode;
 using UnityEngine;
 using FirePixel.Networking;
+using System.Collections.Generic;
 
 
 public class RagDollController : NetworkBehaviour
 {
-    [SerializeField] private Rigidbody[] bones;
+    [SerializeField] private Transform playerBonesRoot;
 
     [SerializeField] private float ragDollStrength = 10f;
     [SerializeField] private float ragDollImpactStrength = 0.5f;
     [SerializeField] private float ragDollImpactRadius = 2;
     [SerializeField] private float ragDollImpactUpMod = 1;
 
-    [SerializeField] private Collider[] mainColliders;
+    [SerializeField] private float ragdollLifeTime = 15;
+
     private Rigidbody mainRigidbody;
+    private Rigidbody[] bones;
+    private Collider[] mainColliders;
 
 
     private void Start()
     {
+        // Detach regdoll from player
+        transform.parent = null;
+
         mainRigidbody = GetComponent<Rigidbody>();
 
+        bones = GetComponentsInChildren<Rigidbody>(true);
+
         int boneCount = bones.Length;
+
+        List<Collider> mainColls = new List<Collider>(boneCount);
+
         for (int i = 0; i < boneCount; i++)
         {
             Rigidbody targetBoneRb = bones[i];
             targetBoneRb.isKinematic = true;
 
-            if (targetBoneRb.TryGetComponent(out Collider coll))
+            foreach(Collider coll in targetBoneRb.GetComponents<Collider>())
             {
+                mainColls.Add(coll);
                 coll.enabled = false;
             }
         }
+
+        mainColliders = mainColls.ToArray();
     }
 
 
@@ -38,6 +53,7 @@ public class RagDollController : NetworkBehaviour
 
     public void StartRagdoll(Vector3 ragdollDirection, Vector3 ragdollImpactPoint)
     {
+        RecreateRagdollTransforms();
         Ragdoll(ragdollDirection, ragdollImpactPoint);
 
         ActivateRagdoll_ServerRPC(ClientManager.LocalClientGameId, ragdollDirection, ragdollImpactPoint);
@@ -63,11 +79,31 @@ public class RagDollController : NetworkBehaviour
 
     private void RecreateRagdollTransforms()
     {
+        List<Transform> children = playerBonesRoot.GetAllChildren();
+        int childCount = children.Count;
 
+        List<Matrix4x4> matrices = new List<Matrix4x4>(childCount);
+
+        for (int i = 0; i < childCount; i++)
+        {
+            matrices.Add(children[i].localToWorldMatrix);
+        }
+        Destroy(playerBonesRoot.gameObject);
+
+
+        children = transform.GetAllChildren();
+        childCount = children.Count;
+
+        for (int i = 0; i < childCount; i++)
+        {
+            TransformUtility.SetTransformFromMatrix(children[i], matrices[i]);
+        }
     }
 
     private void Ragdoll(Vector3 ragdollDirection, Vector3 ragdollImpactPoint)
     {
+        gameObject.SetActive(true);
+
         int mainColliderCount = mainColliders.Length;
         for (int i = 0; i < mainColliderCount; i++)
         {
@@ -90,11 +126,14 @@ public class RagDollController : NetworkBehaviour
             targetBoneRb.AddForce(ragdollDirection * ragDollStrength, ForceMode.Impulse);
             targetBoneRb.AddExplosionForce(ragDollImpactStrength, ragdollImpactPoint, ragDollImpactRadius, ragDollImpactUpMod, ForceMode.Impulse);
         }
+
+        Destroy(gameObject, ragdollLifeTime);
     }
 
 
 #if UNITY_EDITOR
 
+    [Header("DEBUG")]
     [SerializeField] private Transform ragDollImpactPoint;
     [SerializeField] private Vector3 ragDollDirection;
 
@@ -102,6 +141,9 @@ public class RagDollController : NetworkBehaviour
     [ContextMenu("DEBUG Test RagDoll")]
     private void DEBUG_TestRagDoll()
     {
+        if (Application.isPlaying == false) return;
+
+        RecreateRagdollTransforms();
         Ragdoll(ragDollDirection, ragDollImpactPoint.position);
     }
 

@@ -42,7 +42,6 @@ public class GunCore : NetworkBehaviour
 
     private float timeSinceLastShot;
     private float timeSinceShootButtonPress;
-    [SerializeField] private float shootingIntensity;
 
     private int burstShotsLeft = 0;
     private float burstShotTimer = 0f;
@@ -164,11 +163,12 @@ public class GunCore : NetworkBehaviour
         {
             child.gameObject.layer = gunLayer;
         }
+        adsHandler.OnZoomInput(false);
+
+        timeSinceLastShot = 0;
+        burstShotTimer = coreStats.burstShotInterval;
 
         SwapGun_ServerRPC(ClientManager.LocalClientGameId, gunId);
-
-        timeSinceLastShot = coreStats.ShootInterval;
-        burstShotTimer = coreStats.burstShotInterval;
 
         UpdateVisualHeatEmmision_ServerRPC(0);
     }
@@ -199,7 +199,7 @@ public class GunCore : NetworkBehaviour
             out gunShakeHandler.stats,
             out gunSwayHandler.stats,
             out adsHandler.stats);
-        
+
         gunSwayHandler.SwapGun(gunRefHolder.transform, adsHandler);
         gunEmmisionHandler.SwapGun(gunRefHolder.EmissionMatInstance);
     }
@@ -329,12 +329,6 @@ public class GunCore : NetworkBehaviour
             recoilHandler.StabilizeRecoil(coreStats.GetRecoilRecovery(adsPercentage) * deltaTime);
 
             coreStats.DecreaseRecoil(deltaTime);
-
-            shootingIntensity -= deltaTime / coreStats.shootIntensityDescreaseMultplier;
-            if (shootingIntensity < 0f)
-            {
-                shootingIntensity = 0f;
-            }
         }
 
         // Send -1 to heatSinkHandler if burst is ongoing to indicate gun isn't idle yet, otherwise send timeSinceLastShot
@@ -351,8 +345,6 @@ public class GunCore : NetworkBehaviour
     /// </summary>
     private void PrepareShot(int projectileCount, float adsPercentage)
     {
-        shootingIntensity += coreStats.ShootInterval / coreStats.shootIntensityGainMultplier;
-
         gunShakeHandler.AddShake(coreStats.ShootInterval, adsPercentage);
 
         //float2 recoil = new float2(0, coreStats.GetHipFireRecoil(shootingIntensity));
@@ -448,21 +440,6 @@ public class GunCore : NetworkBehaviour
         return dir * dist;
     }
 
-    /// <summary>
-    /// Method to actually fire a shot
-    /// </summary>
-    private void ShootEffects(BulletHoleMessage[] bulletHoleMessages)
-    {
-        int randomAudioId = EzRandom.Range(0, coreStats.shootAudioClips.Length);
-        float randomPitch = EzRandom.Range(MathLogic.Lerp(coreStats.minMaxPitch, coreStats.minMaxPitchAtMaxHeat, heatSinkHandler.HeatPercentage));
-
-        gunShotSource.PlayClipWithPitch(coreStats.shootAudioClips[randomAudioId], randomPitch);
-
-        // Create Decal trhough DecalVfxManager
-        DecalVfxManager.Instance.RegisterDecal(bulletHoleMessages);
-    }
-
-
     [ServerRpc(RequireOwnership = false)]
     private void Shoot_ServerRPC(int fromClientGameId, BulletHoleMessage[] bulletHoleMessages)
     {
@@ -475,6 +452,20 @@ public class GunCore : NetworkBehaviour
         if (rpcTargets.IsTarget == false) return;
 
         ShootEffects(bulletHoleMessages);
+    }
+
+    /// <summary>
+    /// Method to actually fire a shot
+    /// </summary>
+    private void ShootEffects(BulletHoleMessage[] bulletHoleMessages)
+    {
+        int randomAudioId = EzRandom.Range(0, coreStats.shootAudioClips.Length);
+        float randomPitch = EzRandom.Range(MathLogic.Lerp(coreStats.minMaxPitch, coreStats.minMaxPitchAtMaxHeat, heatSinkHandler.HeatPercentage));
+
+        gunShotSource.PlayClipWithPitch(coreStats.shootAudioClips[randomAudioId], randomPitch);
+
+        // Create Decal trhough DecalVfxManager
+        DecalVfxManager.Instance.RegisterDecal(bulletHoleMessages);
     }
 
     #endregion

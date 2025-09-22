@@ -92,33 +92,6 @@ public static class ExtensionMethods
         }
     }
 
-    public static void DestroyAllChildren(this Transform parent)
-    {
-        foreach (Transform child in parent)
-        {
-            GameObject.Destroy(child.gameObject);
-        }
-    }
-
-    /// <summary>
-    /// Get all children recursively
-    /// </summary>
-    public static List<Transform> GetAllChildren(this Transform parent)
-    {
-        List<Transform> children = new List<Transform>();
-        CollectChildren(parent, children);
-        return children;
-    }
-
-    private static void CollectChildren(Transform parent, List<Transform> list)
-    {
-        foreach (Transform child in parent)
-        {
-            list.Add(child);
-            CollectChildren(child, list); // recurse deeper
-        }
-    }
-
     #endregion
 
 
@@ -311,7 +284,7 @@ public static class ExtensionMethods
         {
             return identifier.SurfaceType;
         }
-        return SurfaceType.None;
+        return SurfaceType.Metal;
     }
 
     /// <summary>

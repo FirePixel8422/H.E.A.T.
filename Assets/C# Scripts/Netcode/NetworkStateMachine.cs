@@ -49,7 +49,6 @@ namespace FirePixel.Networking
 
         private Animator anim;
         private RagDollController ragDollController;
-        private Rigidbody rb;
 
         private int animationLayerCount;
 
@@ -64,8 +63,7 @@ namespace FirePixel.Networking
         private void Awake()
         {
             anim = GetComponent<Animator>();
-            ragDollController = GetComponent<RagDollController>();
-            rb = GetComponent<Rigidbody>();
+            ragDollController = GetComponentInChildren<RagDollController>();
 
             animationLayerCount = anim.layerCount;
 

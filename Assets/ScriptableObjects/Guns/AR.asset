@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b0b7c3e06db8a14b87487cb5b20ad5f, type: 3}
   m_Name: AR
   m_EditorClassIdentifier: 
-  gunPrefab: {fileID: 6724042961586966176, guid: 4956023eff3505649bd4db2a067373eb,
+  gunPrefab: {fileID: -7490018373462821997, guid: adb4b3cc0e3bccb4db984bc2c9003414,
     type: 3}
   coreStats:
     damage: 10
@@ -205,35 +205,35 @@ MonoBehaviour:
       max: 1.1
   shakeStats:
     shakePitch:
-      x: 65
-      y: 40
+      x: 160
+      y: 50
     shakeYaw:
       x: 15
-      y: 55
-    shakeBuildUp:
-      x: 20
       y: 8
+    shakeBuildUp:
+      x: 8
+      y: 5
     shakeDecay:
-      x: 5
-      y: 15
+      x: 2
+      y: 2
     pullBackDistance:
       x: 1
-      y: 1.5
+      y: 0.5
     pullBackBuildUp:
       x: 25
       y: 12
     pullBackDecay:
       x: 10
-      y: 10
+      y: 6
     pullBackPitchKick:
-      x: -150
-      y: -65
+      x: -85
+      y: -30
   gunADSStats:
     zoomMultiplier: 2
     zoomInTime: 0.175
     zoomOutTime: 0.125
-    normalAnimationName: PistolHip
-    zoomAnimationName: PistolADS
+    normalAnimationName: AR_Hip
+    zoomAnimationName: AR_ADS
     animLayer: 2
   swayStats:
     movementAmplitude:
@@ -242,13 +242,13 @@ MonoBehaviour:
     movementFrequency: 2
     idleAmplitude:
       x: 0.015
-      y: 0.05
+      y: 0.0001
     idleFrequency: 2.5
     posSwayMouse:
       x: 0.0015
       y: 0.00075
     eulerSwayMouse:
-      x: 0.001
+      x: 0.0025
       y: 0.001
     posSwayMove:
       x: 0.0025

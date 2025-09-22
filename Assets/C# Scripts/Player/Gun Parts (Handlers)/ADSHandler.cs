@@ -9,11 +9,11 @@ public class ADSHandler
     [SerializeField] private NativeSampledAnimationCurve fovMultiplierCurve = NativeSampledAnimationCurve.Default;
 
     [SerializeField] private Animator anim;
+    private CameraHandler camHandler;
 
     public GunADSStats stats;
     public float ZoomedInPercent => zoomInTransitionPercent;
 
-    private CameraHandler camHandler;
 
     private float prevFovMultiplier = -1;
 
@@ -58,6 +58,7 @@ public class ADSHandler
         if (fovMultiplier != prevFovMultiplier)
         {
             camHandler.SetFOVZoomMultiplier(fovMultiplier);
+            PlayerHUD.LocalInstance.SetCrossHairAlpha(1 - zoomInTransitionPercent);
         }
         prevFovMultiplier = fovMultiplier;
     }

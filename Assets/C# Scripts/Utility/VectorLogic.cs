@@ -79,14 +79,13 @@ public static class VectorLogic
     {
         for (int i = 0; i < 3; i++)
         {
-            if (value[i] > 180)
+            if (float.IsNaN(value[i]) || float.IsInfinity(value[i]))
             {
-                value[i] -= 360;
+                value[i] = 0f; // or handle gracefully
+                continue;
             }
-            else if (value[i] < -180)
-            {
-                value[i] += 360;
-            }
+
+            value[i] = Mathf.Repeat(value[i] + 180f, 360f) - 180f;
         }
     }
 

@@ -79,6 +79,8 @@ public class DecalVfxManager : MonoBehaviour
         {
             BulletHoleMessage cMessage = messages[i];
 
+            if (cMessage.hitSurfaceType == SurfaceType.None) continue;
+
             // If list is at max capacity, remove the oldest bullet hole
             if (decalEntries.Count >= decalCap)
             {
@@ -92,6 +94,15 @@ public class DecalVfxManager : MonoBehaviour
                 // Remove all destroyed bullet entries at once
                 decalEntries.RemoveRange(0, onCapReachCleanupCount);
             }
+
+#if UNITY_EDITOR
+            if ((int)cMessage.hitSurfaceType >= decalMaterials.Length)
+            {
+                DebugLogger.LogError($"DecalVfxManager: SurfaceType {(int)cMessage.hitSurfaceType} has no assigned material! Max is {decalMaterials.Length - 1}");
+                continue;
+            }
+#endif
+
             // Add Decal
             DecalProjector decalRenderer = GetDecalFromPool(cMessage.pos, cMessage.rot, Vector3.one * cMessage.scale, (int)cMessage.hitSurfaceType);
 
