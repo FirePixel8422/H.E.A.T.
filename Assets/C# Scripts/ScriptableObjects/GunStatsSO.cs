@@ -33,8 +33,6 @@ public class GunStatsSO : ScriptableObject
     public void SetGunStatsADSRecoilPattern(float2[] pattern, float patternTime)
     {
         coreStats.adsRecoilPattern = pattern;
-        coreStats.shootIntensityGainMultplier = patternTime;
-        coreStats.shootIntensityDescreaseMultplier = patternTime * 5;
     }
 
     public GunCoreStats GetGunCoreStats() => coreStats;

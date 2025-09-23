@@ -167,7 +167,7 @@ public class DecalVfxManager : MonoBehaviour
         {
             DecalProjector pooled = decalPool.Dequeue();
 
-            pooled.transform.SetLocalPositionAndRotation(pos, rot);
+            pooled.transform.SetPositionAndRotation(pos, rot);
             pooled.transform.localScale = scale;
 
             //set target decal material

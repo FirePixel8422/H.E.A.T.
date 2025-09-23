@@ -192,6 +192,7 @@ public class PlayerController : NetworkBehaviour
             if (transform.TryGetComponentInChildren(out ClientManager clientManager, true))
             {
                 clientManager.transform.SetParent(null);
+                clientManager.transform.position = Vector3.zero;
             }
         }
     }

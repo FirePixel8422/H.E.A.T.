@@ -54,9 +54,8 @@ public struct GunCoreStats
     [Header("How much heat to add to the heatsink per shot")]
     public float heatPerShot;
 
-    [Header("How long the recoilPattern is")]
-    public float shootIntensityGainMultplier;
-    public float shootIntensityDescreaseMultplier;
+
+    #region Recoil (ADS Pattern) and Spread
 
     [Header("Scoped in recoil pattern and whether to smooth between points")]
     public float2[] adsRecoilPattern;
@@ -81,13 +80,17 @@ public struct GunCoreStats
     [Header("Speed at which recoilPattern resets")]
     [SerializeField] private float recoilPatternDecayMultiplier;
 
-    private float cADSRecoilIdFloat;
+    /// <summary>
+    /// Increases by 1 for every shot fired and decreases by <see cref="adsRecoilRecovery"/> after not shooting for <see cref="recoilRecoveryDelay"/>.
+    /// </summary>
+    private float recoilModifier;
 
     public float2 GetRecoil(float adsPercentage)
     {
-        int patternPointId = math.clamp((int)math.floor(cADSRecoilIdFloat), 0, adsRecoilPattern.Length - 1);
+        int patternPointId = math.clamp((int)math.floor(recoilModifier), 0, adsRecoilPattern.Length - 1);
 
-        cADSRecoilIdFloat += 1;
+        recoilModifier += 1;
+        stabilityModifier += stabilityLoss * (1 - adsPercentage);
 
         if (invertX)
         {
@@ -101,36 +104,43 @@ public struct GunCoreStats
             return adsRecoilPattern[patternPointId] * math.lerp(hipRecoilMultiplier, adsRecoilMultiplier, adsPercentage);
         }
     }
-
     public float2 GetRecoilForce(float adsPercentage)
     {
         return math.lerp(hipRecoilForce, adsRecoilForce, adsPercentage);
     }
-
     public float GetRecoilRecovery(float adsPercentage)
     {
         return math.lerp(hipRecoilRecovery, adsRecoilRecovery, adsPercentage);
     }
-
-    public void DecreaseRecoil(float deltaTime)
+    public void StabilizeRecoil(float deltaTime)
     {
-        cADSRecoilIdFloat = math.clamp(cADSRecoilIdFloat - deltaTime * recoilPatternDecayMultiplier, 0, adsRecoilPattern.Length);
+        recoilModifier = math.clamp(recoilModifier - deltaTime * recoilPatternDecayMultiplier, 0, adsRecoilPattern.Length);
+    }
+    public void StabilizeHipFire(float multiplier, float deltaTime)
+    {
+        stabilityModifier = math.clamp(stabilityModifier - multiplier * stabilityRecovery * deltaTime, 0, spreadCurve.Length);
     }
 
-
-    [Header("How much the bullet can maximally offset from actual shot point")]
-    public float maxSpread;
-
-    [Header(">>DEBUG<<, the baked spread curve, used for the actual spread calculation instead of the animation curve")]
+    [Header("Spread curve at each shot and spread multiplier")]
     [SerializeField] private NativeSampledAnimationCurve spreadCurve;
+
+    [SerializeField] private float stabilityLoss;
+    [SerializeField] private float stabilityRecovery;
+
+    /// <summary>
+    /// Increased by 1 * (1 - adsPercentage01) for every shot fired. Decreased when idle or ADS Shooting by <see cref="stabilityRecovery"/>
+    /// </summary>
+    private float stabilityModifier;
 
     /// <summary>
     /// Get weapon spread
     /// </summary>
-    public float GetHipFireSpread(float shootingIntensity)
+    public float GetSpread(float adsPercentage)
     {
-        return spreadCurve.Evaluate(shootingIntensity) * maxSpread;
+        return math.lerp(spreadCurve.Evaluate(stabilityModifier), 0, adsPercentage);
     }
+
+    #endregion
 
 
     [Header("RPM (How fast can this gun shoot in shots per minute)")]
@@ -198,11 +208,8 @@ public struct GunCoreStats
 
         heatPerShot = 0.1f,
 
-        shootIntensityGainMultplier = 1,
-        shootIntensityDescreaseMultplier = 1,
-
         adsRecoilPattern = new float2[0],
-        cADSRecoilIdFloat = 0,
+        recoilModifier = 0,
         invertX = false,
 
         hipRecoilMultiplier = new float2(1, 1),
@@ -216,8 +223,10 @@ public struct GunCoreStats
 
         recoilRecoveryDelay = 0.25f,
 
-        maxSpread = 0.25f,
         spreadCurve = NativeSampledAnimationCurve.Default,
+        stabilityLoss = 0.5f,
+        stabilityRecovery = 0.5f,
+        stabilityModifier = 0,
 
         inputBufferTime = 0,
 

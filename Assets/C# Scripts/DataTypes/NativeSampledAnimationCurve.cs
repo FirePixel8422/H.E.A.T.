@@ -22,7 +22,11 @@ public struct NativeSampledAnimationCurve
     [SerializeField] private int sampleCount;
 
     private NativeArray<float> bakedCurve;
-    private float curveSize;
+
+    /// <summary>
+    /// Length in Time of the curve (time of last key)
+    /// </summary>
+    public float Length { get; private set; }
 
 
     /// <summary>
@@ -45,17 +49,17 @@ public struct NativeSampledAnimationCurve
 
         bakedCurve = new NativeArray<float>(sampleCount, Allocator.Persistent);
 
-        curveSize = curve[curve.keys.Length - 1].time;
+        Length = curve[curve.keys.Length - 1].time;
 
         for (int i = 0; i < sampleCount; i++)
         {
-            float t = (float)i / (sampleCount - 1) * curveSize;
+            float t = (float)i / (sampleCount - 1) * Length;
             bakedCurve[i] = curve.Evaluate(t) * valueMultiplier;
         }
     }
 
     /// <summary>
-    /// Get value based on percent (0-1) from the baked curve.
+    /// Get value based on time from the baked curve.
     /// </summary>
     public float Evaluate(float time)
     {
@@ -67,7 +71,7 @@ public struct NativeSampledAnimationCurve
         }
 #endif
 
-        return EvaluateWithBurst(bakedCurve, sampleCount, time / curveSize);
+        return EvaluateWithBurst(bakedCurve, sampleCount, time / Length);
     }
 
     /// <summary>
@@ -88,7 +92,7 @@ public struct NativeSampledAnimationCurve
     public static NativeSampledAnimationCurve Default => new NativeSampledAnimationCurve()
     {
         curve = AnimationCurve.Linear(1, 1, 0, 0),
-        curveSize = 1,
+        Length = 1,
         valueMultiplier = 1,
         sampleCount = 50,
     };

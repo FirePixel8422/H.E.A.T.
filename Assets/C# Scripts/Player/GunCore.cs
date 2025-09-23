@@ -158,7 +158,6 @@ public class GunCore : NetworkBehaviour
             child.gameObject.layer = gunLayer;
             print(child.name);
         }
-        adsHandler.OnZoomInput(false);
 
         timeSinceLastShot = 0;
         burstShotTimer = coreStats.burstShotInterval;
@@ -196,6 +195,7 @@ public class GunCore : NetworkBehaviour
             out gunSwayHandler.stats,
             out adsHandler.stats);
 
+        adsHandler.SwapGun();
         gunSwayHandler.SwapGun(gunRefHolder.transform, adsHandler);
         gunEmmisionHandler.SwapGun(gunRefHolder.EmissionMatInstance);
     }
@@ -240,7 +240,7 @@ public class GunCore : NetworkBehaviour
         }
 
         ProcessShooting(adsPercentage);
-        ProcessRecoilAndHeat(deltaTime, adsPercentage);
+        ProcessRecoilSpreadAndHeat(deltaTime, adsPercentage);
 
         recoilHandler.OnUpdate(coreStats.GetRecoilForce(adsPercentage) * deltaTime);
         gunShakeHandler.OnUpdate(deltaTime, adsPercentage);
@@ -311,15 +311,24 @@ public class GunCore : NetworkBehaviour
         }
     }
 
-    private void ProcessRecoilAndHeat(float deltaTime, float adsPercentage)
+    private void ProcessRecoilSpreadAndHeat(float deltaTime, float adsPercentage)
     {
-        // Only stabilize recoil if no burst is currently firing
+        // Only stabilize recoil if no shots are currently firing
         if (timeSinceLastShot > coreStats.recoilRecoveryDelay && burstShotsLeft == 0)
         {
             recoilHandler.StabilizeRecoil(coreStats.GetRecoilRecovery(adsPercentage) * deltaTime);
 
-            coreStats.DecreaseRecoil(deltaTime);
+            coreStats.StabilizeRecoil(deltaTime);
+
+            // Stabilize hip fire if not firing shots
+            coreStats.StabilizeHipFire(1, deltaTime);
         }
+        else
+        {
+            // Stabilize hip fire if firing, based on adsPercentage
+            coreStats.StabilizeHipFire(adsPercentage, deltaTime);
+        }
+
 
         // Send -1 to heatSinkHandler if burst is ongoing to indicate gun isn't idle yet, otherwise send timeSinceLastShot
         heatSinkHandler.UpdateHeatSink(burstShotsLeft == 0 ? timeSinceLastShot : -1, deltaTime);
@@ -345,8 +354,21 @@ public class GunCore : NetworkBehaviour
 
         Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
 
-        ray.origin += gunShakeHandler.ShakeTransform.localPosition + gunRefHolder.transform.localPosition;
-        ray.direction = gunShakeHandler.ShakeTransform.localRotation * gunRefHolder.transform.localRotation * ray.direction;
+        // To Gun Local Space
+        Vector3 localOrigin = gunRefHolder.transform.InverseTransformPoint(ray.origin);
+        Vector3 localDir = gunRefHolder.transform.InverseTransformDirection(ray.direction);
+
+        // Offset
+        Vector3 targetOrigin = localOrigin + gunShakeHandler.ShakeTransform.localPosition + gunRefHolder.transform.localPosition;
+        Vector3 targetDir = gunShakeHandler.ShakeTransform.localRotation * gunRefHolder.transform.localRotation * localDir;
+
+        // Ads/Hip Lerp
+        localOrigin = Vector3.Lerp(localOrigin, targetOrigin, adsPercentage);
+        localDir = Vector3.Lerp(localDir, targetDir.normalized, adsPercentage);
+
+        // Assign
+        ray.origin = gunRefHolder.transform.TransformPoint(localOrigin);
+        ray.direction = gunRefHolder.transform.TransformDirection(localDir).normalized;
 
         Vector3 gunRight = gunRefHolder.transform.right;
         Vector3 gunUp = gunRefHolder.transform.up;
@@ -357,7 +379,7 @@ public class GunCore : NetworkBehaviour
 
         for (int i = 0; i < projectileCount; i++)
         {
-            float2 spreadOffset = float2.zero;// RandomApproxPointInCircle(coreStats.GetHipFireSpread(previousHeatPercentage));
+            float2 spreadOffset = RandomApproxPointInCircle(coreStats.GetSpread(adsPercentage));
 
             Vector3 rayDirWithSpread = math.normalize(ray.direction + gunRight * spreadOffset.x + gunUp * spreadOffset.y);
 

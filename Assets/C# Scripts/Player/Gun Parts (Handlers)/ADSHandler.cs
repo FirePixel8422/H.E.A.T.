@@ -38,6 +38,11 @@ public class ADSHandler
         anim.CrossFadeInFixedTime(performed ? stats.zoomAnimationName : stats.normalAnimationName, stats.zoomInTime, stats.animLayer);
     }
 
+    public void SwapGun()
+    {
+        anim.PlayInFixedTime(stats.normalAnimationName, stats.animLayer);
+    }
+
     public void OnUpdate(float deltaTime)
     {
         float fovMultiplier;

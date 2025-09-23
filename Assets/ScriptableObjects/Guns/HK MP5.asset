@@ -63,8 +63,6 @@ MonoBehaviour:
     burstShots: 0
     burstShotInterval: 0.1
     heatPerShot: 0.0335
-    shootIntensityGainMultplier: 2.1818173
-    shootIntensityDescreaseMultplier: 10.909086
     adsRecoilPattern:
     - x: 0.053
       y: 0.2
@@ -148,8 +146,8 @@ MonoBehaviour:
       y: 0.036000013
     invertX: 1
     hipRecoilMultiplier:
-      x: 16
-      y: 25
+      x: 0
+      y: 12.5
     adsRecoilMultiplier:
       x: 7
       y: 15
@@ -163,14 +161,13 @@ MonoBehaviour:
     adsRecoilRecovery: 35
     recoilRecoveryDelay: 0.125
     recoilPatternDecayMultiplier: 25
-    maxSpread: 0.075
     spreadCurve:
       curve:
         serializedVersion: 2
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 0.15
+          value: 0
           inSlope: 0
           outSlope: 0
           tangentMode: 0
@@ -178,28 +175,39 @@ MonoBehaviour:
           inWeight: 0
           outWeight: 0
         - serializedVersion: 3
-          time: 0.2
-          value: 0.15
-          inSlope: 0.0042411094
-          outSlope: 0.0042411094
+          time: 2
+          value: 0
+          inSlope: 0.00043826006
+          outSlope: 0.00043826006
           tangentMode: 0
           weightedMode: 0
-          inWeight: 0.9918181
+          inWeight: 1
           outWeight: 0.33333334
         - serializedVersion: 3
-          time: 0.925
+          time: 6
           value: 1
-          inSlope: 2.2337136
-          outSlope: 2.2337136
+          inSlope: -0.00008564823
+          outSlope: -0.00008564823
           tangentMode: 0
           weightedMode: 0
-          inWeight: 0.06502889
+          inWeight: 0.33333334
+          outWeight: 1
+        - serializedVersion: 3
+          time: 35
+          value: 1
+          inSlope: -0.00006438787
+          outSlope: -0.00006438787
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.99654657
           outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-      valueMultiplier: 1
-      sampleCount: 75
+      valueMultiplier: 0.15
+      sampleCount: 50
+    stabilityLoss: 1
+    stabilityRecovery: 6
     roundsPerMinute: 1100
     autoFire: 1
     inputBufferTime: 0
@@ -217,31 +225,31 @@ MonoBehaviour:
       max: 1.1
   shakeStats:
     shakePitch:
-      x: 65
-      y: 40
+      x: 160
+      y: 10
     shakeYaw:
       x: 15
-      y: 55
+      y: 4
     shakeBuildUp:
-      x: 25
-      y: 12
+      x: 8
+      y: 25
     shakeDecay:
-      x: 5
-      y: 15
+      x: 2
+      y: 4
     pullBackDistance:
-      x: 1.25
-      y: 1
+      x: 1
+      y: 0.5
     pullBackBuildUp:
       x: 25
       y: 12
     pullBackDecay:
       x: 10
-      y: 10
+      y: 6
     pullBackPitchKick:
-      x: -200
-      y: -85
+      x: -85
+      y: -30
   gunADSStats:
-    zoomMultiplier: 2
+    zoomMultiplier: 1
     zoomInTime: 0.175
     zoomOutTime: 0.125
     normalAnimationName: PistolHip
@@ -254,22 +262,23 @@ MonoBehaviour:
     movementFrequency: 2
     idleAmplitude:
       x: 0.015
-      y: 0.05
+      y: 0.00025
     idleFrequency: 2.5
     posSwayMouse:
-      x: 0.0015
-      y: 0.00075
+      x: 0.00015
+      y: 0.00005
     eulerSwayMouse:
-      x: 0.001
-      y: 0.001
+      x: 0.00015
+      y: 0.00005
     posSwayMove:
       x: 0.0025
-      y: 0.001
+      y: 0
     eulerSwayMove:
-      x: 0.001
-      y: 0.001
-    offsetSmooth: 12
-    swayRecoverSmooth: 15
+      x: 0.0005
+      y: 0
+    ignoreYForSwayMove: 1
+    offsetSmooth: 8
+    swayRecoverSmooth: 12
     spreadMultplierCurve:
       curve:
         serializedVersion: 2
