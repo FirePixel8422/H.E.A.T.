@@ -21,6 +21,7 @@ public struct GunSwayStats
     public float2 eulerSwayMouse;
     public float2 posSwayMove;
     public float2 eulerSwayMove;
+    public bool ignoreYForSwayMove;
 
     public float offsetSmooth;
     public float swayRecoverSmooth;

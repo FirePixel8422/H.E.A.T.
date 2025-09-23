@@ -26,4 +26,15 @@ public class PlayerHUD : NetworkBehaviour
             LocalInstance = this;
         }
     }
+
+
+#if UNITY_EDITOR
+    private void Start()
+    {
+        if (transform.TryFindObjectOfType(out NetworkManager _, true) == false)
+        {
+            LocalInstance = this;
+        }
+    }
+#endif
 }

@@ -77,8 +77,8 @@ public class GunSwayHandler
         swayPosOffset = Vector3.Lerp(swayPosOffset, Vector3.zero, stats.swayRecoverSmooth * deltaTime);
         swayEulerOffset = Vector3.Lerp(swayEulerOffset, Vector3.zero, stats.swayRecoverSmooth * deltaTime);
 
-        swayPosOffset += new Vector3(-mouseInput.x, -mouseInput.y, 0f) * posSwayMouse + new Vector3(-moveDir.x, -moveDir.y, 0) * posSwayMove;
-        swayEulerOffset += new Vector3(-mouseInput.y, mouseInput.x, 0f) * eulerSwayMouse + new Vector3(-moveDir.x, -moveDir.y, 0) * eulerSwayMove;
+        swayPosOffset += new Vector3(-mouseInput.x, -mouseInput.y, 0f) * posSwayMouse + new Vector3(-moveDir.x, stats.ignoreYForSwayMove ? 0 : -moveDir.y, 0) * posSwayMove;
+        swayEulerOffset += new Vector3(-mouseInput.y, mouseInput.x, 0f) * eulerSwayMouse + new Vector3(-moveDir.x, stats.ignoreYForSwayMove ? 0 : -moveDir.y, 0) * eulerSwayMove;
 
         #endregion
 

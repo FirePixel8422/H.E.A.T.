@@ -36,6 +36,11 @@ public struct NativeSampledAnimationCurve
             DebugLogger.LogError("AnimationCurve is null!");
             return;
         }
+        if (sampleCount == 2)
+        {
+            DebugLogger.LogWarning("WHY THE FUCK IS SAMPLE COUNT 2!");
+            return;
+        }
 #endif
 
         bakedCurve = new NativeArray<float>(sampleCount, Allocator.Persistent);
@@ -52,7 +57,7 @@ public struct NativeSampledAnimationCurve
     /// <summary>
     /// Get value based on percent (0-1) from the baked curve.
     /// </summary>
-    public float Evaluate(float percent)
+    public float Evaluate(float time)
     {
 #if UNITY_EDITOR
         if (bakedCurve == null || bakedCurve.Length != sampleCount)
@@ -62,7 +67,7 @@ public struct NativeSampledAnimationCurve
         }
 #endif
 
-        return EvaluateWithBurst(bakedCurve, sampleCount, percent / curveSize);
+        return EvaluateWithBurst(bakedCurve, sampleCount, time / curveSize);
     }
 
     /// <summary>

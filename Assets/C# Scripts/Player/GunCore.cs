@@ -27,7 +27,6 @@ public class GunCore : NetworkBehaviour
     [SerializeField] private GunEmmisionHandler gunEmmisionHandler;
 
     [Header("Additional Refs")]
-    [SerializeField] private Transform shootPointTransform;
     [SerializeField] private AudioSource gunShotSource;
     [SerializeField] private AudioSource gunOverheatSource;
 
@@ -83,38 +82,27 @@ public class GunCore : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-#if UNITY_EDITOR
-        if (overrideIsOwner) return;
-#endif
-
         Init();
     }
 
 #if UNITY_EDITOR
     private void Start()
     {
-        Init();
+        if (overrideIsOwner)
+        {
+            Init();
+        }
     }
 #endif
 
     private bool registeredForUpdates = false;
     private void ManageUpdateCallbacks(bool register)
     {
-        if (IsSpawned == false) return;
-
 #if UNITY_EDITOR
-        if (overrideIsOwner)
-        {
-            if (registeredForUpdates == register) return;
-
-            UpdateScheduler.ManageUpdate(OnUpdate, register);
-            UpdateScheduler.ManageFixedUpdate(OnFixedUpdate, register);
-            registeredForUpdates = register;
-
-            return;
-        }
+        if ((IsOwner && IsSpawned) || overrideIsOwner)
+#else
+        if (IsOwner && IsSpawned)
 #endif
-        if (IsOwner)
         {
             if (registeredForUpdates == register) return;
 
@@ -137,18 +125,24 @@ public class GunCore : NetworkBehaviour
         playerController.Init(camHandler, gunSwayHandler);
 
 
+#if UNITY_EDITOR
+        if (IsOwner || overrideIsOwner)
+        {
+#else
         if (IsOwner)
         {
-            mainCam = camHandler.MainCamera;
-            SwapGun(0);
-            DecalVfxManager.Instance.Init(mainCam);
-
+#endif
             gunLayer = LayerMask.NameToLayer("Gun");
             gunHolder.gameObject.layer = gunLayer;
+
+            SwapGun(0);
+
+            mainCam = camHandler.MainCamera;
+            DecalVfxManager.Instance.Init(mainCam);
         }
     }
 
-    #endregion
+#endregion
 
 
     #region Swapping Gun
@@ -162,6 +156,7 @@ public class GunCore : NetworkBehaviour
         foreach (Transform child in gunRefHolder.transform.GetAllChildren())
         {
             child.gameObject.layer = gunLayer;
+            print(child.name);
         }
         adsHandler.OnZoomInput(false);
 
@@ -170,7 +165,8 @@ public class GunCore : NetworkBehaviour
 
         SwapGun_ServerRPC(ClientManager.LocalClientGameId, gunId);
 
-        UpdateVisualHeatEmmision_ServerRPC(0);
+        gunEmmisionHandler.UpdateHeatEmission(0);
+        UpdateVisualHeatEmmision_ServerRPC(GameIdRPCTargets.SendToOppositeOfLocalClient(), 0);
     }
 
     [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
@@ -209,12 +205,6 @@ public class GunCore : NetworkBehaviour
 
     private void OnUpdate()
     {
-#if UNITY_EDITOR
-        if (IsOwner == false && overrideIsOwner == false) return;
-#else
-        if (IsOwner == false) return;
-#endif
-
         // TEMP SWAP TO NEXT GUN FUNCTION
         if (Input.GetKeyDown(KeyCode.V))
         {
@@ -277,8 +267,8 @@ public class GunCore : NetworkBehaviour
         {
             float heatPercent = heatSinkHandler.HeatPercentage;
 
-            UpdateVisualHeatEmmision_ServerRPC(heatPercent);
             gunEmmisionHandler.UpdateHeatEmission(heatPercent);
+            UpdateVisualHeatEmmision_ServerRPC(GameIdRPCTargets.SendToOppositeOfLocalClient(), heatPercent);
         }
     }
 
@@ -355,8 +345,11 @@ public class GunCore : NetworkBehaviour
 
         Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
 
-        Vector3 mainCamRight = mainCam.transform.right;
-        Vector3 mainCamUp = mainCam.transform.up;
+        ray.origin += gunShakeHandler.ShakeTransform.localPosition + gunRefHolder.transform.localPosition;
+        ray.direction = gunShakeHandler.ShakeTransform.localRotation * gunRefHolder.transform.localRotation * ray.direction;
+
+        Vector3 gunRight = gunRefHolder.transform.right;
+        Vector3 gunUp = gunRefHolder.transform.up;
 
         float DEBUG_damageThisShot = 0;
 
@@ -366,7 +359,7 @@ public class GunCore : NetworkBehaviour
         {
             float2 spreadOffset = float2.zero;// RandomApproxPointInCircle(coreStats.GetHipFireSpread(previousHeatPercentage));
 
-            Vector3 rayDirWithSpread = math.normalize(ray.direction + mainCamRight * spreadOffset.x + mainCamUp * spreadOffset.y);
+            Vector3 rayDirWithSpread = math.normalize(ray.direction + gunRight * spreadOffset.x + gunUp * spreadOffset.y);
 
             // Shoot an invisble sphere to detect a hit
             if (Physics.SphereCast(ray.origin, coreStats.bulletSize, rayDirWithSpread, out RaycastHit hit))
@@ -421,9 +414,9 @@ public class GunCore : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void UpdateVisualHeatEmmision_ServerRPC(float percent)
+    private void UpdateVisualHeatEmmision_ServerRPC(GameIdRPCTargets rpcTargets, float percent)
     {
-        UpdateVisualHeatEmmision_ClientRPC(GameIdRPCTargets.SendToOppositeClient(ClientManager.LocalClientGameId), percent);
+        UpdateVisualHeatEmmision_ClientRPC(rpcTargets, percent);
     }
     [ClientRpc(RequireOwnership = false)]
     private void UpdateVisualHeatEmmision_ClientRPC(GameIdRPCTargets rpcTargets, float percent)
@@ -492,15 +485,9 @@ public class GunCore : NetworkBehaviour
     }
 
 
+
+
 #if UNITY_EDITOR
-    [SerializeField] private bool overrideIsOwner = true;
-
-    [SerializeField] private int DEBUG_toSwapGunId = 0;
-
-    [ContextMenu("DEBUG_SwapGun")]
-    private void DEBUG_SwapGun()
-    {
-        SwapGun(DEBUG_toSwapGunId);
-    }
+    [SerializeField] private bool overrideIsOwner;
 #endif
 }

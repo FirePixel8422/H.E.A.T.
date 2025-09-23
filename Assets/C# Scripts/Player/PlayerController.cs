@@ -169,40 +169,42 @@ public class PlayerController : NetworkBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
 
-#if UNITY_EDITOR
-        if (IsOwner == false && overrideIsOwner == false)
-        {
-            OpponentInstance = this;
-            return;
-        }
-#else
         if (IsOwner == false)
         {
             OpponentInstance = this;
             return;
         }
-#endif
+
         LocalInstance = this;
     }
+
+#if UNITY_EDITOR
+    private void Start()
+    {
+        if (overrideIsOwner)
+        {
+            ManageUpdateCallbacks(true);
+
+            Cursor.lockState = CursorLockMode.Locked;
+
+            LocalInstance = this;
+
+            if (transform.TryGetComponentInChildren(out ClientManager clientManager, true))
+            {
+                clientManager.transform.SetParent(null);
+            }
+        }
+    }
+#endif
 
     private bool registeredForUpdates = false;
     private void ManageUpdateCallbacks(bool register)
     {
-        if (IsSpawned == false || initialized == false) return;
-
 #if UNITY_EDITOR
-        if (overrideIsOwner)
-        {
-            if (registeredForUpdates == register) return;
-
-            UpdateScheduler.ManageFixedUpdate(OnFixedUpdate, register);
-            UpdateScheduler.ManageUpdate(OnUpdate, register);
-            registeredForUpdates = register;
-
-            return;
-        }
+        if ((IsOwner && IsSpawned && initialized) || overrideIsOwner)
+#else
+        if (IsOwner && IsSpawned && initialized)
 #endif
-        if (IsOwner)
         {
             if (registeredForUpdates == register) return;
 

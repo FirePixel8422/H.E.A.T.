@@ -10,8 +10,6 @@ public class GunRefHolder : MonoBehaviour
 #pragma warning restore UDR0001
 
 
-    public Transform GunTransform { get; private set; }
-
     [Header("Part of the gun that glows based on heat")]
     [SerializeField] private Renderer emissionRendererObj;
 
@@ -33,7 +31,6 @@ public class GunRefHolder : MonoBehaviour
             OpponentInstance = this;
         }
 
-        GunTransform = transform;
         emissionMatInstance = emissionRendererObj.material;
     }
 

@@ -4,7 +4,8 @@ using UnityEngine;
 [System.Serializable]
 public class GunShakeHandler
 {
-    [SerializeField] private Transform gunParentTransform;
+    [SerializeField] private Transform shakeTransform;
+    public Transform ShakeTransform => shakeTransform;
 
     public GunShakeStats stats;
 
@@ -21,15 +22,15 @@ public class GunShakeHandler
     public void Init()
     {
 #if UNITY_EDITOR
-        if (gunParentTransform == null)
+        if (shakeTransform == null)
         {
             DebugLogger.LogError("GunShakeHandler: gunParentTransform is not set!");
             return;
         }
 #endif
 
-        startRot = gunParentTransform.localRotation;
-        startPos = gunParentTransform.localPosition;
+        startRot = shakeTransform.localRotation;
+        startPos = shakeTransform.localPosition;
     }
 
 
@@ -90,6 +91,6 @@ public class GunShakeHandler
         finalRot.x -= currentPullback * pullBackPitchKick;
 
         // Update Transform
-        gunParentTransform.SetLocalPositionAndRotation(startPos + Vector3.back * currentPullback, startRot * Quaternion.Euler(finalRot));
+        shakeTransform.SetLocalPositionAndRotation(startPos + Vector3.back * currentPullback, startRot * Quaternion.Euler(finalRot));
     }
 }
