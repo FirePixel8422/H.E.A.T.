@@ -1,6 +1,5 @@
 using FirePixel.Networking;
 using System.Runtime.CompilerServices;
-using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
@@ -188,8 +187,6 @@ public class GunCore : NetworkBehaviour
     [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     private void RequestGunData_ServerRPC()
     {
-        MessageHandler.Instance.SendTextLocal("Requesdted");
-
         RequestGunData_ClientRPC();
     }
     [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
@@ -211,8 +208,6 @@ public class GunCore : NetworkBehaviour
     {
         // Skip Owner, they already have the correct gun
         if (IsOwner) return;
-
-        MessageHandler.Instance.SendTextLocal("recieevd");
 
         SetupNewGunData(gunId);
     }
@@ -247,9 +242,7 @@ public class GunCore : NetworkBehaviour
 
             SwapGun(gunId);
 
-#if UNITY_EDITOR
             MessageHandler.Instance.SendTextLocal("Swapped to: " + GunManager.Instance.GetCurrentGunName());
-#endif
         }
         // TEMP
 
@@ -425,7 +418,7 @@ public class GunCore : NetworkBehaviour
                 {
                     float damage = coreStats.GetDamageOutput(hit.distance, false);
 
-                    player.TakeDamage(damage, hit.point, ray.direction);
+                    player.DealDamage(damage, hit.point, ray.direction);
                 }
 
                 // Deal damage to hit player

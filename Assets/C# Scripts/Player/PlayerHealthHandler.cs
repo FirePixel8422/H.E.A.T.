@@ -12,9 +12,11 @@ public class PlayerHealthHandler : NetworkBehaviour
     private NetworkStateMachine stateMachine;
 
     public Action OnDeathEvent { get; private set; }
+    public static Action<float> OnDamageRecieved { get; private set; }
+    public static Action<float> OnDamageDealt { get; private set; }
 
 
-    private void Start()
+    public override void OnNetworkSpawn()
     {
         stateMachine = GetComponent<NetworkStateMachine>();
     }
@@ -23,11 +25,13 @@ public class PlayerHealthHandler : NetworkBehaviour
     #region Take Damage, Update Health and Death
 
     /// <summary>
-    /// Take damage locally and send to other clients. of health hits 0, die and send to other clients.
+    /// Make this player take damage locally and send to other clients. if health hits 0, die and send to other clients.
     /// </summary>
-    public void TakeDamage(float damage, Vector3 hitPoint, Vector3 hitDir)
+    public void DealDamage(float damage, Vector3 hitPoint, Vector3 hitDir)
     {
         bool dead = RecieveDamage(damage);
+
+        OnDamageDealt?.Invoke(damage);
 
         if (dead)
         {
@@ -46,9 +50,11 @@ public class PlayerHealthHandler : NetworkBehaviour
     [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     private void RecieveDamage_ClientRPC(GameIdRPCTargets rpcTargets, float damage)
     {
-        if (rpcTargets.IsTarget) return;
+        if (rpcTargets.IsTarget == false) return;
 
         RecieveDamage(damage);
+
+        OnDamageRecieved?.Invoke(damage);
     }
 
     private bool RecieveDamage(float damage)
@@ -70,20 +76,22 @@ public class PlayerHealthHandler : NetworkBehaviour
         stateMachine.Die(hitDir, hitPoint, 0.25f);
 
         Die();
-        OnDeath_ServerRPC(GameIdRPCTargets.SendToOppositeOfLocalClient());
+        OnDeath_ServerRPC(GameIdRPCTargets.SendToOppositeOfLocalClient(), OwnerClientId);
     }
 
     /// <summary>
     /// Notify Server client has died and update game state on server
     /// </summary>
     [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    private void OnDeath_ServerRPC(GameIdRPCTargets rpcTargets)
+    private void OnDeath_ServerRPC(GameIdRPCTargets rpcTargets, ulong deadClientNetworkId)
     {
         OnDeathEvent?.Invoke();
 
         OnDeath_ClientRPC(rpcTargets);
 
         NetworkObject.Despawn(gameObject);
+
+        this.FindObjectOfType<PlayerManager>().SpawnPlayer_ServerRPC(deadClientNetworkId);
     }
     [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     private void OnDeath_ClientRPC(GameIdRPCTargets rpcTargets)
@@ -99,4 +107,13 @@ public class PlayerHealthHandler : NetworkBehaviour
     }
 
     #endregion
+
+
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        OnDamageRecieved = null;
+        OnDamageDealt = null;
+    }
 }

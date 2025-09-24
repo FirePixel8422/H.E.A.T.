@@ -1698,7 +1698,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 1
-  jumpForce: 6
+  jumpForce: 4.5
   fallGravityMultiplier: 5
   groundCheckRadius: 0.075
   mouseSensitivity: 0.1

@@ -15,7 +15,7 @@ MonoBehaviour:
   gunPrefab: {fileID: 7472375964016343806, guid: 15660d99b1790df4f82cbaba4ef1a417,
     type: 3}
   coreStats:
-    damage: 10
+    damage: 15
     headShotMultiplier: 1.5
     maxEffectiveRange: 22.5
     damageFallOffCurve:

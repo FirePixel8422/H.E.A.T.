@@ -46,7 +46,5 @@ public class GunManager : MonoBehaviour
     }
 
 
-#if UNITY_EDITOR
     public string GetCurrentGunName() => guns[currentGunId].name;
-#endif
 }

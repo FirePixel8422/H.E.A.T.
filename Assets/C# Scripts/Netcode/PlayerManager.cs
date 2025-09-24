@@ -20,7 +20,7 @@ namespace FirePixel.Networking
         /// </summary>
 
         [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-        private void SpawnPlayer_ServerRPC(ulong ownerNetworkId)
+        public void SpawnPlayer_ServerRPC(ulong ownerNetworkId)
         {
             NetworkObject spawnedPlayer = NetworkObject.InstantiateAndSpawn(playerPrefab, NetworkManager, ownerNetworkId);
         }
