@@ -53,6 +53,8 @@ public class RagDollController : NetworkBehaviour
 
     public void StartRagdoll(Vector3 ragdollDirection, Vector3 ragdollImpactPoint)
     {
+        return;
+
         RecreateRagdollTransforms();
         Ragdoll(ragdollDirection, ragdollImpactPoint);
 
@@ -88,7 +90,7 @@ public class RagDollController : NetworkBehaviour
         {
             matrices.Add(children[i].localToWorldMatrix);
         }
-        Destroy(playerBonesRoot.gameObject);
+        //Destroy(playerBonesRoot.gameObject);
 
 
         children = transform.GetAllChildren();

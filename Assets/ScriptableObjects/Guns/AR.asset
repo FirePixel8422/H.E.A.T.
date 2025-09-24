@@ -237,7 +237,7 @@ MonoBehaviour:
       x: -85
       y: -30
   gunADSStats:
-    zoomMultiplier: 1
+    zoomMultiplier: 1.5
     zoomInTime: 0.175
     zoomOutTime: 0.125
     normalAnimationName: AR_Hip

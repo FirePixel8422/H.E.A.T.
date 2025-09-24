@@ -10930,6 +10930,11 @@ PrefabInstance:
       objectReference: {fileID: 1805684028}
     - target: {fileID: 5287381020941622744, guid: c0eb4b36e7e97f24b8ef673c374d8424,
         type: 3}
+      propertyPath: nextSceneName
+      value: Luuk Test Scene
+      objectReference: {fileID: 0}
+    - target: {fileID: 5287381020941622744, guid: c0eb4b36e7e97f24b8ef673c374d8424,
+        type: 3}
       propertyPath: invisibleScreenCover
       value: 
       objectReference: {fileID: 4949833827327076846}

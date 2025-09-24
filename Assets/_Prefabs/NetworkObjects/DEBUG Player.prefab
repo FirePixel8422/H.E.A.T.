@@ -1056,7 +1056,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 564049262
+  GlobalObjectIdHash: 3757223715
   InScenePlacedSourceGlobalObjectIdHash: 4087933105
   DeferredDespawnTick: 0
   Ownership: 1
@@ -1154,6 +1154,7 @@ MonoBehaviour:
       max: 0
   camHandler:
     mainCamera: {fileID: 4769577523386625857}
+    mainCamTransform: {fileID: 6012974010948853806}
     gunCamera: {fileID: 4245517809260214837}
     baseFOV: 75
     mainCamMaxTiltAngle: 75
@@ -1277,6 +1278,7 @@ MonoBehaviour:
       ignoreYForSwayMove: 0
       offsetSmooth: 12
       swayRecoverSmooth: 15
+      gunYOffset: 0
       spreadMultplierCurve:
         curve:
           serializedVersion: 2
@@ -1304,7 +1306,6 @@ MonoBehaviour:
           m_RotationOrder: 4
         valueMultiplier: 1
         sampleCount: 50
-    gunYOffset: 0
   gunEmmisionHandler:
     heatGradient:
       gradient:
