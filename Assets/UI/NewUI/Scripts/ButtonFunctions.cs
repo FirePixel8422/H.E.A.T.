@@ -121,7 +121,7 @@ public class ButtonFunctions : MonoBehaviour
     }
     public void AttachmentButton()
     {
-        
+        armoryScreens[2].SetActive(true);
     }
     //ALLE BACKBUTTONS HIERONDER
     public void GoBackFromArmory()
@@ -138,6 +138,7 @@ public class ButtonFunctions : MonoBehaviour
     public void BackToGuns()
     {
         previewGunsAttachments[selectedGun].SetActive(false);
+        armoryScreens[2].SetActive(false);
         armoryScreens[1].SetActive(false);
         armoryScreens[0].SetActive(true);
     }
