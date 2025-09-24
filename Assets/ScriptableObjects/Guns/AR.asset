@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b0b7c3e06db8a14b87487cb5b20ad5f, type: 3}
   m_Name: AR
   m_EditorClassIdentifier: 
-  gunPrefab: {fileID: -7490018373462821997, guid: adb4b3cc0e3bccb4db984bc2c9003414,
+  gunPrefab: {fileID: 7472375964016343806, guid: 15660d99b1790df4f82cbaba4ef1a417,
     type: 3}
   coreStats:
     damage: 10
@@ -196,7 +196,6 @@ MonoBehaviour:
       sampleCount: 50
     stabilityLoss: 1
     stabilityRecovery: 6
-    stabilityModifier: 0
     roundsPerMinute: 600
     autoFire: 1
     inputBufferTime: 0
@@ -260,14 +259,15 @@ MonoBehaviour:
       x: 0.00015
       y: 0.00005
     posSwayMove:
-      x: 0.0025
-      y: 0
+      x: 0.005
+      y: 0.0005
     eulerSwayMove:
       x: 0.0005
       y: 0
     ignoreYForSwayMove: 1
     offsetSmooth: 8
     swayRecoverSmooth: 12
+    gunYOffset: 0.0055
     spreadMultplierCurve:
       curve:
         serializedVersion: 2

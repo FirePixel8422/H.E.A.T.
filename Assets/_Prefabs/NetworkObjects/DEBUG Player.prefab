@@ -1096,7 +1096,6 @@ MonoBehaviour:
         m_RotationOrder: 4
       valueMultiplier: 0
       sampleCount: 0
-      curveSize: 0
     bulletSize: 0
     bulletHoleFXSize:
       min: 0
@@ -1106,8 +1105,6 @@ MonoBehaviour:
     burstShots: 0
     burstShotInterval: 0
     heatPerShot: 0
-    shootIntensityGainMultplier: 0
-    shootIntensityDescreaseMultplier: 0
     adsRecoilPattern:
     - x: 0
       y: 0
@@ -1130,7 +1127,6 @@ MonoBehaviour:
     adsRecoilRecovery: 0
     recoilRecoveryDelay: 0
     recoilPatternDecayMultiplier: 0
-    maxSpread: 0
     spreadCurve:
       curve:
         serializedVersion: 2
@@ -1140,7 +1136,8 @@ MonoBehaviour:
         m_RotationOrder: 4
       valueMultiplier: 0
       sampleCount: 0
-      curveSize: 0
+    stabilityLoss: 0
+    stabilityRecovery: 0
     roundsPerMinute: 0
     autoFire: 0
     inputBufferTime: 0
@@ -1206,7 +1203,6 @@ MonoBehaviour:
         m_RotationOrder: 4
       valueMultiplier: 1
       sampleCount: 125
-      curveSize: 1
     anim: {fileID: 5199238681142820621}
     stats:
       zoomMultiplier: 0
@@ -1308,7 +1304,7 @@ MonoBehaviour:
           m_RotationOrder: 4
         valueMultiplier: 1
         sampleCount: 50
-        curveSize: 1
+    gunYOffset: 0
   gunEmmisionHandler:
     heatGradient:
       gradient:
