@@ -213,14 +213,15 @@ MonoBehaviour:
       x: 0.00015
       y: 0.00005
     posSwayMove:
-      x: 0.0025
-      y: 0
+      x: 0.005
+      y: 0.0005
     eulerSwayMove:
       x: 0.0005
       y: 0
     ignoreYForSwayMove: 1
     offsetSmooth: 8
     swayRecoverSmooth: 12
+    gunYOffset: 0
     spreadMultplierCurve:
       curve:
         serializedVersion: 2

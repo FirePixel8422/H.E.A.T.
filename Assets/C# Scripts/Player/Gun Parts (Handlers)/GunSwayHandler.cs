@@ -24,7 +24,7 @@ public class GunSwayHandler
         this.gunTransform = gunTransform;
         this.adsHandler = adsHandler;
 
-        startPos = gunTransform.localPosition;
+        startPos = gunTransform.localPosition + Vector3.up * stats.gunYOffset;
         startEuler = gunTransform.localEulerAngles;
     }
 

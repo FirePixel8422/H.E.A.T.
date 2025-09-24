@@ -26,6 +26,9 @@ public struct GunSwayStats
     public float offsetSmooth;
     public float swayRecoverSmooth;
 
+    [Header("Gun Y Offset for scopes")]
+    public float gunYOffset;
+
     [Header("Spread Multiplier")]
     public NativeSampledAnimationCurve spreadMultplierCurve;
 
