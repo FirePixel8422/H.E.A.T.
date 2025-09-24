@@ -599,6 +599,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 25685557496614411}
+  - component: {fileID: 2828476301602286516}
   m_Layer: 7
   m_Name: Ragdoll (Parent)
   m_TagString: Untagged
@@ -622,6 +623,27 @@ Transform:
   - {fileID: 6461929932083117262}
   m_Father: {fileID: 8183323876570374502}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2828476301602286516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2270797352324684656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a2f26040fb3140428b31ec20e5acd7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RagDollController
+  ShowTopMostFoldoutHeaderGroup: 1
+  playerBonesRoot: {fileID: 8654208601561914458}
+  ragDollStrength: 10
+  ragDollImpactStrength: 0.5
+  ragDollImpactRadius: 2
+  ragDollImpactUpMod: 1
+  ragdollLifeTime: 15
+  ragDollImpactPoint: {fileID: 0}
+  ragDollDirection: {x: 0, y: 0, z: 0}
 --- !u!1 &2700433526815143514
 GameObject:
   m_ObjectHideFlags: 0
@@ -1242,7 +1264,6 @@ MonoBehaviour:
         m_RotationOrder: 4
       valueMultiplier: 0
       sampleCount: 0
-      curveSize: 0
     bulletSize: 0
     bulletHoleFXSize:
       min: 0
@@ -1252,8 +1273,6 @@ MonoBehaviour:
     burstShots: 0
     burstShotInterval: 0
     heatPerShot: 0
-    shootIntensityGainMultplier: 0
-    shootIntensityDescreaseMultplier: 0
     adsRecoilPattern:
     - x: 0
       y: 0
@@ -1276,7 +1295,6 @@ MonoBehaviour:
     adsRecoilRecovery: 0
     recoilRecoveryDelay: 0
     recoilPatternDecayMultiplier: 0
-    maxSpread: 0
     spreadCurve:
       curve:
         serializedVersion: 2
@@ -1286,7 +1304,8 @@ MonoBehaviour:
         m_RotationOrder: 4
       valueMultiplier: 0
       sampleCount: 0
-      curveSize: 0
+    stabilityLoss: 0
+    stabilityRecovery: 0
     roundsPerMinute: 0
     autoFire: 0
     inputBufferTime: 0
@@ -1301,8 +1320,11 @@ MonoBehaviour:
     overHeatMinMaxPitch:
       min: 0
       max: 0
+  currentGunId:
+    value: 0
   camHandler:
     mainCamera: {fileID: 4769577523386625857}
+    mainCamTransform: {fileID: 6012974010948853806}
     gunCamera: {fileID: 4245517809260214837}
     baseFOV: 75
     mainCamMaxTiltAngle: 75
@@ -1352,7 +1374,6 @@ MonoBehaviour:
         m_RotationOrder: 4
       valueMultiplier: 1
       sampleCount: 125
-      curveSize: 1
     anim: {fileID: 5199238681142820621}
     stats:
       zoomMultiplier: 0
@@ -1427,6 +1448,7 @@ MonoBehaviour:
       ignoreYForSwayMove: 0
       offsetSmooth: 12
       swayRecoverSmooth: 15
+      gunYOffset: 0
       spreadMultplierCurve:
         curve:
           serializedVersion: 2
@@ -1454,7 +1476,6 @@ MonoBehaviour:
           m_RotationOrder: 4
         valueMultiplier: 1
         sampleCount: 50
-        curveSize: 1
   gunEmmisionHandler:
     heatGradient:
       gradient:
@@ -1487,11 +1508,9 @@ MonoBehaviour:
         m_ColorSpace: 0
         m_NumColorKeys: 5
         m_NumAlphaKeys: 2
-  shootPointTransform: {fileID: 0}
   gunShotSource: {fileID: 5837324410720302518}
   gunOverheatSource: {fileID: 6957241378848993016}
   overrideIsOwner: 0
-  DEBUG_toSwapGunId: 0
 --- !u!114 &8084332042966875633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1674,14 +1693,14 @@ MonoBehaviour:
   steerPower: 75
   midAirSteerPower: 25
   sprintDirection: 2
-  airSprintMultiplier: 1
+  airSprintMultiplier: 1.25
   groundCheck: {fileID: 7949984123326286938}
   groundMask:
     serializedVersion: 2
     m_Bits: 1
-  jumpForce: 3
+  jumpForce: 6
   fallGravityMultiplier: 5
-  groundCheckRadius: 0.05
+  groundCheckRadius: 0.075
   mouseSensitivity: 0.1
   overrideIsOwner: 0
 --- !u!114 &809467867142740111
@@ -2677,7 +2696,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -3244,7 +3263,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 183
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

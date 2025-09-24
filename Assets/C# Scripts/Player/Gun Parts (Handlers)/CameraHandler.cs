@@ -1,5 +1,4 @@
 ﻿using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -8,9 +7,11 @@ using UnityEngine;
 public class CameraHandler
 {
     [SerializeField] private Camera mainCamera;
+    [SerializeField] private Transform mainCamTransform;
     [SerializeField] private Camera gunCamera;
 
     [SerializeField] private float baseFOV;
+
 
     public Camera MainCamera => mainCamera;
     public Camera GunCamera => gunCamera;
@@ -23,16 +24,16 @@ public class CameraHandler
     /// </summary>
     public float MainCamLocalEulerPitch
     {
-        get => mainCamera.transform.localEulerAngles.x;
+        get => mainCamTransform.localEulerAngles.x;
         set
         {
-            Vector3 euler = mainCamera.transform.localEulerAngles;
+            Vector3 euler = mainCamTransform.localEulerAngles;
             euler.x = value;
             euler.NormalizeAsEuler();
 
             euler.x = math.clamp(euler.x, -mainCamMaxTiltAngle, mainCamMaxTiltAngle);
 
-            mainCamera.transform.localEulerAngles = euler;
+            mainCamTransform.localEulerAngles = euler;
         }
     }
 
@@ -47,12 +48,6 @@ public class CameraHandler
     {
         mainCamera.fieldOfView = baseFOV * fovMultiplier;
         gunCamera.fieldOfView = baseFOV * fovMultiplier;
-    }
-
-
-    public void ZoomIn(float zoomMultiplier)
-    {
-
     }
 
     /// <summary>

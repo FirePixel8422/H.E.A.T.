@@ -42,7 +42,7 @@ public class PlayerHealthHandler : NetworkBehaviour
     private void SendDamage_ServerRPC(GameIdRPCTargets rpcTargets, float damage)
     {
         RecieveDamage_ClientRPC(rpcTargets, damage);
-    }    
+    }
     [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     private void RecieveDamage_ClientRPC(GameIdRPCTargets rpcTargets, float damage)
     {
@@ -82,18 +82,20 @@ public class PlayerHealthHandler : NetworkBehaviour
         OnDeathEvent?.Invoke();
 
         OnDeath_ClientRPC(rpcTargets);
+
+        NetworkObject.Despawn(gameObject);
     }
     [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     private void OnDeath_ClientRPC(GameIdRPCTargets rpcTargets)
     {
-        if (rpcTargets.IsTarget) return;
+        if (rpcTargets.IsTarget == false) return;
 
         Die();
     }
 
     private void Die()
     {
-
+        
     }
 
     #endregion

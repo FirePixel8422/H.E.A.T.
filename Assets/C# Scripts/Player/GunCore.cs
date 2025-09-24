@@ -1,5 +1,6 @@
 using FirePixel.Networking;
 using System.Runtime.CompilerServices;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
@@ -17,6 +18,8 @@ public class GunCore : NetworkBehaviour
 
     [Header("Data Driven Gun Parts")]
     [SerializeField] private GunCoreStats coreStats;
+
+    [SerializeField] private NetworkValue<int> currentGunId = new NetworkValue<int>();
 
     [SerializeField] private CameraHandler camHandler;
     [SerializeField] private ADSHandler adsHandler;
@@ -82,7 +85,21 @@ public class GunCore : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        currentGunId = new NetworkValue<int>(0);
+        if (IsOwner)
+        {
+            currentGunId.OnValueChanged += (int newValue) =>
+            {
+                UpdateGunData_ServerRPC(newValue);
+            };
+        }
+        else
+        {
+            RequestGunData_ServerRPC();
+        }
+
         Init();
+        ManageUpdateCallbacks(true);
     }
 
 #if UNITY_EDITOR
@@ -91,6 +108,7 @@ public class GunCore : NetworkBehaviour
         if (overrideIsOwner)
         {
             Init();
+            ManageUpdateCallbacks(true);
         }
     }
 #endif
@@ -149,6 +167,8 @@ public class GunCore : NetworkBehaviour
 
     private void SwapGun(int gunId)
     {
+        currentGunId.Value = gunId;
+
         SetupNewGunData(gunId);
 
         // set gun to always in front layer ("Gun")
@@ -156,28 +176,43 @@ public class GunCore : NetworkBehaviour
         foreach (Transform child in gunRefHolder.transform.GetAllChildren())
         {
             child.gameObject.layer = gunLayer;
-            print(child.name);
         }
 
         timeSinceLastShot = 0;
         burstShotTimer = coreStats.burstShotInterval;
-
-        SwapGun_ServerRPC(ClientManager.LocalClientGameId, gunId);
 
         gunEmmisionHandler.UpdateHeatEmission(0);
         UpdateVisualHeatEmmision_ServerRPC(GameIdRPCTargets.SendToOppositeOfLocalClient(), 0);
     }
 
     [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    private void SwapGun_ServerRPC(int forClientGameId, int gunId)
+    private void RequestGunData_ServerRPC()
     {
-        SwapGun_ClientRPC(gunId, GameIdRPCTargets.SendToOppositeClient(forClientGameId));
+        MessageHandler.Instance.SendTextLocal("Requesdted");
+
+        RequestGunData_ClientRPC();
+    }
+    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    private void RequestGunData_ClientRPC()
+    {
+        // Let the owner send GunId to the requesting client
+        if (IsOwner == false) return;
+
+        UpdateGunData_ServerRPC(currentGunId.Value);
     }
 
-    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    private void SwapGun_ClientRPC(int gunId, GameIdRPCTargets rpcTargets)
+    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    private void UpdateGunData_ServerRPC(int gunId)
     {
-        if (rpcTargets.IsTarget == false) return;
+        RecieveGunData_ClientRPC(gunId);
+    }
+    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
+    private void RecieveGunData_ClientRPC(int gunId)
+    {
+        // Skip Owner, they already have the correct gun
+        if (IsOwner) return;
+
+        MessageHandler.Instance.SendTextLocal("recieevd");
 
         SetupNewGunData(gunId);
     }
@@ -386,13 +421,20 @@ public class GunCore : NetworkBehaviour
             // Shoot an invisble sphere to detect a hit
             if (Physics.SphereCast(ray.origin, coreStats.bulletSize, rayDirWithSpread, out RaycastHit hit))
             {
-                Vector3 hitNormal = hit.normal;
+                if (hit.transform.TryGetComponent(out PlayerHealthHandler player))
+                {
+                    float damage = coreStats.GetDamageOutput(hit.distance, false);
+
+                    player.TakeDamage(damage, hit.point, ray.direction);
+                }
 
                 // Deal damage to hit player
                 DEBUG_damageThisShot += coreStats.GetDamageOutput(hit.distance, false);
 
 
                 #region BulletHole FX
+
+                Vector3 hitNormal = hit.normal;
 
                 SurfaceType hitSurfaceType = hit.collider.GetSurfaceType();
 
@@ -493,6 +535,8 @@ public class GunCore : NetworkBehaviour
 
         DisposeGunData();
         DisposeHandlerData();
+
+        currentGunId.OnValueChanged = null;
 
         base.OnDestroy();
     }
