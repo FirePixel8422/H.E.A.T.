@@ -63,6 +63,11 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: a433955ced8ae6d46a97a622aa18b616, type: 2}
+    - target: {fileID: -3057492394780252666, guid: fd42ff9a24c84314da31fb80a2cde312,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 903781129018998227, guid: fd42ff9a24c84314da31fb80a2cde312,
         type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -72,6 +77,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HeatDoor
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fd42ff9a24c84314da31fb80a2cde312,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 5092708244707826562, guid: fd42ff9a24c84314da31fb80a2cde312,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
