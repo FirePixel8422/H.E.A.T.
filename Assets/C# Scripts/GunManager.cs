@@ -10,7 +10,7 @@ public class GunManager : MonoBehaviour
     }
 
 
-    [SerializeField] private GunStatsSO[] guns;
+    [SerializeField] private GunStatsSO[] baseGuns;
     private int currentGunId;
 
     /// <summary>
@@ -31,7 +31,7 @@ public class GunManager : MonoBehaviour
             gunRefHolder.DestroyGun();
         }
 
-        GunStatsSO targetGun = guns[gunId];
+        GunStatsSO targetGun = baseGuns[gunId];
 
         gunRefHolder = Instantiate(targetGun.GunPrefab, gunParentTransform);
         gunRefHolder.Init(isOwner);
@@ -41,10 +41,10 @@ public class GunManager : MonoBehaviour
 
     public int GetNextGunId() 
     {
-        currentGunId = (currentGunId + 1) % guns.Length;
+        currentGunId = (currentGunId + 1) % baseGuns.Length;
         return currentGunId;
     }
 
 
-    public string GetCurrentGunName() => guns[currentGunId].name;
+    public string GetCurrentGunName() => baseGuns[currentGunId].name;
 }

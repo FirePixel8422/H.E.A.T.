@@ -127,14 +127,14 @@ public static class ExtensionMethods
         return component != null;
     }
 
-    public static bool TryFindObjectOfType<T>(this UnityEngine.Object obj, out T component, bool includeInactive) where T : UnityEngine.Object
+    public static bool TryFindObjectOfType<T>(this UnityEngine.Object obj, out T component, bool includeInactive = false) where T : UnityEngine.Object
     {
         FindObjectsInactive findObjectsInactive = includeInactive ? FindObjectsInactive.Include : FindObjectsInactive.Exclude;
 
         component = UnityEngine.Object.FindFirstObjectByType<T>(findObjectsInactive);
         return component != null;
     }
-    public static bool TryFindObjectsOfType<T>(this UnityEngine.Object obj, out T[] component, bool includeInactive, bool sortByInstanceID = false) where T : UnityEngine.Object
+    public static bool TryFindObjectsOfType<T>(this UnityEngine.Object obj, out T[] component, bool includeInactive = false, bool sortByInstanceID = false) where T : UnityEngine.Object
     {
         FindObjectsInactive findObjectsInactive = includeInactive ? FindObjectsInactive.Include : FindObjectsInactive.Exclude;
         FindObjectsSortMode sortMode = sortByInstanceID ? FindObjectsSortMode.InstanceID : FindObjectsSortMode.None;

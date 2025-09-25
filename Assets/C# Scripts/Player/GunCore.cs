@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-
 public class GunCore : NetworkBehaviour
 {
     [SerializeField] private Transform gunHolder;

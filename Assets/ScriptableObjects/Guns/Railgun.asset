@@ -120,7 +120,7 @@ MonoBehaviour:
     hipRecoilRecovery: 50
     adsRecoilRecovery: 35
     recoilRecoveryDelay: 0.25
-    recoilPatternDecayMultiplier: 17.5
+    recoilPatternDecayMultiplier: 1
     spreadCurve:
       curve:
         serializedVersion: 2

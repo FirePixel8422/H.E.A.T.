@@ -2,7 +2,6 @@ using Unity.Mathematics;
 using UnityEngine;
 
 
-
 [CreateAssetMenu(fileName = "GunCoreStatsSO", menuName = "ScriptableObjects/GunData")]
 public class GunStatsSO : ScriptableObject
 {

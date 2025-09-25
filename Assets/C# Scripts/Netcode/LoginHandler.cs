@@ -20,11 +20,12 @@ namespace FirePixel.Networking
 
             mainSceneLoadOperation.completed += (_) =>
             {
-                mainSceneLoadOperation.allowSceneActivation = true;
-
                 SceneManager.UnLoadSceneAsync(startScreenSceneName);    
 
-                this.FindObjectOfType<LoginCallbackReciever>()?.onLoginCompleted?.Invoke();
+                if (this.TryFindObjectOfType(out LoginCallbackReciever reciever))
+                {
+                    reciever.onLoginCompleted?.Invoke();
+                }
             };
 
             await UnityServices.InitializeAsync();
@@ -32,6 +33,8 @@ namespace FirePixel.Networking
             AuthenticationService.Instance.SignOut();
 
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
+
+            mainSceneLoadOperation.allowSceneActivation = true;
         }
     }
 }
