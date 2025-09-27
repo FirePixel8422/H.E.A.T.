@@ -4,34 +4,25 @@
 
 public class GunRefHolder : MonoBehaviour
 {
-#pragma warning disable UDR0001
-    public static GunRefHolder LocalInstance;
-    public static GunRefHolder OpponentInstance;
-#pragma warning restore UDR0001
-
-
     [Header("Part of the gun that glows based on heat")]
     [SerializeField] private Renderer emissionRendererObj;
 
-    private Material emissionMatInstance;
-    public Material EmissionMatInstance => emissionMatInstance;
+    public Material EmissionMatInstance { get; private set; }
 
+
+    public void OnSwapGun()
+    {
+        EmissionMatInstance = emissionRendererObj.material;
+    }
 
     /// <summary>
-    /// Setup ref Data and set static Instances
+    /// Spawn target attachment under the gun with configured offset in AttchmentSO Data
     /// </summary>
-    public void Init(bool localClientIsOwner)
+    public void SpawnAttachment(GunAttachmentSO attachment)
     {
-        if (localClientIsOwner)
-        {
-            LocalInstance = this;
-        }
-        else
-        {
-            OpponentInstance = this;
-        }
+        GameObject attachmentObj = Instantiate(attachment.AttachmentPrefab, transform);
 
-        emissionMatInstance = emissionRendererObj.material;
+        attachmentObj.transform.SetLocalPositionAndRotation(attachment.TransformOffset.position, attachment.TransformOffset.Rotation);
     }
 
     /// <summary>

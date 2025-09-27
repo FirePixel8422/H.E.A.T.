@@ -6,14 +6,12 @@ using Unity.Mathematics;
 public struct DebugRecoilPatternData
 {
     public string weaponName;
-    public float totalTime;
     public float2[] recoilPoints;
 
     public DebugRecoilPatternData(string weaponName, float2[] recoilPoints)
     {
         this.weaponName = weaponName;
         this.recoilPoints = recoilPoints;
-        totalTime = 0;
     }
 }
 #endif

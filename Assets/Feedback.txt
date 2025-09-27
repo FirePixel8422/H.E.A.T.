@@ -1,0 +1,5 @@
+Feedback:
+Rotation error in Player(Cloen).localrotation
+meer parkour op randjes en shit
+Jump is zwak en floatty
+Camera clipped door muren heen

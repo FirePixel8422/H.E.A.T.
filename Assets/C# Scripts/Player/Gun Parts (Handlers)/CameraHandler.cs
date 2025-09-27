@@ -9,12 +9,15 @@ public class CameraHandler
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Transform mainCamTransform;
     [SerializeField] private Camera gunCamera;
-
-    [SerializeField] private float baseFOV;
-
-
     public Camera MainCamera => mainCamera;
     public Camera GunCamera => gunCamera;
+
+
+    [SerializeField] private float baseFOV;
+    private float currentFOV;
+
+    private float sensitivityMultiplier = 1;
+
 
 
     [SerializeField] private float mainCamMaxTiltAngle = 90;
@@ -37,17 +40,30 @@ public class CameraHandler
         }
     }
 
+    public float GetADSSensitivityMultiplier()
+    {
+        float baseHalf = baseFOV * 0.5f * Mathf.Deg2Rad;
+        float zoomHalf = currentFOV * 0.5f * Mathf.Deg2Rad;
+
+        return math.tan(zoomHalf) / math.tan(baseHalf) * sensitivityMultiplier;
+    }
+
     public void SetFOV(float fov)
     {
         baseFOV = fov;
+        currentFOV = fov;
         mainCamera.fieldOfView = fov;
         gunCamera.fieldOfView = fov;
     }
 
-    public void SetFOVZoomMultiplier(float fovMultiplier)
+    public void SetFOVZoomMultiplier(float fovMultiplier, float sensitivityMultiplier)
     {
-        mainCamera.fieldOfView = baseFOV * fovMultiplier;
-        gunCamera.fieldOfView = baseFOV * fovMultiplier;
+        currentFOV = baseFOV * fovMultiplier;
+
+        mainCamera.fieldOfView = currentFOV;
+        gunCamera.fieldOfView = currentFOV;
+
+        this.sensitivityMultiplier = sensitivityMultiplier;
     }
 
     /// <summary>

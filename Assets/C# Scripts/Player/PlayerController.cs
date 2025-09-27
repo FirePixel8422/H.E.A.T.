@@ -136,10 +136,13 @@ public class PlayerController : NetworkBehaviour
     {
         mouseInput = ctx.ReadValue<Vector2>();
 
-        camHandler.MainCamLocalEulerPitch += -mouseInput.y * mouseSensitivity;
+        float sensitivityMultiplier = mouseSensitivity * camHandler.GetADSSensitivityMultiplier();
 
-        transform.Rotate(Vector3.up, mouseInput.x * mouseSensitivity);
+        // Actual rotation
+        camHandler.MainCamLocalEulerPitch += -mouseInput.y * sensitivityMultiplier;
+        transform.Rotate(Vector3.up, mouseInput.x * sensitivityMultiplier);
 
+        // Debug/troll
         stateMachine.ShakeGooglyEyes();
     }
 
@@ -332,7 +335,6 @@ public class PlayerController : NetworkBehaviour
 
 
 #if UNITY_EDITOR
-
     [SerializeField] private bool overrideIsOwner;
 
     private void OnDrawGizmos()

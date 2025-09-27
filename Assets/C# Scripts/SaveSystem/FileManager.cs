@@ -326,6 +326,7 @@ public static class FileManager
 }
 
 
+[System.Serializable]
 public struct ValueWrapper<T>
 {
     public T Value;
@@ -336,6 +337,7 @@ public struct ValueWrapper<T>
     }
 }
 
+[System.Serializable]
 public struct ArrayWrapper<T>
 {
     public T[] Value;
@@ -344,4 +346,12 @@ public struct ArrayWrapper<T>
     {
         Value = _values;
     }
+
+    public T this[int index]
+    {
+        get => Value[index];
+        set => Value[index] = value;
+    }
+
+    public int Length => Value?.Length ?? 0;
 }

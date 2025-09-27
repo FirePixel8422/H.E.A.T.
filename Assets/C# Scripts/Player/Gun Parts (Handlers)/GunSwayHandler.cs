@@ -17,10 +17,8 @@ public class GunSwayHandler
     private float bobTimer;
 
 
-    public void SwapGun(Transform gunTransform, ADSHandler adsHandler)
+    public void OnSwapGun(Transform gunTransform, ADSHandler adsHandler)
     {
-        stats.BakeAllCurves();
-
         this.gunTransform = gunTransform;
         this.adsHandler = adsHandler;
 

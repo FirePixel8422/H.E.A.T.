@@ -9,23 +9,23 @@ public struct SmartAttributeFloat
     [SerializeField] private float value;
 
     [Header("How to apply the value")]
-    [SerializeField] private ApplyMode applymode;
+    [SerializeField] private ApplyMode applyMode;
 
 
     public void ApplyToStat(ref float stat)
     {
-        stat = applymode switch
+        stat = applyMode switch
         {
             ApplyMode.Add => stat + value,
             ApplyMode.Multiply => stat * value,
             ApplyMode.Override => value,
-            _ => default,
+            _ => stat,
         };
     }
 
-    public SmartAttributeFloat(float value, ApplyMode applymode)
+    public SmartAttributeFloat(float value, ApplyMode applyMode)
     {
         this.value = value;
-        this.applymode = applymode;
+        this.applyMode = applyMode;
     }
 }

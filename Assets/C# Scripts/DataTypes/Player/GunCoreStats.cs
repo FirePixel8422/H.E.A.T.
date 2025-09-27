@@ -10,7 +10,7 @@ public struct GunCoreStats
 {
     [Header("Damage per bullet")]
     [Tooltip("Use GetDamageOutput() for true damage. Raw damage dealt per bullet, before falloff and headshot multiplier")]
-    public float damage;
+    [SerializeField] private float damage;
     [Header("When headshot damage is done, multiply by this value")]
     [SerializeField] private float headShotMultiplier;
 
@@ -182,6 +182,8 @@ public struct GunCoreStats
     /// </summary>
     public void Dispose()
     {
+        DebugLogger.Log("Disposing GunCoreStats curves");
+
         damageFallOffCurve.Dispose();
         spreadCurve.Dispose();
     }

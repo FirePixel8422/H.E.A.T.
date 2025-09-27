@@ -4,5 +4,7 @@
 
 public interface IGunAtachment
 {
-    public void ApplyToBaseStats(GunManager gunManager, int gunId);
+    public int AttachmentId { get; set; }
+
+    public void ApplyToBaseStats(ref CompleteGunStatsSet gunStatsSet);
 }

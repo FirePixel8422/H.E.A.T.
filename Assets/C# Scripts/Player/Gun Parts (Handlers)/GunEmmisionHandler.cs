@@ -15,7 +15,7 @@ public class GunEmmisionHandler
         emissionId = Shader.PropertyToID("_EmissionColor");
     }
 
-    public void SwapGun(Material _matInstance)
+    public void OnSwapGun(Material _matInstance)
     {
         emissionMatInstance = _matInstance;
     }

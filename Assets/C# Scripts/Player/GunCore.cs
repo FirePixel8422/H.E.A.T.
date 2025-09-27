@@ -214,9 +214,7 @@ public class GunCore : NetworkBehaviour
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void SetupNewGunData(int gunId)
     {
-        DisposeGunData();
-
-        GunManager.Instance.SwapGun(gunHolder, gunId, IsOwner,
+        GunManager.Instance.SwapGun(gunHolder, gunId,
             ref gunRefHolder,
             out coreStats, 
             out heatSinkHandler.stats,
@@ -224,9 +222,9 @@ public class GunCore : NetworkBehaviour
             out gunSwayHandler.stats,
             out adsHandler.stats);
 
-        adsHandler.SwapGun();
-        gunSwayHandler.SwapGun(gunRefHolder.transform, adsHandler);
-        gunEmmisionHandler.SwapGun(gunRefHolder.EmissionMatInstance);
+        adsHandler.OnSwapGun();
+        gunSwayHandler.OnSwapGun(gunRefHolder.transform, adsHandler);
+        gunEmmisionHandler.OnSwapGun(gunRefHolder.EmissionMatInstance);
     }
 
     #endregion
@@ -235,13 +233,16 @@ public class GunCore : NetworkBehaviour
     private void OnUpdate()
     {
         // TEMP SWAP TO NEXT GUN FUNCTION
-        if (Input.GetKeyDown(KeyCode.V))
+        if (Input.GetKeyDown(KeyCode.V) || Input.GetMouseButtonDown(5))
         {
             int gunId = GunManager.Instance.GetNextGunId();
 
             SwapGun(gunId);
 
-            MessageHandler.Instance.SendTextLocal("Swapped to: " + GunManager.Instance.GetCurrentGunName());
+            if (MessageHandler.Instance != null)
+            {
+                MessageHandler.Instance.SendTextLocal("Swapped to: " + GunManager.Instance.GetCurrentGunName());
+            }
         }
         // TEMP
 
@@ -525,21 +526,9 @@ public class GunCore : NetworkBehaviour
         UpdateScheduler.UnRegisterUpdate(OnUpdate);
         UpdateScheduler.UnRegisterFixedUpdate(OnFixedUpdate);
 
-        DisposeGunData();
-        DisposeHandlerData();
-
         currentGunId.OnValueChanged = null;
 
         base.OnDestroy();
-    }
-    private void DisposeGunData()
-    {
-        coreStats.Dispose();
-        gunSwayHandler.Dispose();
-    }
-    private void DisposeHandlerData()
-    {
-        adsHandler.Dispose();
     }
 
 

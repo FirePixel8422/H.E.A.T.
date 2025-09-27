@@ -3,7 +3,6 @@ using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 using Unity.Mathematics;
-using JetBrains.Annotations;
 
 
 public class DebugRecoilPatternMaker : MonoBehaviour
@@ -13,7 +12,7 @@ public class DebugRecoilPatternMaker : MonoBehaviour
 
     [SerializeField] private DebugRecoilPatternData recoilPatternData;
 
-    [SerializeField] GunStatsSO toSaveLoadGunDataObject;
+    [SerializeField] GunSO toSaveLoadGunDataObject;
 
     [SerializeField] private bool updateRecoilVisualsLive;
     [SerializeField] private float shootingSequenceRPM;
@@ -54,7 +53,7 @@ public class DebugRecoilPatternMaker : MonoBehaviour
 
     public void SaveRecoilPatternToScriptableObject()
     {
-        toSaveLoadGunDataObject.SetGunStatsADSRecoilPattern(recoilPatternData.recoilPoints, recoilPatternData.totalTime);
+        toSaveLoadGunDataObject.SetGunStatsADSRecoilPattern(recoilPatternData.recoilPoints);
     }
 
 
@@ -141,8 +140,6 @@ public class DebugRecoilPatternMaker : MonoBehaviour
 
             elapsed += 60 / shootingSequenceRPM;
         }
-
-        recoilPatternData.totalTime = elapsed;
 
         DebugLogger.Log("Shooting sequence took: " + elapsed);
     }

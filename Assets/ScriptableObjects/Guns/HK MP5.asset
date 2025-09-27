@@ -14,305 +14,308 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gunPrefab: {fileID: 5484704871031037484, guid: 4b07b6d66a4e04544bc5f5591b3f340f,
     type: 3}
-  coreStats:
-    damage: 7.5
-    headShotMultiplier: 1.5
-    maxEffectiveRange: 22.5
-    damageFallOffCurve:
-      curve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 1
-          inSlope: 0.00000023841855
-          outSlope: 0.00000023841855
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 1
-        - serializedVersion: 3
-          time: 0.33
-          value: 1
-          inSlope: -0.00000023841858
-          outSlope: -0.00000023841858
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 1
-          outWeight: 0.33333334
-        - serializedVersion: 3
-          time: 1
-          value: 0.25
-          inSlope: -2.4150937
-          outSlope: -2.4150937
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0.08843061
-          outWeight: 0
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      valueMultiplier: 1
-      sampleCount: 75
-    bulletSize: 0.05
-    bulletHoleFXSize:
-      min: 0.15
-      max: 0.175
-    bulletHoleFXLifetime: 12.5
-    projectileCount: 1
-    burstShots: 0
-    burstShotInterval: 0.1
-    heatPerShot: 0.0335
-    adsRecoilPattern:
-    - x: 0.053
-      y: 0.2
-    - x: 0.018000007
-      y: 0.1375
-    - x: 0.093
-      y: 0.11
-    - x: 0.053000003
-      y: 0.074999996
-    - x: -0.025
-      y: 0.027
-    - x: -0.08
-      y: 0.026
-    - x: -0.058000002
-      y: 0.09300001
-    - x: -0.036000002
-      y: 0.07500005
-    - x: 0.106000006
-      y: 0.054999948
-    - x: -0.032000184
-      y: 0.068999946
-    - x: 0.10700019
-      y: 0.062000096
-    - x: 0.03200002
-      y: 0.092999995
-    - x: -0.02700001
-      y: 0.065999985
-    - x: -0.038000003
-      y: -0.044999957
-    - x: -0.029
-      y: 0.034999967
-    - x: -0.022
-      y: -0.054999948
-    - x: -0.116
-      y: 0.024999976
-    - x: 0.017
-      y: 0.06799996
-    - x: -0.071
-      y: -0.021999955
-    - x: -0.14299999
-      y: 0.09399998
-    - x: -0.08400001
-      y: -0.021000028
-    - x: -0.062000006
-      y: 0.07700002
-    - x: 0.07800001
-      y: 0.018000007
-    - x: -0.0059999973
-      y: 0.065999985
-    - x: 0.07599999
-      y: -0.044999957
-    - x: 0.064999975
-      y: 0.055999994
-    - x: 0.08
-      y: -0.014000058
-    - x: 0.14199999
-      y: 0.024999976
-    - x: 0.08600001
-      y: -0.06099999
-    - x: 0.054999992
-      y: 0.123000026
-    - x: 0.095
-      y: 0.014000058
-    - x: 0.013999999
-      y: 0.06499994
-    - x: -0.211
-      y: 0.03700006
-    - x: -0.214
-      y: -0.036000013
-    - x: -0.009999998
-      y: 0.06699991
-    - x: -0.15400001
-      y: 0.055999994
-    - x: -0.054000005
-      y: 0.018000007
-    - x: -0.05799988
-      y: 0.003000021
-    - x: -0.0500001
-      y: 0.019000053
-    - x: -0.050000012
-      y: 0.036000013
-    invertX: 1
-    hipRecoilMultiplier:
-      x: 0
-      y: 12.5
-    adsRecoilMultiplier:
-      x: 7
-      y: 15
-    hipRecoilForce:
-      x: 30
-      y: 100
-    adsRecoilForce:
-      x: 20
-      y: 75
-    hipRecoilRecovery: 50
-    adsRecoilRecovery: 35
-    recoilRecoveryDelay: 0.125
-    recoilPatternDecayMultiplier: 15
-    spreadCurve:
-      curve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 0
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        - serializedVersion: 3
-          time: 2
-          value: 0
-          inSlope: 0.00043826006
-          outSlope: 0.00043826006
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 1
-          outWeight: 0.33333334
-        - serializedVersion: 3
-          time: 6
-          value: 1
-          inSlope: -0.00008564823
-          outSlope: -0.00008564823
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0.33333334
-          outWeight: 1
-        - serializedVersion: 3
-          time: 35
-          value: 1
-          inSlope: -0.00006438787
-          outSlope: -0.00006438787
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0.99654657
-          outWeight: 0
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      valueMultiplier: 0.15
-      sampleCount: 50
-    stabilityLoss: 1
-    stabilityRecovery: 6
-    roundsPerMinute: 1100
-    autoFire: 1
-    inputBufferTime: 0
-    shootAudioClips:
-    - {fileID: 8300000, guid: 5dbc74a65da58144aa0a20190bcd4909, type: 3}
-    minMaxPitch:
-      min: 0.65
-      max: 0.8
-    minMaxPitchAtMaxHeat:
-      min: 2.25
-      max: 2.5
-    overHeatAudioClip: {fileID: 8300000, guid: b3c4117d9d2775948b26557916a1468a, type: 3}
-    overHeatMinMaxPitch:
-      min: 0.9
-      max: 1.1
-  shakeStats:
-    shakePitch:
-      x: 160
-      y: 10
-    shakeYaw:
-      x: 15
-      y: 4
-    shakeBuildUp:
-      x: 8
-      y: 25
-    shakeDecay:
-      x: 2
-      y: 4
-    pullBackDistance:
-      x: 1
-      y: 0.5
-    pullBackBuildUp:
-      x: 25
-      y: 12
-    pullBackDecay:
-      x: 10
-      y: 6
-    pullBackPitchKick:
-      x: -85
-      y: -30
-  gunADSStats:
-    zoomMultiplier: 1
-    zoomInTime: 0.175
-    zoomOutTime: 0.125
-    normalAnimationName: PistolHip
-    zoomAnimationName: PistolADS
-    animLayer: 2
-  swayStats:
-    movementAmplitude:
-      x: 0.015
-      y: 0.001
-    movementFrequency: 2
-    idleAmplitude:
-      x: 0.015
-      y: 0.00025
-    idleFrequency: 2.5
-    posSwayMouse:
-      x: 0.00015
-      y: 0.00005
-    eulerSwayMouse:
-      x: 0.00015
-      y: 0.00005
-    posSwayMove:
-      x: 0.005
-      y: 0.0005
-    eulerSwayMove:
-      x: 0.0005
-      y: 0
-    ignoreYForSwayMove: 1
-    offsetSmooth: 8
-    swayRecoverSmooth: 12
-    gunYOffset: 0
-    spreadMultplierCurve:
-      curve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 0
-          inSlope: 1
-          outSlope: 0
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        - serializedVersion: 3
-          time: 1
-          value: 1
-          inSlope: 0
-          outSlope: 1
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      valueMultiplier: 1
-      sampleCount: 50
-  heatSinkStats:
-    heatSinkSize: 1
-    heatDecayDelay: 0.33
-    heatDecayPower: 0.135
-    heatDecayPowerMultiplier: 1
-    overheatDecayDelay: 0.5
-    overheatDecayPower: 0.115
-    overheatDecayPowerMultiplier: 1
-    decayMultiplierAtMaxHeat: 10
+  baseStats:
+    coreStats:
+      damage: 10
+      headShotMultiplier: 1.5
+      maxEffectiveRange: 15
+      damageFallOffCurve:
+        curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: 0.00000023841855
+            outSlope: 0.00000023841855
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 1
+          - serializedVersion: 3
+            time: 0.33
+            value: 1
+            inSlope: -0.00000023841858
+            outSlope: -0.00000023841858
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 1
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 1
+            value: 0.25
+            inSlope: -2.4150937
+            outSlope: -2.4150937
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.08843061
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        valueMultiplier: 1
+        sampleCount: 75
+      bulletSize: 0.03
+      bulletHoleFXSize:
+        min: 0.125
+        max: 0.15
+      bulletHoleFXLifetime: 12.5
+      projectileCount: 1
+      burstShots: 0
+      burstShotInterval: 0.1
+      heatPerShot: 0.0335
+      adsRecoilPattern:
+      - x: 0.053
+        y: 0.2
+      - x: 0.018000007
+        y: 0.1375
+      - x: 0.093
+        y: 0.11
+      - x: 0.053000003
+        y: 0.074999996
+      - x: -0.025
+        y: 0.027
+      - x: -0.08
+        y: 0.026
+      - x: -0.058000002
+        y: 0.09300001
+      - x: -0.036000002
+        y: 0.07500005
+      - x: 0.106000006
+        y: 0.054999948
+      - x: -0.032000184
+        y: 0.068999946
+      - x: 0.10700019
+        y: 0.062000096
+      - x: 0.03200002
+        y: 0.092999995
+      - x: -0.02700001
+        y: 0.065999985
+      - x: -0.038000003
+        y: -0.044999957
+      - x: -0.029
+        y: 0.034999967
+      - x: -0.022
+        y: -0.054999948
+      - x: -0.116
+        y: 0.024999976
+      - x: 0.017
+        y: 0.06799996
+      - x: -0.071
+        y: -0.021999955
+      - x: -0.14299999
+        y: 0.09399998
+      - x: -0.08400001
+        y: -0.021000028
+      - x: -0.062000006
+        y: 0.07700002
+      - x: 0.07800001
+        y: 0.018000007
+      - x: -0.0059999973
+        y: 0.065999985
+      - x: 0.07599999
+        y: -0.044999957
+      - x: 0.064999975
+        y: 0.055999994
+      - x: 0.08
+        y: -0.014000058
+      - x: 0.14199999
+        y: 0.024999976
+      - x: 0.08600001
+        y: -0.06099999
+      - x: 0.054999992
+        y: 0.123000026
+      - x: 0.095
+        y: 0.014000058
+      - x: 0.013999999
+        y: 0.06499994
+      - x: -0.211
+        y: 0.03700006
+      - x: -0.214
+        y: -0.036000013
+      - x: -0.009999998
+        y: 0.06699991
+      - x: -0.15400001
+        y: 0.055999994
+      - x: -0.054000005
+        y: 0.018000007
+      - x: -0.05799988
+        y: 0.003000021
+      - x: -0.0500001
+        y: 0.019000053
+      - x: -0.050000012
+        y: 0.036000013
+      invertX: 1
+      hipRecoilMultiplier:
+        x: 0
+        y: 12.5
+      adsRecoilMultiplier:
+        x: 7
+        y: 15
+      hipRecoilForce:
+        x: 30
+        y: 100
+      adsRecoilForce:
+        x: 20
+        y: 75
+      hipRecoilRecovery: 50
+      adsRecoilRecovery: 35
+      recoilRecoveryDelay: 0.125
+      recoilPatternDecayMultiplier: 15
+      spreadCurve:
+        curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 2
+            value: 0
+            inSlope: 0.00043826006
+            outSlope: 0.00043826006
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 1
+            outWeight: 0.33333334
+          - serializedVersion: 3
+            time: 6
+            value: 1
+            inSlope: -0.00008564823
+            outSlope: -0.00008564823
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.33333334
+            outWeight: 1
+          - serializedVersion: 3
+            time: 35
+            value: 1
+            inSlope: -0.00006438787
+            outSlope: -0.00006438787
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.99654657
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        valueMultiplier: 0.15
+        sampleCount: 50
+      stabilityLoss: 1
+      stabilityRecovery: 6
+      roundsPerMinute: 1100
+      autoFire: 1
+      inputBufferTime: 0
+      shootAudioClips:
+      - {fileID: 8300000, guid: 5dbc74a65da58144aa0a20190bcd4909, type: 3}
+      minMaxPitch:
+        min: 0.65
+        max: 0.8
+      minMaxPitchAtMaxHeat:
+        min: 2.25
+        max: 2.5
+      overHeatAudioClip: {fileID: 8300000, guid: b3c4117d9d2775948b26557916a1468a,
+        type: 3}
+      overHeatMinMaxPitch:
+        min: 0.9
+        max: 1.1
+    shakeStats:
+      shakePitch:
+        x: 160
+        y: 10
+      shakeYaw:
+        x: 15
+        y: 4
+      shakeBuildUp:
+        x: 8
+        y: 25
+      shakeDecay:
+        x: 2
+        y: 4
+      pullBackDistance:
+        x: 1
+        y: 0.5
+      pullBackBuildUp:
+        x: 25
+        y: 12
+      pullBackDecay:
+        x: 10
+        y: 6
+      pullBackPitchKick:
+        x: -85
+        y: -30
+    gunADSStats:
+      zoomMultiplier: 1
+      adsSensitivityMultiplier: 1.2
+      zoomInTime: 0.175
+      zoomOutTime: 0.125
+      normalAnimationName: PistolHip
+      zoomAnimationName: PistolADS
+      animLayer: 2
+    swayStats:
+      movementAmplitude:
+        x: 0.015
+        y: 0.001
+      movementFrequency: 2
+      idleAmplitude:
+        x: 0.015
+        y: 0.00025
+      idleFrequency: 2.5
+      posSwayMouse:
+        x: 0.00015
+        y: 0.00005
+      eulerSwayMouse:
+        x: 0.00015
+        y: 0.00005
+      posSwayMove:
+        x: 0.005
+        y: 0.0005
+      eulerSwayMove:
+        x: 0.0005
+        y: 0
+      ignoreYForSwayMove: 1
+      offsetSmooth: 8
+      swayRecoverSmooth: 12
+      gunYOffset: 0
+      spreadMultplierCurve:
+        curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 1
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 1
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        valueMultiplier: 1
+        sampleCount: 50
+    heatSinkStats:
+      heatSinkSize: 1
+      heatDecayDelay: 0.33
+      heatDecayPower: 0.135
+      heatDecayPowerMultiplier: 1
+      overheatDecayDelay: 0.5
+      overheatDecayPower: 0.115
+      overheatDecayPowerMultiplier: 1
+      decayMultiplierAtMaxHeat: 10

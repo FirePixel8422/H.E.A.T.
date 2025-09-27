@@ -9,23 +9,23 @@ public struct SmartAttributeInt
     [SerializeField] private int value;
 
     [Header("How to apply the value")]
-    [SerializeField] private ApplyMode applymode;
+    [SerializeField] private ApplyMode applyMode;
 
 
     public void ApplyToStat(ref int stat)
     {
-        stat = applymode switch
+        stat = applyMode switch
         {
             ApplyMode.Add => stat + value,
             ApplyMode.Multiply => stat * value,
             ApplyMode.Override => value,
-            _ => default,
+            _ => stat,
         };
     }
 
-    public SmartAttributeInt(int value, ApplyMode applymode)
+    public SmartAttributeInt(int value, ApplyMode applyMode)
     {
         this.value = value;
-        this.applymode = applymode;
+        this.applyMode = applyMode;
     }
 }
