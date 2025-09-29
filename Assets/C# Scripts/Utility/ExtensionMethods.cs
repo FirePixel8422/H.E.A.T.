@@ -245,6 +245,22 @@ public static class ExtensionMethods
         source.pitch = pitch;
         source.Play();
     }
+    /// <summary>
+    /// Lets AudioSource play with selected pitch
+    /// </summary>
+    public static void PlayOneShotWithPitch(this AudioSource source, float pitch)
+    {
+        source.pitch = pitch;
+        source.PlayOneShot(source.clip);
+    }
+    /// <summary>
+    /// Lets AudioSource play selected clip with selected pitch
+    /// </summary>
+    public static void PlayOneShotClipWithPitch(this AudioSource source, AudioClip clip, float pitch)
+    {
+        source.pitch = pitch;
+        source.PlayOneShot(clip);
+    }
 
     #endregion
 
@@ -302,5 +318,13 @@ public static class ExtensionMethods
     {
         action = actionAsset.FindAction(actionName);
         return action != null;
+    }
+
+    /// <summary>
+    /// Assign value <typeparamref name="T"/> to ref of captured variable (use this to write back to arrays)
+    /// </summary>
+    public static void AssignValueToRef<T>(this ref T target, T value) where T : unmanaged
+    {
+        target = value;
     }
 }

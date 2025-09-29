@@ -9,13 +9,13 @@ public class PlayerHUD : NetworkBehaviour
 
 
     [SerializeField] private Image crossHair;
+    private Color crossHairColor;
 
     public void SetCrossHairAlpha(float alpha)
     {
-        Color col = crossHair.color;
-        col.a = alpha;
+        crossHairColor.a = alpha;
 
-        crossHair.color = col;
+        crossHair.color = crossHairColor;
     }
 
 
@@ -24,6 +24,7 @@ public class PlayerHUD : NetworkBehaviour
         if (IsOwner)
         {
             LocalInstance = this;
+            crossHairColor = crossHair.color;
         }
     }
 

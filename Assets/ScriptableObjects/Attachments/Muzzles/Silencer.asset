@@ -19,6 +19,15 @@ MonoBehaviour:
     eulerRotation: {x: 0, y: 0, z: 0}
   type: 1
   stats:
-    zoomMultiplier:
-      value: 0
-      applymode: 0
+    shootAudioClips:
+    - {fileID: 8300000, guid: 5dbc74a65da58144aa0a20190bcd4909, type: 3}
+    minMaxPitch:
+      value:
+        min: 0.55
+        max: 0.7
+      applyMode: 3
+    minMaxPitchAtMaxHeat:
+      value:
+        min: 1.25
+        max: 1.4
+      applyMode: 3

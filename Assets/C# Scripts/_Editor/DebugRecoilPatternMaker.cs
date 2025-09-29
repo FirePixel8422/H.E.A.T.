@@ -130,7 +130,7 @@ public class DebugRecoilPatternMaker : MonoBehaviour
         {
             yield return new WaitForSeconds(60 / shootingSequenceRPM);
 
-            source.PlayWithPitch(EzRandom.Range(0.95f, 1.05f));
+            source.PlayOneShotWithPitch(EzRandom.Range(0.95f, 1.05f));
 
             cRecoil += recoilPatternData.recoilPoints[i];
 

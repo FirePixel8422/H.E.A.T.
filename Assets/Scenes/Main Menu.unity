@@ -10872,58 +10872,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: MatchManagement
       objectReference: {fileID: 0}
-    - target: {fileID: 4267619818096258449, guid: c0eb4b36e7e97f24b8ef673c374d8424,
-        type: 3}
-      propertyPath: baseGuns.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 4267619818096258449, guid: c0eb4b36e7e97f24b8ef673c374d8424,
-        type: 3}
-      propertyPath: 'baseGuns.Array.data[0]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 345d4e08f6ffca9408ae925d7c9c85a0,
-        type: 2}
-    - target: {fileID: 4267619818096258449, guid: c0eb4b36e7e97f24b8ef673c374d8424,
-        type: 3}
-      propertyPath: 'baseGuns.Array.data[1]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 27f968b9b70baf2479d2c0044169a853,
-        type: 2}
-    - target: {fileID: 4267619818096258449, guid: c0eb4b36e7e97f24b8ef673c374d8424,
-        type: 3}
-      propertyPath: 'baseGuns.Array.data[2]'
-      value: 
-      objectReference: {fileID: 11400000, guid: efca6e1d6873b4e4ea917692e2fe765c,
-        type: 2}
-    - target: {fileID: 4267619818096258449, guid: c0eb4b36e7e97f24b8ef673c374d8424,
-        type: 3}
-      propertyPath: 'baseGuns.Array.data[3]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 32d506f0be6f2a64c9a137600b5378e7,
-        type: 2}
-    - target: {fileID: 4267619818096258449, guid: c0eb4b36e7e97f24b8ef673c374d8424,
-        type: 3}
-      propertyPath: globalAttachmentsList.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4267619818096258449, guid: c0eb4b36e7e97f24b8ef673c374d8424,
-        type: 3}
-      propertyPath: 'globalAttachmentsList.Array.data[0]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 8c2600a700342b142bb0a03b8770beed,
-        type: 2}
-    - target: {fileID: 4267619818096258449, guid: c0eb4b36e7e97f24b8ef673c374d8424,
-        type: 3}
-      propertyPath: 'globalAttachmentsList.Array.data[1]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 01652b5aac7c3704fa89ca7229c4fb56,
-        type: 2}
-    - target: {fileID: 4267619818096258449, guid: c0eb4b36e7e97f24b8ef673c374d8424,
-        type: 3}
-      propertyPath: 'globalAttachmentsList.Array.data[2]'
-      value: 
-      objectReference: {fileID: 11400000, guid: 3b12978bb28168442b564b0246add77e,
-        type: 2}
     - target: {fileID: 5287381020941622744, guid: c0eb4b36e7e97f24b8ef673c374d8424,
         type: 3}
       propertyPath: rejoinMenu

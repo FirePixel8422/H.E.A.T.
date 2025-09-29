@@ -9,6 +9,7 @@ using UnityEngine.InputSystem;
 public class GunCore : NetworkBehaviour
 {
     [SerializeField] private Transform gunHolder;
+    [SerializeField] private LayerMask playerColliderMask;
 
     private GunRefHolder gunRefHolder;
     private PlayerController playerController;
@@ -233,7 +234,7 @@ public class GunCore : NetworkBehaviour
     private void OnUpdate()
     {
         // TEMP SWAP TO NEXT GUN FUNCTION
-        if (Input.GetKeyDown(KeyCode.V) || Input.GetMouseButtonDown(5))
+        if (Input.GetKeyDown(KeyCode.V) || Input.GetMouseButtonDown(4))
         {
             int gunId = GunManager.Instance.GetNextGunId();
 
@@ -412,13 +413,13 @@ public class GunCore : NetworkBehaviour
             Vector3 rayDirWithSpread = math.normalize(ray.direction + gunRight * spreadOffset.x + gunUp * spreadOffset.y);
 
             // Shoot an invisble sphere to detect a hit
-            if (Physics.SphereCast(ray.origin, coreStats.bulletSize, rayDirWithSpread, out RaycastHit hit))
+            if (Physics.SphereCast(ray.origin, coreStats.bulletSize, rayDirWithSpread, out RaycastHit hit, math.INFINITY, playerColliderMask, QueryTriggerInteraction.Collide))
             {
-                if (hit.transform.TryGetComponent(out PlayerHealthHandler player))
+                if (hit.transform.TryGetComponent(out SmartHitBox targetHitBox))
                 {
-                    float damage = coreStats.GetDamageOutput(hit.distance, false);
+                    float damage = coreStats.GetDamageOutput(hit.distance, targetHitBox.IsHeadHitBox);
 
-                    player.DealDamage(damage, hit.point, ray.direction);
+                    targetHitBox.DealDamageToTargetObject(damage, targetHitBox.IsHeadHitBox, hit.point, ray.direction);
                 }
 
                 // Deal damage to hit player
@@ -462,7 +463,7 @@ public class GunCore : NetworkBehaviour
 
         if (heatSinkHandler.Overheated)
         {
-            gunOverheatSource.PlayClipWithPitch(coreStats.overHeatAudioClip, EzRandom.Range(coreStats.overHeatMinMaxPitch));
+            gunOverheatSource.PlayOneShotClipWithPitch(coreStats.overHeatAudioClip, EzRandom.Range(coreStats.overHeatMinMaxPitch));
         }
 
         // Call shoot method through the server and all clients, except self > call shoot locally
@@ -512,7 +513,7 @@ public class GunCore : NetworkBehaviour
         int randomAudioId = EzRandom.Range(0, coreStats.shootAudioClips.Length);
         float randomPitch = EzRandom.Range(MathLogic.Lerp(coreStats.minMaxPitch, coreStats.minMaxPitchAtMaxHeat, heatSinkHandler.HeatPercentage));
 
-        gunShotSource.PlayClipWithPitch(coreStats.shootAudioClips[randomAudioId], randomPitch);
+        gunShotSource.PlayOneShotClipWithPitch(coreStats.shootAudioClips[randomAudioId], randomPitch);
 
         // Create Decal trhough DecalVfxManager
         DecalVfxManager.Instance.RegisterDecal(bulletHoleMessages);

@@ -6,11 +6,17 @@ public class GunMuzzleStats : IGunAtachment
 {
     public int AttachmentId { get; set; }
 
-    [SerializeField] private SmartAttributeFloat zoomMultiplier;
+    [Header("List of audio clips to randomly pick and play when shooting")]
+    [SerializeField] private AudioClip[] shootAudioClips;
+    [SerializeField] private SmartAttributeMinMaxFloat minMaxPitch = new SmartAttributeMinMaxFloat(new MinMaxFloat(1, 1), ApplyMode.Override);
+    [SerializeField] private SmartAttributeMinMaxFloat minMaxPitchAtMaxHeat = new SmartAttributeMinMaxFloat(new MinMaxFloat(1, 1), ApplyMode.Override);
 
 
     public void ApplyToBaseStats(ref CompleteGunStatsSet gunStatsSet)
     {
-        zoomMultiplier.ApplyToStat(ref gunStatsSet.gunADSStats.zoomMultiplier);
+        gunStatsSet.coreStats.shootAudioClips = shootAudioClips;
+
+        minMaxPitch.ApplyToStat(ref gunStatsSet.coreStats.minMaxPitch);
+        minMaxPitchAtMaxHeat.ApplyToStat(ref gunStatsSet.coreStats.minMaxPitchAtMaxHeat);
     }
 }

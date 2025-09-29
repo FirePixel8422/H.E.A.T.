@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 
 
+[System.Serializable]
 public class PoolingSystem<T> where T : Component
 {
     [SerializeField] private T pooledPrefab;
@@ -32,7 +33,7 @@ public class PoolingSystem<T> where T : Component
 
         Initialize();
     }
-    private void Initialize()
+    public void Initialize()
     {
         allObjects = new List<T>(startCapacity);
         availableObjects = new Queue<T>(startCapacity);

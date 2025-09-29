@@ -4,7 +4,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 
-public class PlayerHealthHandler : NetworkBehaviour
+public class PlayerHealthHandler : NetworkBehaviour, IDamagable
 {
     [SerializeField] private float maxHealth = 250;
     [SerializeField] private float cHealth = 250;
@@ -12,8 +12,8 @@ public class PlayerHealthHandler : NetworkBehaviour
     private NetworkStateMachine stateMachine;
 
     public Action OnDeathEvent { get; private set; }
-    public static Action<float> OnDamageRecieved { get; private set; }
-    public static Action<float> OnDamageDealt { get; private set; }
+    public static Action<float, HitTypeResult> OnDamageRecieved { get; private set; }
+    public static Action<float, HitTypeResult> OnDamageDealt { get; private set; }
 
 
     public override void OnNetworkSpawn()
@@ -27,11 +27,13 @@ public class PlayerHealthHandler : NetworkBehaviour
     /// <summary>
     /// Make this player take damage locally and send to other clients. if health hits 0, die and send to other clients.
     /// </summary>
-    public void DealDamage(float damage, Vector3 hitPoint, Vector3 hitDir)
+    public void DealDamage(float damage, bool headShot, Vector3 hitPoint, Vector3 hitDir)
     {
         bool dead = RecieveDamage(damage);
 
-        OnDamageDealt?.Invoke(damage);
+        HitTypeResult hitType = CalculateHitType(headShot, dead);
+        
+        OnDamageDealt?.Invoke(damage, hitType);
 
         if (dead)
         {
@@ -39,22 +41,34 @@ public class PlayerHealthHandler : NetworkBehaviour
             return;
         }
 
-        SendDamage_ServerRPC(GameIdRPCTargets.SendToOppositeOfLocalClient(), damage);
+        SendDamage_ServerRPC(GameIdRPCTargets.SendToOppositeOfLocalClient(), damage, hitType);
+    }
+
+    private HitTypeResult CalculateHitType(bool headShot, bool dead)
+    {
+        if (headShot)
+        {
+            return dead ? HitTypeResult.HeadShotKill : HitTypeResult.HeadShot;
+        }
+        else
+        {
+            return dead ? HitTypeResult.NormalKill : HitTypeResult.Normal;
+        }
     }
 
     [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    private void SendDamage_ServerRPC(GameIdRPCTargets rpcTargets, float damage)
+    private void SendDamage_ServerRPC(GameIdRPCTargets rpcTargets, float damage, HitTypeResult hitType)
     {
-        RecieveDamage_ClientRPC(rpcTargets, damage);
+        RecieveDamage_ClientRPC(rpcTargets, damage, hitType);
     }
     [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
-    private void RecieveDamage_ClientRPC(GameIdRPCTargets rpcTargets, float damage)
+    private void RecieveDamage_ClientRPC(GameIdRPCTargets rpcTargets, float damage, HitTypeResult hitType)
     {
         if (rpcTargets.IsTarget == false) return;
 
         RecieveDamage(damage);
 
-        OnDamageRecieved?.Invoke(damage);
+        OnDamageRecieved?.Invoke(damage, hitType);
     }
 
     private bool RecieveDamage(float damage)
@@ -69,6 +83,7 @@ public class PlayerHealthHandler : NetworkBehaviour
 
         return false;
     }
+
 
     // Flag state machine as dead and notify other clients
     private void OnDeath(Vector3 hitPoint, Vector3 hitDir)
