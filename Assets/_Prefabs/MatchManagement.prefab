@@ -143,12 +143,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a0d409050b64f9408920ae7b792a543, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseGunStats:
+  globalAttachmentsList:
+  - {fileID: 11400000, guid: 8c2600a700342b142bb0a03b8770beed, type: 2}
+  - {fileID: 11400000, guid: 01652b5aac7c3704fa89ca7229c4fb56, type: 2}
+  - {fileID: 11400000, guid: 3b12978bb28168442b564b0246add77e, type: 2}
+  baseGuns:
   - {fileID: 11400000, guid: 345d4e08f6ffca9408ae925d7c9c85a0, type: 2}
   - {fileID: 11400000, guid: 27f968b9b70baf2479d2c0044169a853, type: 2}
   - {fileID: 11400000, guid: efca6e1d6873b4e4ea917692e2fe765c, type: 2}
   - {fileID: 11400000, guid: 32d506f0be6f2a64c9a137600b5378e7, type: 2}
-  defaultGunStats: []
+  attachmentIdsList: []
   currentGunStats: []
 --- !u!1 &5977880562155519185
 GameObject:

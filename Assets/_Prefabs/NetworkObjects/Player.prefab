@@ -1377,6 +1377,7 @@ MonoBehaviour:
     anim: {fileID: 5199238681142820621}
     stats:
       zoomMultiplier: 0
+      adsSensitivityMultiplier: 0
       zoomInTime: 0
       zoomOutTime: 0
       normalAnimationName: 
@@ -1901,7 +1902,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -1998,7 +1999,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
