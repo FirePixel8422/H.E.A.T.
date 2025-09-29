@@ -6,10 +6,7 @@ using UnityEngine;
 [System.Serializable]
 public struct SmartAttributeFloat2
 {
-    [Header("Value to use")]
     [SerializeField] private float2 value;
-
-    [Header("How to apply the value")]
     [SerializeField] private ApplyMode applyMode;
 
 

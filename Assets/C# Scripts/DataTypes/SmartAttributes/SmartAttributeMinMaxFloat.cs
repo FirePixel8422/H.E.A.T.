@@ -5,10 +5,7 @@
 [System.Serializable]
 public struct SmartAttributeMinMaxFloat
 {
-    [Header("Value to use")]
     [SerializeField] private MinMaxFloat value;
-
-    [Header("How to apply the value")]
     [SerializeField] private ApplyMode applyMode;
 
 

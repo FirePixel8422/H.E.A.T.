@@ -5,10 +5,7 @@
 [System.Serializable]
 public struct SmartAttributeFloat
 {
-    [Header("Value to use")]
     [SerializeField] private float value;
-
-    [Header("How to apply the value")]
     [SerializeField] private ApplyMode applyMode;
 
 

@@ -3,7 +3,7 @@
 
 public class GunAttachmentSO : ScriptableObject
 {
-    [Header("Actual attachment (Prefab)")]
+    [Space(20)]
     [SerializeField] private GameObject attachmentPrefab;
     public GameObject AttachmentPrefab => attachmentPrefab;
 
@@ -12,14 +12,6 @@ public class GunAttachmentSO : ScriptableObject
     public LocalOffset TransformOffset => transformOffset;
 
 
-    public virtual AttachmentType Type
-    {
-        get
-        {
-            DebugLogger.LogError("Null Attachment is used");
-            return default;
-        }
-    }
     public virtual IGunAtachment Stats
     {
         get

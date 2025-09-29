@@ -17,10 +17,48 @@ MonoBehaviour:
   transformOffset:
     position: {x: 0, y: 0, z: 0}
     eulerRotation: {x: 0, y: 0, z: 0}
-  type: 1
   stats:
+    damage:
+      value: 1
+      applyMode: 0
+    headShotMultiplier:
+      value: 1.5
+      applyMode: 0
+    damageFallOffCurve:
+      ignoreData: 1
+      data:
+        curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 1
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 0
+            outSlope: 1
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        valueMultiplier: 1
+        sampleCount: 50
+    maxEffectiveRange:
+      value: 1
+      applyMode: 0
     shootAudioClips:
-    - {fileID: 8300000, guid: 5dbc74a65da58144aa0a20190bcd4909, type: 3}
+      ignoreData: 1
+      data: []
     minMaxPitch:
       value:
         min: 0.55

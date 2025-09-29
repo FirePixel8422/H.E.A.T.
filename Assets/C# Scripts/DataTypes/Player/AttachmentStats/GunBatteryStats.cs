@@ -5,7 +5,9 @@
 public class GunBatteryStats : IGunAtachment
 {
     public int AttachmentId { get; set; }
-    
+    public AttachmentType Type { get; set; }
+
+
     [SerializeField] private SmartAttributeFloat zoomMultiplier;
 
 

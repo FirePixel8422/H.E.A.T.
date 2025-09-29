@@ -15,8 +15,8 @@ public struct GunADSStats
     public float zoomOutTime;
 
     [Header("Names of the normal and ads zoom animations")]
-    [SerializeField] private string normalAnimationName;
-    [SerializeField] private string zoomAnimationName;
+    public string normalAnimationName;
+    public string zoomAnimationName;
     public int animLayer;
 
     public void GetAnimationHashes(out int normalAnimationHash, out int zoomAnimationHash)

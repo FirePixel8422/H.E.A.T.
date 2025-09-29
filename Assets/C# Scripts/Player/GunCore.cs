@@ -408,7 +408,7 @@ public class GunCore : NetworkBehaviour
 
         for (int i = 0; i < projectileCount; i++)
         {
-            float2 spreadOffset = RandomApproxPointInCircle(coreStats.GetSpread(adsPercentage));
+            float2 spreadOffset = RandomPointInCircle(coreStats.GetSpread(adsPercentage));
 
             Vector3 rayDirWithSpread = math.normalize(ray.direction + gunRight * spreadOffset.x + gunUp * spreadOffset.y);
 
@@ -484,11 +484,11 @@ public class GunCore : NetworkBehaviour
         gunEmmisionHandler.UpdateHeatEmission(percent);
     }
 
-    private float2 RandomApproxPointInCircle(float radius)
+    private float2 RandomPointInCircle(float radius)
     {
-        float2 dir = math.normalize(new float2(EzRandom.Range01() * 2f - 1f, EzRandom.Range01() * 2f - 1f));
-        float dist = EzRandom.Range01() * radius;
-        return dir * dist;
+        float angle = EzRandom.Range01() * math.PI * 2f;
+        float dist = math.sqrt(EzRandom.Range01()) * radius;
+        return new float2(math.cos(angle), math.sin(angle)) * dist;
     }
 
     [ServerRpc(RequireOwnership = false)]

@@ -10,16 +10,16 @@ public struct GunCoreStats
 {
     [Header("Damage per bullet")]
     [Tooltip("Use GetDamageOutput() for true damage. Raw damage dealt per bullet, before falloff and headshot multiplier")]
-    [SerializeField] private float damage;
+    public float damage;
     [Header("When headshot damage is done, multiply by this value")]
-    [SerializeField] private float headShotMultiplier;
+    public float headShotMultiplier;
 
 
     [Header("The maximum distance this weapon can shoot from until damage fully falls off")]
-    [SerializeField] private float maxEffectiveRange;
+    public float maxEffectiveRange;
 
     [Header("How many sample to give the damage falloff curve")]
-    [SerializeField] private NativeSampledAnimationCurve damageFallOffCurve;
+    public NativeSampledAnimationCurve damageFallOffCurve;
 
     /// <summary>
     /// Get damage output and account for headShot and damage falloff
@@ -60,25 +60,25 @@ public struct GunCoreStats
     [Header("Scoped in recoil pattern and whether to smooth between points")]
     public float2[] adsRecoilPattern;
 
-    [SerializeField] private bool invertX;
+    public bool invertX;
 
     [Header("Multipliers on top off the recoil pattern based on ADS state (blended)")]
-    [SerializeField] private float2 hipRecoilMultiplier;
-    [SerializeField] private float2 adsRecoilMultiplier;
+    public float2 hipRecoilMultiplier;
+    public float2 adsRecoilMultiplier;
 
     [Header("How Aggressive recoil is added, higher is more 'clicky' recoil")]
-    [SerializeField] private float2 hipRecoilForce;
-    [SerializeField] private float2 adsRecoilForce;
+    public float2 hipRecoilForce;
+    public float2 adsRecoilForce;
 
     [Header("How fast to reset added recoil")]
-    [SerializeField] private float hipRecoilRecovery;
-    [SerializeField] private float adsRecoilRecovery;
+    public float hipRecoilRecovery;
+    public float adsRecoilRecovery;
 
     [Header("The time that needs to pass while not shooting for the recoil to stabilize")]
     public float recoilRecoveryDelay;
 
     [Header("Speed at which recoilPattern resets")]
-    [SerializeField] private float recoilPatternDecayMultiplier;
+    public float recoilPatternDecayMultiplier;
 
     /// <summary>
     /// Increases by 1 for every shot fired and decreases by <see cref="adsRecoilRecovery"/> after not shooting for <see cref="recoilRecoveryDelay"/>.
@@ -122,10 +122,10 @@ public struct GunCoreStats
     }
 
     [Header("Spread curve at each shot and spread multiplier")]
-    [SerializeField] private NativeSampledAnimationCurve spreadCurve;
+    public NativeSampledAnimationCurve spreadCurve;
 
-    [SerializeField] private float stabilityLoss;
-    [SerializeField] private float stabilityRecovery;
+    public float stabilityLoss;
+    public float stabilityRecovery;
 
     /// <summary>
     /// Increased by 1 * (1 - adsPercentage01) for every shot fired. Decreased when idle or ADS Shooting by <see cref="stabilityRecovery"/>
@@ -144,7 +144,7 @@ public struct GunCoreStats
 
 
     [Header("RPM (How fast can this gun shoot in shots per minute)")]
-    [SerializeField] private float roundsPerMinute;
+    public float roundsPerMinute;
 
     [Tooltip("Time between every shot")]
     public float ShootInterval => 60 / roundsPerMinute;
@@ -154,7 +154,7 @@ public struct GunCoreStats
     public bool autoFire;
 
     [Header("How much time does the input get buffered, when its pressed too early")]
-    [SerializeField] private float inputBufferTime;
+    public float inputBufferTime;
     public float InputBufferTime => autoFire ? 0 : inputBufferTime;
 
 
