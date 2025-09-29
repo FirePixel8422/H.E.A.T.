@@ -11,12 +11,14 @@ GameObject:
   - component: {fileID: 6035085676187903982}
   - component: {fileID: 4960486552686220272}
   - component: {fileID: 8344933460284912970}
+  - component: {fileID: 6433120751350440370}
+  - component: {fileID: 5815990897427484559}
   m_Layer: 0
   m_Name: House5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &6035085676187903982
 Transform:
@@ -81,8 +83,50 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 10, y: 4.6, z: 5}
-  m_Center: {x: -0.6, y: 1.25, z: -2}
+  m_Size: {x: 10.31, y: 0.5, z: 5.37}
+  m_Center: {x: -0.6, y: 3.29, z: -1.88}
+--- !u!65 &6433120751350440370
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1410194342738405694}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 5, y: 4.6, z: 5}
+  m_Center: {x: 1.9, y: 1.25, z: 3.1}
+--- !u!65 &5815990897427484559
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1410194342738405694}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 5.3, y: 0.5, z: 5.3}
+  m_Center: {x: 1.9, y: 3.27, z: 3.15}
 --- !u!1001 &49432330234373738
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -678,6 +722,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: House5
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 02a7ed5eb943b8f4d9955d7824563e80,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

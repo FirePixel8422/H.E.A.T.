@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &8937966123301613687
 Transform:
@@ -68,12 +68,13 @@ GameObject:
   - component: {fileID: 1624669354306915280}
   - component: {fileID: 6960479641873010211}
   - component: {fileID: 7029562295926350211}
+  - component: {fileID: 7930928515871160097}
   m_Layer: 0
   m_Name: House1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &4789634251099623991
 Transform:
@@ -187,6 +188,27 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.44, y: 0.43, z: 1.1}
   m_Center: {x: 0, y: 7.68, z: 2.01}
+--- !u!65 &7930928515871160097
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5397946006855062763}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 5.25, y: 0.5, z: 5.25}
+  m_Center: {x: 0, y: 6.8, z: 0}
 --- !u!1001 &490529789475055336
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -264,6 +286,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Window2
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 679e3749a812d5949b845692f17a9fcb,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -343,6 +370,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Railing Pool1 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44b1e10f555f45e40bf0d6a3bc2e4985,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -428,6 +460,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: House1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 063d98036d1a7644d9f5094f8719292c,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -507,6 +544,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Railing Pool1
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44b1e10f555f45e40bf0d6a3bc2e4985,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -585,6 +627,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Railing Pool1 (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44b1e10f555f45e40bf0d6a3bc2e4985,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -670,6 +717,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Railing Top
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 311634ab6d9f03747a06ecabbba1c1a0,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -749,6 +801,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Railing Pool1 (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44b1e10f555f45e40bf0d6a3bc2e4985,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -827,6 +884,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Railing Pool1 (15)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44b1e10f555f45e40bf0d6a3bc2e4985,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -917,6 +979,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Window2 (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 679e3749a812d5949b845692f17a9fcb,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -995,6 +1062,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Railing Pool1 (16)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44b1e10f555f45e40bf0d6a3bc2e4985,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1075,6 +1147,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Railing Pool1 (14)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44b1e10f555f45e40bf0d6a3bc2e4985,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1154,6 +1231,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Railing Pool1 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44b1e10f555f45e40bf0d6a3bc2e4985,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1232,6 +1314,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Railing Pool1 (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44b1e10f555f45e40bf0d6a3bc2e4985,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1322,6 +1409,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Window2 (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 679e3749a812d5949b845692f17a9fcb,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1410,6 +1502,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Window2 (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 679e3749a812d5949b845692f17a9fcb,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1569,6 +1666,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Railing Top (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 311634ab6d9f03747a06ecabbba1c1a0,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1647,6 +1749,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Railing Pool1 (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44b1e10f555f45e40bf0d6a3bc2e4985,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1737,6 +1844,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Window2 (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 679e3749a812d5949b845692f17a9fcb,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1816,6 +1928,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Railing Pool1 (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44b1e10f555f45e40bf0d6a3bc2e4985,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1894,6 +2011,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Railing Pool1 (10)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44b1e10f555f45e40bf0d6a3bc2e4985,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1984,6 +2106,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Window2 (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 679e3749a812d5949b845692f17a9fcb,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2073,6 +2200,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Window2 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 679e3749a812d5949b845692f17a9fcb,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2151,6 +2283,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Railing Pool1 (13)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44b1e10f555f45e40bf0d6a3bc2e4985,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2241,6 +2378,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Window2 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 679e3749a812d5949b845692f17a9fcb,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2325,6 +2467,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Railing Top (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 311634ab6d9f03747a06ecabbba1c1a0,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2404,6 +2551,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Railing Curve
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fc5e3ef4d868bca4d8bd843f02a19317,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2482,6 +2634,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Railing Pool1 (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44b1e10f555f45e40bf0d6a3bc2e4985,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2572,6 +2729,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Window2 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 679e3749a812d5949b845692f17a9fcb,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2650,6 +2812,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Railing Curve (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fc5e3ef4d868bca4d8bd843f02a19317,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2730,6 +2897,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Railing Pool1 (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44b1e10f555f45e40bf0d6a3bc2e4985,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2808,6 +2980,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Railing Pool1 (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44b1e10f555f45e40bf0d6a3bc2e4985,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2888,6 +3065,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Railing Curve (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fc5e3ef4d868bca4d8bd843f02a19317,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2966,6 +3148,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Railing Pool1 (12)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 44b1e10f555f45e40bf0d6a3bc2e4985,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3056,6 +3243,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Window2 (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 679e3749a812d5949b845692f17a9fcb,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3134,6 +3326,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Railing Curve (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fc5e3ef4d868bca4d8bd843f02a19317,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
