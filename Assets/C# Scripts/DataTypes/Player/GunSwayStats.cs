@@ -33,13 +33,20 @@ public struct GunSwayStats
     public NativeSampledAnimationCurve spreadMultplierCurve;
 
 
+    /// <summary>
+    /// Bake all curves from the AnimationCurves in this struct into their internal float arrays.
+    /// </summary>
     public void BakeAllCurves()
     {
         spreadMultplierCurve.Bake();
     }
+    public void Dispose()
+    {
+        spreadMultplierCurve.Dispose();
+    }
 
     /// <summary>
-    /// Returns a GunSwayStats struct with sensible defaults.
+    /// Default values for SwayStats
     /// </summary>
     public static GunSwayStats Default => new GunSwayStats
     {
@@ -56,9 +63,4 @@ public struct GunSwayStats
         spreadMultplierCurve = NativeSampledAnimationCurve.Default
     };
 
-
-    public void Dispose()
-    {
-        spreadMultplierCurve.Dispose();
-    }
 }

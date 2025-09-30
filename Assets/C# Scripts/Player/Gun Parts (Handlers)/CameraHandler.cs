@@ -31,13 +31,21 @@ public class CameraHandler
         set
         {
             Vector3 euler = mainCamTransform.localEulerAngles;
-            euler.x = value;
-            euler.NormalizeAsEuler();
-
-            euler.x = math.clamp(euler.x, -mainCamMaxTiltAngle, mainCamMaxTiltAngle);
+            euler.x = math.clamp(NormalizeAngle(value), -mainCamMaxTiltAngle, mainCamMaxTiltAngle);
 
             mainCamTransform.localEulerAngles = euler;
         }
+    }
+
+    /// <summary>
+    /// Normalize a single float angle into [-180, 180].
+    /// </summary>
+    private float NormalizeAngle(float angle)
+    {
+        if (float.IsNaN(angle) || float.IsInfinity(angle))
+            return 0f;
+
+        return Mathf.Repeat(angle + 180f, 360f) - 180f;
     }
 
     public float GetADSSensitivityMultiplier()

@@ -20,6 +20,8 @@ public class GunManager : MonoBehaviour
     [SerializeField] private ArrayWrapper<int>[] attachmentIdsList;
     [SerializeField] private CompleteGunStatsSet[] currentGunStats;
 
+    public int GunCount => baseGuns.Length;
+
     private int currentGunId;
 
 
@@ -42,7 +44,6 @@ public class GunManager : MonoBehaviour
         }
 
         currentGunStats = new CompleteGunStatsSet[gunCount];
-
 
         CalculateGunStats();
     }

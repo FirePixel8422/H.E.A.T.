@@ -301,12 +301,36 @@ MonoBehaviour:
     heatSinkStats:
       heatSinkSize: 1
       heatDecayDelay: 0.25
-      heatDecayPower: 0.1
-      heatDecayPowerMultiplier: 1
+      heatDecayPower: 0.5
       overheatDecayDelay: 0.65
-      overheatDecayPower: 0.075
-      overheatDecayPowerMultiplier: 1
-      decayMultiplierAtMaxHeat: 10
+      overheatDecayPower: 0.6
+      heatDecayMultiplierCurve:
+        curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: -0.0042106807
+            outSlope: -0.0042106807
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 1
+          - serializedVersion: 3
+            time: 1
+            value: 0.25
+            inSlope: -2.3229413
+            outSlope: -2.3229413
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.04048592
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        valueMultiplier: 1
+        sampleCount: 75
   baseAttachments:
-  - {fileID: 11400000, guid: 01652b5aac7c3704fa89ca7229c4fb56, type: 2}
+  - {fileID: 11400000, guid: 8c2600a700342b142bb0a03b8770beed, type: 2}
   - {fileID: 11400000, guid: 3b12978bb28168442b564b0246add77e, type: 2}

@@ -28,6 +28,8 @@ public class GunCore : NetworkBehaviour
     [SerializeField] private GunSwayHandler gunSwayHandler;
     [SerializeField] private GunEmmisionHandler gunEmmisionHandler;
 
+    public GunHeatSink CurrentHeatSink => heatSinkHandler.gunHeatSinks[currentGunId.Value];
+
     [Header("Additional Refs")]
     [SerializeField] private AudioSource gunShotSource;
     [SerializeField] private AudioSource gunOverheatSource;
@@ -138,6 +140,8 @@ public class GunCore : NetworkBehaviour
         gunEmmisionHandler.Init();
         gunShakeHandler.Init();
 
+        heatSinkHandler.Init(GunManager.Instance.GunCount);
+
         playerController = GetComponent<PlayerController>();
         playerController.Init(camHandler, gunSwayHandler);
 
@@ -181,7 +185,7 @@ public class GunCore : NetworkBehaviour
         burstShotTimer = coreStats.burstShotInterval;
 
         gunEmmisionHandler.UpdateHeatEmission(0);
-        UpdateVisualHeatEmmision_ServerRPC(GameIdRPCTargets.SendToOppositeOfLocalClient(), 0);
+        UpdateVisualHeatEmmision_ServerRPC(0);
     }
 
     [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
@@ -218,7 +222,7 @@ public class GunCore : NetworkBehaviour
         GunManager.Instance.SwapGun(gunHolder, gunId,
             ref gunRefHolder,
             out coreStats, 
-            out heatSinkHandler.stats,
+            out heatSinkHandler.gunHeatSinks[currentGunId.Value].stats,
             out gunShakeHandler.stats,
             out gunSwayHandler.stats,
             out adsHandler.stats);
@@ -250,10 +254,11 @@ public class GunCore : NetworkBehaviour
 
 
 
-        float deltaTime = Time.deltaTime;
+        bool shotThisFrame = false;
         float adsPercentage = adsHandler.ZoomedInPercent;
+        float deltaTime = Time.deltaTime;
 
-        if (heatSinkHandler.Overheated)
+        if (CurrentHeatSink.Overheated)
         {
             // Reset burst shots immediately when overheated
             burstShotsLeft = 0;
@@ -265,11 +270,11 @@ public class GunCore : NetworkBehaviour
                 timeSinceShootButtonPress += deltaTime;
             }
 
-            ProcessBurstShots(deltaTime, adsPercentage);
+            ProcessBurstShots(adsPercentage, deltaTime, ref shotThisFrame);
         }
 
-        ProcessShooting(adsPercentage);
-        ProcessRecoilSpreadAndHeat(deltaTime, adsPercentage);
+        ProcessShooting(adsPercentage, ref shotThisFrame);
+        ProcessRecoilSpreadAndHeat(adsPercentage, shotThisFrame, deltaTime);
 
         recoilHandler.OnUpdate(coreStats.GetRecoilForce(adsPercentage) * deltaTime);
         gunShakeHandler.OnUpdate(deltaTime, adsPercentage);
@@ -286,25 +291,19 @@ public class GunCore : NetworkBehaviour
 
     private void OnFixedUpdate()
     {
-#if UNITY_EDITOR
-        if (IsOwner == false && overrideIsOwner == false) return;
-#else
-        if (IsOwner == false) return;
-#endif
-
         if (gunEmmisionHandler != null)
         {
-            float heatPercent = heatSinkHandler.HeatPercentage;
+            float heatPercent = CurrentHeatSink.HeatPercentage;
 
             gunEmmisionHandler.UpdateHeatEmission(heatPercent);
-            UpdateVisualHeatEmmision_ServerRPC(GameIdRPCTargets.SendToOppositeOfLocalClient(), heatPercent);
+            UpdateVisualHeatEmmision_ServerRPC(heatPercent);
         }
     }
 
 
     #region Process Shots, Burst Shots And Recoil + Heat
 
-    private void ProcessBurstShots(float deltaTime, float adsPercentage)
+    private void ProcessBurstShots(float adsPercentage, float deltaTime, ref bool shotThisFrame)
     {
         if (burstShotsLeft <= 0) return;
 
@@ -322,11 +321,13 @@ public class GunCore : NetworkBehaviour
         {
             burstShotTimer = coreStats.burstShotInterval; // Reset timer for next burst
         }
+
+        shotThisFrame = true;
     }
 
-    private void ProcessShooting(float adsPercentage)
+    private void ProcessShooting(float adsPercentage, ref bool shotThisFrame)
     {
-        if (ShootInputBuffered && CanShoot && !heatSinkHandler.Overheated)
+        if (ShootInputBuffered && CanShoot && CurrentHeatSink.Overheated == false)
         {
             // Handles catch-up shots if input was buffered longer than shoot interval
             while (timeSinceShootButtonPress >= coreStats.ShootInterval)
@@ -337,10 +338,12 @@ public class GunCore : NetworkBehaviour
 
                 burstShotsLeft += coreStats.burstShots; // Queue burst shots for each fired shot
             }
+
+            shotThisFrame = true;
         }
     }
 
-    private void ProcessRecoilSpreadAndHeat(float deltaTime, float adsPercentage)
+    private void ProcessRecoilSpreadAndHeat(float adsPercentage, bool shotThisFrame, float deltaTime)
     {
         // Only stabilize recoil if no shots are currently firing
         if (timeSinceLastShot > coreStats.recoilRecoveryDelay && burstShotsLeft == 0)
@@ -358,9 +361,23 @@ public class GunCore : NetworkBehaviour
             coreStats.StabilizeHipFire(adsPercentage, deltaTime);
         }
 
+        int heatSinkCount = heatSinkHandler.gunHeatSinks.Length;
 
-        // Send -1 to heatSinkHandler if burst is ongoing to indicate gun isn't idle yet, otherwise send timeSinceLastShot
-        heatSinkHandler.UpdateHeatSink(burstShotsLeft == 0 ? timeSinceLastShot : -1, deltaTime);
+        for (int i = 0; i < heatSinkCount; i++)
+        {
+            bool isCurrentHeatSink = i == currentGunId.Value;
+
+            if (isCurrentHeatSink)
+            {
+                // Send -1 to heatSinkHandler if burst is ongoing to indicate gun isn't idle yet, otherwise send timeSinceLastShot
+                heatSinkHandler.gunHeatSinks[i].UpdateHeatSink(shotThisFrame ? 0 : deltaTime, deltaTime);
+            }
+            else
+            {
+                // Send -1 to heatSinkHandler if burst is ongoing to indicate gun isn't idle yet, otherwise send timeSinceLastShot
+                heatSinkHandler.gunHeatSinks[i].UpdateHeatSink(deltaTime, deltaTime);
+            }
+        }
     }
 
     #endregion
@@ -379,7 +396,7 @@ public class GunCore : NetworkBehaviour
         float2 recoil = coreStats.GetRecoil(adsPercentage);
         StartCoroutine(recoilHandler.AddRecoil(recoil, coreStats.ShootInterval));
 
-        heatSinkHandler.AddHeat(coreStats.heatPerShot, out float prevHeatPercentage, out float newHeatPercentage);
+        CurrentHeatSink.AddHeat(coreStats.heatPerShot, out float prevHeatPercentage, out float newHeatPercentage);
 
         Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
 
@@ -461,7 +478,7 @@ public class GunCore : NetworkBehaviour
             }
         }
 
-        if (heatSinkHandler.Overheated)
+        if (CurrentHeatSink.Overheated)
         {
             gunOverheatSource.PlayOneShotClipWithPitch(coreStats.overHeatAudioClip, EzRandom.Range(coreStats.overHeatMinMaxPitch));
         }
@@ -472,14 +489,14 @@ public class GunCore : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    private void UpdateVisualHeatEmmision_ServerRPC(GameIdRPCTargets rpcTargets, float percent)
+    private void UpdateVisualHeatEmmision_ServerRPC(float percent)
     {
-        UpdateVisualHeatEmmision_ClientRPC(rpcTargets, percent);
+        UpdateVisualHeatEmmision_ClientRPC(percent);
     }
     [ClientRpc(RequireOwnership = false)]
-    private void UpdateVisualHeatEmmision_ClientRPC(GameIdRPCTargets rpcTargets, float percent)
+    private void UpdateVisualHeatEmmision_ClientRPC(float percent)
     {
-        if (rpcTargets.IsTarget == false) return;
+        if (IsOwner) return;
 
         gunEmmisionHandler.UpdateHeatEmission(percent);
     }
@@ -511,7 +528,7 @@ public class GunCore : NetworkBehaviour
     private void ShootEffects(BulletHoleMessage[] bulletHoleMessages)
     {
         int randomAudioId = EzRandom.Range(0, coreStats.shootAudioClips.Length);
-        float randomPitch = EzRandom.Range(MathLogic.Lerp(coreStats.minMaxPitch, coreStats.minMaxPitchAtMaxHeat, heatSinkHandler.HeatPercentage));
+        float randomPitch = EzRandom.Range(MathLogic.Lerp(coreStats.minMaxPitch, coreStats.minMaxPitchAtMaxHeat, CurrentHeatSink.HeatPercentage));
 
         gunShotSource.PlayOneShotClipWithPitch(coreStats.shootAudioClips[randomAudioId], randomPitch);
 

@@ -27,4 +27,13 @@ public static class DebugLogger
     {
         Debug.LogError(message);
     }
+
+    [System.Diagnostics.Conditional(ScriptingDefineSymbol)]
+    public static void LogError(object message, bool logCondition)
+    {
+        if (logCondition)
+        {
+            Debug.LogError(message);
+        }
+    }
 }

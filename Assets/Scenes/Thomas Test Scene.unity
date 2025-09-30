@@ -8497,6 +8497,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   gunHolder: {fileID: 441267901}
+  playerColliderMask:
+    serializedVersion: 2
+    m_Bits: 0
   coreStats:
     damage: 10
     headShotMultiplier: 1.5
@@ -8685,8 +8688,11 @@ MonoBehaviour:
     overHeatMinMaxPitch:
       min: 0.9
       max: 1.1
+  currentGunId:
+    value: 0
   camHandler:
     mainCamera: {fileID: 828992682}
+    mainCamTransform: {fileID: 0}
     gunCamera: {fileID: 1644350611}
     baseFOV: 75
     mainCamMaxTiltAngle: 75
@@ -8739,6 +8745,7 @@ MonoBehaviour:
     anim: {fileID: 1730879146}
     stats:
       zoomMultiplier: 1
+      adsSensitivityMultiplier: 0
       zoomInTime: 0.175
       zoomOutTime: 0.125
       normalAnimationName: AR_Hip

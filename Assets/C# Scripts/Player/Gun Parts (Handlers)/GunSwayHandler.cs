@@ -83,9 +83,4 @@ public class GunSwayHandler
 
         gunTransform.SetLocalPositionAndRotation(targetPos + swayPosOffset, Quaternion.Euler(startEuler + swayEulerOffset));
     }
-
-    public void Dispose()
-    {
-        stats.Dispose();
-    }
 }

@@ -169,21 +169,15 @@ public struct GunCoreStats
 
 
     /// <summary>
-    /// Bake all curves from the AnimationCurve to the internal float array.
+    /// Bake all curves from the AnimationCurves in this struct into their internal float arrays.
     /// </summary>
     public void BakeAllCurves()
     {
         damageFallOffCurve.Bake();
         spreadCurve.Bake();
     }
-
-    /// <summary>
-    /// Free all allocated native mmemory underlying in this struct
-    /// </summary>
     public void Dispose()
     {
-        DebugLogger.Log("Disposing GunCoreStats curves");
-
         damageFallOffCurve.Dispose();
         spreadCurve.Dispose();
     }

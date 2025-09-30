@@ -348,7 +348,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GunRefHolder
   emissionRendererObj: {fileID: 335564442526838234}
-  attachmentPoints: []
 --- !u!1001 &74919120041999127
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -375,7 +374,7 @@ PrefabInstance:
     - target: {fileID: 1511631250735920685, guid: 310b6dfb1f98cfe4ebda4816400df15a,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.14
+      value: -0.753
       objectReference: {fileID: 0}
     - target: {fileID: 1511631250735920685, guid: 310b6dfb1f98cfe4ebda4816400df15a,
         type: 3}

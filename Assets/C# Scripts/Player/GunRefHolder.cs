@@ -23,6 +23,7 @@ public class GunRefHolder : MonoBehaviour
         GameObject attachmentObj = Instantiate(attachment.AttachmentPrefab, transform);
 
         attachmentObj.transform.SetLocalPositionAndRotation(attachment.TransformOffset.position, attachment.TransformOffset.Rotation);
+        attachmentObj.transform.localScale = attachment.TransformOffset.scale;
     }
 
     /// <summary>

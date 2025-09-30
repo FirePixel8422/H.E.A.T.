@@ -2,7 +2,7 @@
 
 
 
-public class SmartHitBox : MonoBehaviour
+public class SmartHitBox : SurfaceTypeIdentifier
 {
     [Header("IDamagable Object that this collider is part of\nLeave empty to auto find in parent")]
     [SerializeField] private IDamagable targetObject;
@@ -14,9 +14,9 @@ public class SmartHitBox : MonoBehaviour
     {
         if (targetObject == null)
         {
-            targetObject = transform.GetComponentInParent<IDamagable>();
+            targetObject = transform.GetComponentInParent<IDamagable>(true);
 
-            DebugLogger.LogError(gameObject.name = " has no targetObject for IDamagable");
+            DebugLogger.LogError(gameObject + " has no targetObject for IDamagable", targetObject == null);
         }
     }
 

@@ -8,8 +8,8 @@ public class GunAttachmentSO : ScriptableObject
     public GameObject AttachmentPrefab => attachmentPrefab;
 
 
-    [SerializeField] private LocalOffset transformOffset;
-    public LocalOffset TransformOffset => transformOffset;
+    [SerializeField] private TransformOffset transformOffset = TransformOffset.Default;
+    public TransformOffset TransformOffset => transformOffset;
 
 
     public virtual IGunAtachment Stats
