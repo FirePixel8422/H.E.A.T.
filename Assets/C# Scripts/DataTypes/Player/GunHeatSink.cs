@@ -28,6 +28,7 @@ public struct GunHeatSink
 
     public void Init(Image heatBar, Animator anim)
     {
+        GunManager.Instance.bas
         this.heatBar = heatBar;
         this.anim = anim;
     }
