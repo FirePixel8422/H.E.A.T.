@@ -17,7 +17,7 @@ MonoBehaviour:
   baseStats:
     coreStats:
       damage: 140
-      headShotMultiplier: 1.5
+      headShotMultiplier: 2
       maxEffectiveRange: 35
       damageFallOffCurve:
         curve:
@@ -197,8 +197,8 @@ MonoBehaviour:
       adsSensitivityMultiplier: 0.75
       zoomInTime: 0.25
       zoomOutTime: 0.2
-      normalAnimationName: PistolHip
-      zoomAnimationName: PistolADS
+      normalAnimationName: BrokenPistol_Hip
+      zoomAnimationName: BrokenPistol_ADS
       animLayer: 2
     swayStats:
       movementAmplitude:

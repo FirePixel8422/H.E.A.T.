@@ -255,8 +255,8 @@ MonoBehaviour:
       adsSensitivityMultiplier: 1.2
       zoomInTime: 0.175
       zoomOutTime: 0.125
-      normalAnimationName: PistolHip
-      zoomAnimationName: PistolADS
+      normalAnimationName: BrokenPistol_Hip
+      zoomAnimationName: BrokenPistol_ADS
       animLayer: 2
     swayStats:
       movementAmplitude:

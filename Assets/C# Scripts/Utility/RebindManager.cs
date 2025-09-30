@@ -32,7 +32,9 @@ public class RebindManager : MonoBehaviour
     private void OnCancelRebind(InputAction.CallbackContext ctx)
     {
         if (ctx.performed)
+        {
             CancelRebind();
+        }
     }
 
     private async void Start()
@@ -106,8 +108,14 @@ public class RebindManager : MonoBehaviour
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         if (logRebindOperations)
         {
-            if (success) DebugLogger.Log("Rebinds reset and rebind file deleted.");
-            else        DebugLogger.Log("Rebinds reset but no rebind file found to delete.");
+            if (success)
+            {
+                DebugLogger.Log("Rebinds reset and rebind file deleted.");
+            }
+            else
+            {
+                DebugLogger.Log("Rebinds reset but no rebind file found to delete.");
+            }
         }
 #endif
     }

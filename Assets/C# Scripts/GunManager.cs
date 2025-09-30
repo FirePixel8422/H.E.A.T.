@@ -73,6 +73,16 @@ public class GunManager : MonoBehaviour
         }
     }
 
+    public void SetupHeatSinks(out GunHeatSink[] heatSinks, UnityEngine.UI.Image heatBar, Animator anim)
+    {
+        heatSinks = new GunHeatSink[GunCount];
+        for (int i = 0; i < GunCount; i++)
+        {
+            heatSinks[i] = new GunHeatSink();
+            heatSinks[i].stats = currentGunStats[i].heatSinkStats;
+            heatSinks[i].Init(heatBar, anim);
+        }
+    }
 
     /// <summary>
     /// Swap gun and get baseGunstats by gunId.
@@ -80,7 +90,6 @@ public class GunManager : MonoBehaviour
     public void SwapGun(
         Transform gunParentTransform, int gunId, ref GunRefHolder gunRefHolder,
         out GunCoreStats coreStats,
-        out HeatSinkStats heatSinkStats,
         out GunShakeStats shakeStats,
         out GunSwayStats swayStats,
         out GunADSStats gunADSStats)
@@ -104,7 +113,7 @@ public class GunManager : MonoBehaviour
             gunRefHolder.SpawnAttachment(globalAttachmentsList[attachmentId]);
         }
 
-        currentGunStats[gunId].GetStatsCopy(out coreStats, out heatSinkStats, out shakeStats, out swayStats, out gunADSStats);
+        currentGunStats[gunId].GetStatsCopy(out coreStats, out _, out shakeStats, out swayStats, out gunADSStats);
     }
 
     public int GetNextGunId() 

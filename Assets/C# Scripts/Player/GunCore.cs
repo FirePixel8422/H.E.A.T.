@@ -19,6 +19,11 @@ public class GunCore : NetworkBehaviour
     [SerializeField] private GunCoreStats coreStats;
 
     [SerializeField] private NetworkValue<int> currentGunId = new NetworkValue<int>();
+    public int CurrentGunId
+    {
+        get => currentGunId.Value;
+        set => currentGunId.Value = value;
+    }
 
     [SerializeField] private CameraHandler camHandler;
     [SerializeField] private ADSHandler adsHandler;
@@ -28,7 +33,7 @@ public class GunCore : NetworkBehaviour
     [SerializeField] private GunSwayHandler gunSwayHandler;
     [SerializeField] private GunEmmisionHandler gunEmmisionHandler;
 
-    public GunHeatSink CurrentHeatSink => heatSinkHandler.gunHeatSinks[currentGunId.Value];
+    public GunHeatSink CurrentHeatSink => heatSinkHandler[CurrentGunId];
 
     [Header("Additional Refs")]
     [SerializeField] private AudioSource gunShotSource;
@@ -139,8 +144,7 @@ public class GunCore : NetworkBehaviour
         adsHandler.Init(camHandler);
         gunEmmisionHandler.Init();
         gunShakeHandler.Init();
-
-        heatSinkHandler.Init(GunManager.Instance.GunCount);
+        heatSinkHandler.Init();
 
         playerController = GetComponent<PlayerController>();
         playerController.Init(camHandler, gunSwayHandler);
@@ -170,8 +174,7 @@ public class GunCore : NetworkBehaviour
 
     private void SwapGun(int gunId)
     {
-        currentGunId.Value = gunId;
-
+        CurrentGunId = gunId;
         SetupNewGunData(gunId);
 
         // set gun to always in front layer ("Gun")
@@ -181,7 +184,7 @@ public class GunCore : NetworkBehaviour
             child.gameObject.layer = gunLayer;
         }
 
-        timeSinceLastShot = 0;
+        timeSinceLastShot = coreStats.ShootInterval - 0.25f;
         burstShotTimer = coreStats.burstShotInterval;
 
         gunEmmisionHandler.UpdateHeatEmission(0);
@@ -199,7 +202,7 @@ public class GunCore : NetworkBehaviour
         // Let the owner send GunId to the requesting client
         if (IsOwner == false) return;
 
-        UpdateGunData_ServerRPC(currentGunId.Value);
+        UpdateGunData_ServerRPC(CurrentGunId);
     }
 
     [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
@@ -221,13 +224,13 @@ public class GunCore : NetworkBehaviour
     {
         GunManager.Instance.SwapGun(gunHolder, gunId,
             ref gunRefHolder,
-            out coreStats, 
-            out heatSinkHandler.gunHeatSinks[currentGunId.Value].stats,
+            out coreStats,
             out gunShakeHandler.stats,
             out gunSwayHandler.stats,
             out adsHandler.stats);
 
         adsHandler.OnSwapGun();
+        heatSinkHandler.OnSwapGun(CurrentGunId);
         gunSwayHandler.OnSwapGun(gunRefHolder.transform, adsHandler);
         gunEmmisionHandler.OnSwapGun(gunRefHolder.EmissionMatInstance);
     }
@@ -291,13 +294,10 @@ public class GunCore : NetworkBehaviour
 
     private void OnFixedUpdate()
     {
-        if (gunEmmisionHandler != null)
-        {
-            float heatPercent = CurrentHeatSink.HeatPercentage;
+        float heatPercent = CurrentHeatSink.HeatPercentage;
 
-            gunEmmisionHandler.UpdateHeatEmission(heatPercent);
-            UpdateVisualHeatEmmision_ServerRPC(heatPercent);
-        }
+        gunEmmisionHandler.UpdateHeatEmission(heatPercent);
+        UpdateVisualHeatEmmision_ServerRPC(heatPercent);
     }
 
 
@@ -365,17 +365,15 @@ public class GunCore : NetworkBehaviour
 
         for (int i = 0; i < heatSinkCount; i++)
         {
-            bool isCurrentHeatSink = i == currentGunId.Value;
+            bool isCurrentHeatSink = i == CurrentGunId;
 
             if (isCurrentHeatSink)
             {
-                // Send -1 to heatSinkHandler if burst is ongoing to indicate gun isn't idle yet, otherwise send timeSinceLastShot
-                heatSinkHandler.gunHeatSinks[i].UpdateHeatSink(shotThisFrame ? 0 : deltaTime, deltaTime);
+                heatSinkHandler[i].UpdateHeatSink(shotThisFrame ? 0 : deltaTime, deltaTime, true);
             }
             else
             {
-                // Send -1 to heatSinkHandler if burst is ongoing to indicate gun isn't idle yet, otherwise send timeSinceLastShot
-                heatSinkHandler.gunHeatSinks[i].UpdateHeatSink(deltaTime, deltaTime);
+                heatSinkHandler[i].UpdateHeatSink(deltaTime, deltaTime, false);
             }
         }
     }
@@ -396,7 +394,7 @@ public class GunCore : NetworkBehaviour
         float2 recoil = coreStats.GetRecoil(adsPercentage);
         StartCoroutine(recoilHandler.AddRecoil(recoil, coreStats.ShootInterval));
 
-        CurrentHeatSink.AddHeat(coreStats.heatPerShot, out float prevHeatPercentage, out float newHeatPercentage);
+        CurrentHeatSink.AddHeat(coreStats.heatPerShot);
 
         Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
 

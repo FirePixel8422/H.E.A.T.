@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
-using UnityEngine.InputSystem.iOS;
 using UnityEngine.UI;
 
 
 
 [System.Serializable]
-public struct GunHeatSink
+public class GunHeatSink
 {
     [SerializeField] private Image heatBar;
     [SerializeField] private Animator anim;
@@ -28,7 +27,6 @@ public struct GunHeatSink
 
     public void Init(Image heatBar, Animator anim)
     {
-        GunManager.Instance.bas
         this.heatBar = heatBar;
         this.anim = anim;
     }
@@ -37,15 +35,13 @@ public struct GunHeatSink
     /// Called by GunCore when a shot is fired. Adds heat equivelent to coreStats.addedHeat.
     /// </summary>
     /// <returns>The heat percentage from 0-1 before adding the new heat</returns>
-    public void AddHeat(float addedHeat, out float prevHeatPercentage, out float newHeatPercentage)
+    public void AddHeat(float addedHeat)
     {
-        prevHeatPercentage = HeatPercentage;
+        timeSinceLastShot = 0;
+
         heatAmount += addedHeat;
-        newHeatPercentage = HeatPercentage;
 
-        heatBar.fillAmount = newHeatPercentage;
-
-        if (newHeatPercentage >= 1)
+        if (HeatPercentage >= 1)
         {
             heatAmount = stats.heatSinkSize;
 
@@ -58,9 +54,9 @@ public struct GunHeatSink
     }
 
     /// <summary>
-    /// Called by GunCore, gives timeSinceLastShot as to check if heatsink may cool down.
-    /// </summary
-    public void UpdateHeatSink(float frameTimeElapsedSinceLastShot, float deltaTime)
+    /// Called by GunCore, gives <paramref name="frameTimeElapsedSinceLastShot"/> as deltaSinceLastShot to later check if heatsink may cool down.
+    /// </summary>
+    public void UpdateHeatSink(float frameTimeElapsedSinceLastShot, float deltaTime, bool isActiveHeatSink)
     {
         timeSinceLastShot += frameTimeElapsedSinceLastShot;
 
@@ -80,7 +76,11 @@ public struct GunHeatSink
             DecayHeat(deltaTime);
         }
 
-        heatBar.fillAmount = heatAmount / stats.heatSinkSize;
+        // Only update UI for active heatsink
+        if (isActiveHeatSink)
+        {
+            heatBar.fillAmount = HeatPercentage;
+        }
     }
 
 

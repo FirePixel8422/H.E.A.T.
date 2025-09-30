@@ -21,6 +21,11 @@ public class PlayerHealthHandler : NetworkBehaviour, IDamagable
         stateMachine = GetComponent<NetworkStateMachine>();
     }
 
+    public void ResetHealth()
+    {
+        cHealth = maxHealth;
+    }
+
 
     #region Take Damage, Update Health and Death
 

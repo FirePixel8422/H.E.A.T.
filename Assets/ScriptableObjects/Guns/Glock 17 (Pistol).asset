@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b0b7c3e06db8a14b87487cb5b20ad5f, type: 3}
-  m_Name: Pistol
+  m_Name: Glock 17 (Pistol)
   m_EditorClassIdentifier: 
   gunPrefab: {fileID: -8254727432609910657, guid: 4fe5b04f823250442b44523f814768fe,
     type: 3}
@@ -200,7 +200,7 @@ MonoBehaviour:
         y: 4
       pullBackDistance:
         x: 1
-        y: 0.5
+        y: 0.25
       pullBackBuildUp:
         x: 25
         y: 12
@@ -215,8 +215,8 @@ MonoBehaviour:
       adsSensitivityMultiplier: 1
       zoomInTime: 0.175
       zoomOutTime: 0.125
-      normalAnimationName: PistolHip
-      zoomAnimationName: PistolADS
+      normalAnimationName: Glock_Hip
+      zoomAnimationName: Glock_ADS
       animLayer: 2
     swayStats:
       movementAmplitude:
@@ -274,9 +274,34 @@ MonoBehaviour:
       heatSinkSize: 1
       heatDecayDelay: 0.5
       heatDecayPower: 0.1
-      heatDecayPowerMultiplier: 1
       overheatDecayDelay: 0.65
       overheatDecayPower: 0.075
-      overheatDecayPowerMultiplier: 1
-      decayMultiplierAtMaxHeat: 10
-  baseAttachments: []
+      heatDecayMultiplierCurve:
+        curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 1
+            inSlope: -0.0042106807
+            outSlope: -0.0042106807
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 1
+          - serializedVersion: 3
+            time: 1
+            value: 0.25
+            inSlope: -2.3229413
+            outSlope: -2.3229413
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0.04048592
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        valueMultiplier: 1
+        sampleCount: 75
+  baseAttachments:
+  - {fileID: 11400000, guid: 418e04dfa63fd9345bc3ae0af4be0014, type: 2}

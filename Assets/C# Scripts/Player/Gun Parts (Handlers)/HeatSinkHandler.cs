@@ -10,12 +10,24 @@ public class HeatSinkHandler
 
     public GunHeatSink[] gunHeatSinks;
 
-    public void Init(int gunCount)
+    public GunHeatSink this[int index]
     {
-        gunHeatSinks = new GunHeatSink[gunCount];
-        for (int i = 0; i < gunCount; i++)
-        {
-            gunHeatSinks[i].Init(heatBar, anim);
-        }
+        get => gunHeatSinks[index];
+        set => gunHeatSinks[index] = value;
+    }
+
+    /// <summary>
+    /// Create and setup heatSink array for every gun through GunManager
+    /// </summary>
+    public void Init()
+    {
+        GunManager.Instance.SetupHeatSinks(out gunHeatSinks, heatBar, anim);
+    }
+
+    public void OnSwapGun(int newGunId)
+    {
+        // Manual update on gun swap of heatBarUI and Animation update
+        heatBar.fillAmount = gunHeatSinks[newGunId].HeatPercentage;
+        anim.SetBool("Overheated", gunHeatSinks[newGunId].Overheated);
     }
 }

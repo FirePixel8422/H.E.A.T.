@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b0b7c3e06db8a14b87487cb5b20ad5f, type: 3}
-  m_Name: AR
+  m_Name: M4A1 (AR)
   m_EditorClassIdentifier: 
   gunPrefab: {fileID: 7472375964016343806, guid: 15660d99b1790df4f82cbaba4ef1a417,
     type: 3}
@@ -263,7 +263,7 @@ MonoBehaviour:
         y: 0.00005
       posSwayMove:
         x: 0.005
-        y: 0.0005
+        y: 0.00025
       eulerSwayMove:
         x: 0.0005
         y: 0
@@ -332,5 +332,5 @@ MonoBehaviour:
         valueMultiplier: 1
         sampleCount: 75
   baseAttachments:
-  - {fileID: 11400000, guid: 8c2600a700342b142bb0a03b8770beed, type: 2}
+  - {fileID: 11400000, guid: 01652b5aac7c3704fa89ca7229c4fb56, type: 2}
   - {fileID: 11400000, guid: 3b12978bb28168442b564b0246add77e, type: 2}
