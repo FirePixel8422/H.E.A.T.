@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f797b4af9a4cd44b9f7d59fefd5754a, type: 3}
+  m_Name: Pistol Scope
+  m_EditorClassIdentifier: Assembly-CSharp::GunScopeSO
+  attachmentPrefab: {fileID: 8085073952584872311, guid: 574a2ae9d66778c4aa0ac4ef011a1df9,
+    type: 3}
+  transformOffset:
+    position: {x: 0, y: 0, z: 0}
+    eulerRotation: {x: 0, y: 0, z: 0}
+  stats:
+    zoomMultiplier:
+      value: 1
+      applyMode: 3

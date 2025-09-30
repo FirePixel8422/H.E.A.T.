@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b0b7c3e06db8a14b87487cb5b20ad5f, type: 3}
   m_Name: Pistol
   m_EditorClassIdentifier: 
-  gunPrefab: {fileID: 5484704871031037484, guid: 4b07b6d66a4e04544bc5f5591b3f340f,
+  gunPrefab: {fileID: -8254727432609910657, guid: 4fe5b04f823250442b44523f814768fe,
     type: 3}
   baseStats:
     coreStats:
@@ -279,3 +279,4 @@ MonoBehaviour:
       overheatDecayPower: 0.075
       overheatDecayPowerMultiplier: 1
       decayMultiplierAtMaxHeat: 10
+  baseAttachments: []

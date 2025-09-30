@@ -71,5 +71,34 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a45202a17dffbd5469527a551c6a64cb,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -8254727432609910657}
   m_SourcePrefab: {fileID: 100100000, guid: a45202a17dffbd5469527a551c6a64cb, type: 3}
+--- !u!1 &230235408476690429 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a45202a17dffbd5469527a551c6a64cb,
+    type: 3}
+  m_PrefabInstance: {fileID: 1148589651006941868}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-8254727432609910657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 230235408476690429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c923460df06e0048a743d98b5dc486a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GunRefHolder
+  emissionRendererObj: {fileID: 1743185055290226216}
+--- !u!23 &1743185055290226216 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: a45202a17dffbd5469527a551c6a64cb,
+    type: 3}
+  m_PrefabInstance: {fileID: 1148589651006941868}
+  m_PrefabAsset: {fileID: 0}
