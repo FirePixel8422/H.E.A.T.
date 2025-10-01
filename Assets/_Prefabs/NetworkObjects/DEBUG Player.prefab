@@ -961,6 +961,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   gunHolder: {fileID: 2654517494388891251}
+  playerColliderMask:
+    serializedVersion: 2
+    m_Bits: 0
   coreStats:
     damage: 0
     headShotMultiplier: 0
@@ -1094,18 +1097,9 @@ MonoBehaviour:
       zoomAnimationName: 
       animLayer: 0
   heatSinkHandler:
-    stats:
-      heatSinkSize: 0
-      heatDecayDelay: 0
-      heatDecayPower: 0
-      heatDecayPowerMultiplier: 0
-      overheatDecayDelay: 0
-      overheatDecayPower: 0
-      overheatDecayPowerMultiplier: 0
-      decayMultiplierAtMaxHeat: 0
     heatBar: {fileID: 2356366298338774540}
     anim: {fileID: 6297763046934028342}
-    heatAmount: 0
+    gunHeatSinks: []
   gunShakeHandler:
     shakeTransform: {fileID: 2654517494388891251}
     stats:
@@ -2895,6 +2889,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8183323876570374502}
     m_Modifications:
+    - target: {fileID: 840134738611709233, guid: c0eb4b36e7e97f24b8ef673c374d8424,
+        type: 3}
+      propertyPath: UITransform
+      value: 
+      objectReference: {fileID: 5947807743304783318}
     - target: {fileID: 3088868075374821422, guid: c0eb4b36e7e97f24b8ef673c374d8424,
         type: 3}
       propertyPath: m_Name

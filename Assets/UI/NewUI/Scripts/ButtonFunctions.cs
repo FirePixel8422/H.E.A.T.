@@ -21,6 +21,9 @@ public class ButtonFunctions : MonoBehaviour
     public GameObject[] previewGunsAttachments;
     int selectedGun;
 
+    [Header("Cameras")]
+    public GameObject[] cameras;
+
     #region MainScreen
     public void GoToLobbyButton()
     {
@@ -148,9 +151,11 @@ public class ButtonFunctions : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
 
-        mainScreens[3].SetActive(true);
+        //mainScreens[3].SetActive(true);
 
-        selectedGun = 0;
-        previewGuns[0].SetActive(true);
+        //selectedGun = 0;
+        //previewGuns[0].SetActive(true);
+        cameras[0].SetActive(false);
+        cameras[1].SetActive(true);
     }
 }
