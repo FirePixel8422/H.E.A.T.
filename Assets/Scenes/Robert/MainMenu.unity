@@ -7508,6 +7508,10 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 489959254}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8539018543373503773, guid: f980bf5a6f282d04a99fc19e39aafad3,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1482415293}
     - targetCorrespondingSourceObject: {fileID: 1792266699183761043, guid: f980bf5a6f282d04a99fc19e39aafad3,
         type: 3}
       insertIndex: -1
@@ -8909,7 +8913,7 @@ MonoBehaviour:
   - {fileID: 80131996}
   animator: {fileID: 1155942012}
   animationWaitTime:
-  - 3.75
+  - 3
   enteredRoomCode: 
   codeInputfield: {fileID: 1264044266}
   codeDisplay: {fileID: 1600020448}
@@ -9040,6 +9044,25 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -1550514412580984892, guid: 10166bd5334fb744a8bbbe85d8b304a2, type: 3}
+--- !u!1 &1482415289 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8539018543373503773, guid: f980bf5a6f282d04a99fc19e39aafad3,
+    type: 3}
+  m_PrefabInstance: {fileID: 1284537747}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1482415293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482415289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29146498f4567554dab5fc400f832f3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EyeLookAtPlayer
+  player: {fileID: 1499776152}
 --- !u!1 &1490257010
 GameObject:
   m_ObjectHideFlags: 0
@@ -9161,6 +9184,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1490257010}
   m_CullTransparentMesh: 1
+--- !u!1 &1499776152 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5910342581198502848, guid: 47d8fd93def297f4fba40f2e726286a6,
+    type: 3}
+  m_PrefabInstance: {fileID: 1930295142}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1521837712
 GameObject:
   m_ObjectHideFlags: 0
@@ -13253,6 +13282,7 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 567968087}
+  - {fileID: 1930295142}
   - {fileID: 986500111}
   - {fileID: 807516578}
   - {fileID: 359933655}
@@ -13264,4 +13294,3 @@ SceneRoots:
   - {fileID: 1718689370}
   - {fileID: 1200625028}
   - {fileID: 1155942011}
-  - {fileID: 1930295142}
