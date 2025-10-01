@@ -14,13 +14,6 @@ public class ButtonFunctions : MonoBehaviour
     public TMP_InputField codeInputfield;
     public TMP_Text codeDisplay;
 
-    [Header("Armory")]
-    public GameObject[] armoryScreens;
-
-    public GameObject[] previewGuns;
-    public GameObject[] previewGunsAttachments;
-    int selectedGun;
-
     [Header("Cameras")]
     public GameObject[] cameras;
 
@@ -104,57 +97,11 @@ public class ButtonFunctions : MonoBehaviour
         mainScreens[1].SetActive(true);
     }
     #endregion
-    #region Armory
-    public void PreviewGunButton(int GunID)
-    {
-        foreach(GameObject gun in previewGuns)
-        {
-            gun.SetActive(false);
-        }
-        previewGuns[GunID].SetActive(true);
-        //previewGuns[GunID]
-
-        selectedGun = GunID;
-    }
-    public void CustomizeButton()
-    {
-        previewGunsAttachments[selectedGun].SetActive(true);
-        armoryScreens[0].SetActive(false);
-        armoryScreens[1].SetActive(true);
-    }
-    public void AttachmentButton()
-    {
-        armoryScreens[2].SetActive(true);
-    }
-    //ALLE BACKBUTTONS HIERONDER
-    public void GoBackFromArmory()
-    {
-        animator.SetInteger("UI", 2);
-
-        mainScreens[3].SetActive(false);
-
-        foreach (GameObject gun in previewGuns)
-        {
-            gun.SetActive(false);
-        }
-    }
-    public void BackToGuns()
-    {
-        previewGunsAttachments[selectedGun].SetActive(false);
-        armoryScreens[2].SetActive(false);
-        armoryScreens[1].SetActive(false);
-        armoryScreens[0].SetActive(true);
-    }
-    #endregion
 
     IEnumerator WaitForArmoryAnim(float time)
     {
         yield return new WaitForSeconds(time);
 
-        //mainScreens[3].SetActive(true);
-
-        //selectedGun = 0;
-        //previewGuns[0].SetActive(true);
         cameras[0].SetActive(false);
         cameras[1].SetActive(true);
     }
