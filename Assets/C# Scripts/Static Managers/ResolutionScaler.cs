@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -16,9 +15,7 @@ public static class ResolutionScaler
     private static void Init()
     {
         urp = (UniversalRenderPipelineAsset)GraphicsSettings.currentRenderPipeline;
-        renderScale = 0.05f;
-
-        urp.renderScale = renderScale;
+        renderScale = urp.renderScale;
     }
 
 
