@@ -667,7 +667,7 @@ PrefabInstance:
     - target: {fileID: 4789634251099623991, guid: 92aeb2aafc84ea3438273074ed221496,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 21.189201
+      value: 18.16
       objectReference: {fileID: 0}
     - target: {fileID: 4789634251099623991, guid: 92aeb2aafc84ea3438273074ed221496,
         type: 3}
@@ -677,7 +677,7 @@ PrefabInstance:
     - target: {fileID: 4789634251099623991, guid: 92aeb2aafc84ea3438273074ed221496,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 19.478027
+      value: 14.65
       objectReference: {fileID: 0}
     - target: {fileID: 4789634251099623991, guid: 92aeb2aafc84ea3438273074ed221496,
         type: 3}
@@ -1012,6 +1012,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Trainingarea
+      objectReference: {fileID: 0}
+    - target: {fileID: 4470650656545422303, guid: f980bf5a6f282d04a99fc19e39aafad3,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.6300001
       objectReference: {fileID: 0}
     - target: {fileID: 5261552690817222892, guid: f980bf5a6f282d04a99fc19e39aafad3,
         type: 3}
