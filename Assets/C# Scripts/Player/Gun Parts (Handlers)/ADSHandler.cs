@@ -14,6 +14,7 @@ public class ADSHandler
 
 
     private CameraHandler camHandler;
+    private PlayerHUDHandler hudHandler;
 
     private float zoomInTransitionValue;
     private bool isZoomingIn;
@@ -24,9 +25,10 @@ public class ADSHandler
     private int zoomAnimationHash;
 
 
-    public void Init(CameraHandler camHandler)
+    public void Init(CameraHandler camHandler, PlayerHUDHandler hudHandler)
     {
         this.camHandler = camHandler;
+        this.hudHandler = hudHandler;
         fovMultiplierCurve.Bake();
     }
 
@@ -71,7 +73,7 @@ public class ADSHandler
             float sensitivityMultiplier = Mathf.Lerp(1, stats.adsSensitivityMultiplier, ZoomedInPercent);
 
             camHandler.SetFOVZoomMultiplier(fovMultiplier, sensitivityMultiplier);
-            PlayerHUD.LocalInstance.SetCrossHairAlpha(1 - zoomInTransitionValue);
+            hudHandler.SetCrossHairAlpha(1 - zoomInTransitionValue);
         }
         prevFovMultiplier = fovMultiplier;
     }

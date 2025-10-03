@@ -2,6 +2,7 @@ using FirePixel.Networking;
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,10 +14,12 @@ public class GunCore : NetworkBehaviour
 
     private GunRefHolder gunRefHolder;
     private PlayerController playerController;
+    private PlayerHUDHandler hudHandler;
     private int gunLayer;
 
     [Header("Data Driven Gun Parts")]
     [SerializeField] private GunCoreStats coreStats;
+    [SerializeField] private GunAudioStats audioStats;
 
     [SerializeField] private NetworkValue<int> currentGunId = new NetworkValue<int>();
     public int CurrentGunId
@@ -38,6 +41,7 @@ public class GunCore : NetworkBehaviour
     [Header("Additional Refs")]
     [SerializeField] private AudioSource gunShotSource;
     [SerializeField] private AudioSource gunOverheatSource;
+    [SerializeField] private AudioSource onHitSource;
 
     private Camera mainCam;
 
@@ -109,7 +113,7 @@ public class GunCore : NetworkBehaviour
     }
 
 #if UNITY_EDITOR
-    private void Start()
+    private void Awake()
     {
         if (overrideIsOwner)
         {
@@ -140,14 +144,15 @@ public class GunCore : NetworkBehaviour
     {
         ManageUpdateCallbacks(true);
 
-        recoilHandler.Init(camHandler);
-        adsHandler.Init(camHandler);
+        playerController = GetComponent<PlayerController>();
+        playerController.Init(camHandler, gunSwayHandler);
+        hudHandler = GetComponent<PlayerHUDHandler>();
+
+        recoilHandler.Init(camHandler, playerController);
+        adsHandler.Init(camHandler, hudHandler);
         gunEmmisionHandler.Init();
         gunShakeHandler.Init();
         heatSinkHandler.Init();
-
-        playerController = GetComponent<PlayerController>();
-        playerController.Init(camHandler, gunSwayHandler);
 
 
 #if UNITY_EDITOR
@@ -183,6 +188,8 @@ public class GunCore : NetworkBehaviour
         {
             child.gameObject.layer = gunLayer;
         }
+
+        heatSinkHandler.OnSwapGun(CurrentGunId);
 
         timeSinceLastShot = coreStats.ShootInterval - 0.25f;
         burstShotTimer = coreStats.burstShotInterval;
@@ -225,12 +232,12 @@ public class GunCore : NetworkBehaviour
         GunManager.Instance.SwapGun(gunHolder, gunId,
             ref gunRefHolder,
             out coreStats,
+            out audioStats,
             out gunShakeHandler.stats,
             out gunSwayHandler.stats,
             out adsHandler.stats);
 
         adsHandler.OnSwapGun();
-        heatSinkHandler.OnSwapGun(CurrentGunId);
         gunSwayHandler.OnSwapGun(gunRefHolder.transform, adsHandler);
         gunEmmisionHandler.OnSwapGun(gunRefHolder.EmissionMatInstance);
     }
@@ -435,6 +442,9 @@ public class GunCore : NetworkBehaviour
                     float damage = coreStats.GetDamageOutput(hit.distance, targetHitBox.IsHeadHitBox);
 
                     targetHitBox.DealDamageToTargetObject(damage, targetHitBox.IsHeadHitBox, hit.point, ray.direction);
+
+                    // On hitting any smart hitBox, play OnHit SFX
+                    onHitSource.PlayOneShotClipWithPitch(audioStats.onHitAudioClip, EzRandom.Range(audioStats.onHitMinMaxPitch));
                 }
 
                 // Deal damage to hit player
@@ -478,7 +488,7 @@ public class GunCore : NetworkBehaviour
 
         if (CurrentHeatSink.Overheated)
         {
-            gunOverheatSource.PlayOneShotClipWithPitch(coreStats.overHeatAudioClip, EzRandom.Range(coreStats.overHeatMinMaxPitch));
+            gunOverheatSource.PlayOneShotClipWithPitch(audioStats.overHeatAudioClip, EzRandom.Range(audioStats.overHeatMinMaxPitch));
         }
 
         // Call shoot method through the server and all clients, except self > call shoot locally
@@ -525,10 +535,9 @@ public class GunCore : NetworkBehaviour
     /// </summary>
     private void ShootEffects(BulletHoleMessage[] bulletHoleMessages)
     {
-        int randomAudioId = EzRandom.Range(0, coreStats.shootAudioClips.Length);
-        float randomPitch = EzRandom.Range(MathLogic.Lerp(coreStats.minMaxPitch, coreStats.minMaxPitchAtMaxHeat, CurrentHeatSink.HeatPercentage));
+        float randomPitch = EzRandom.Range(MathLogic.Lerp(audioStats.minMaxPitch, audioStats.minMaxPitchAtMaxHeat, CurrentHeatSink.HeatPercentage));
 
-        gunShotSource.PlayOneShotClipWithPitch(coreStats.shootAudioClips[randomAudioId], randomPitch);
+        gunShotSource.PlayOneShotClipWithPitch(audioStats.shootAudioClip, randomPitch);
 
         // Create Decal trhough DecalVfxManager
         DecalVfxManager.Instance.RegisterDecal(bulletHoleMessages);

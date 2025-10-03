@@ -8,12 +8,6 @@ using UnityEngine.InputSystem;
 [Tooltip("Controls player movement, jumping, crouchInput, and camera look. Handles Rigidbody physics for movement and gravity. Sends player transforms to the server and synchronizes them with clients.")]
 public class PlayerController : NetworkBehaviour
 {
-#pragma warning disable UDR0001
-    public static PlayerController LocalInstance;
-    public static PlayerController OpponentInstance;
-#pragma warning restore UDR0001
-
-
     #region Movement
 
     [Header("Movement Settings")]
@@ -82,6 +76,7 @@ public class PlayerController : NetworkBehaviour
 
     private GunSwayHandler gunSwayHandler;
     private CameraHandler camHandler;
+    private PlayerHUDHandler hudHandler;
     private Rigidbody rb;
     private NetworkStateMachine stateMachine;
 
@@ -171,26 +166,16 @@ public class PlayerController : NetworkBehaviour
         ManageUpdateCallbacks(true);
 
         Cursor.lockState = CursorLockMode.Locked;
-
-        if (IsOwner == false)
-        {
-            OpponentInstance = this;
-            return;
-        }
-
-        LocalInstance = this;
     }
 
 #if UNITY_EDITOR
-    private void Start()
+    private void Awake()
     {
         if (overrideIsOwner)
         {
             ManageUpdateCallbacks(true);
 
             Cursor.lockState = CursorLockMode.Locked;
-
-            LocalInstance = this;
 
             if (transform.TryGetComponentInChildren(out ClientManager clientManager, true))
             {

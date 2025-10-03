@@ -73,7 +73,7 @@ namespace FirePixel.Networking
                     {
                         // Turn rejoin menu visible and setup rejoin button to call method
                         rejoinMenu.SetActive(true);
-                        rejoinMenu.GetComponentInChildren<Button>().onClick.AddListener(() => RejoinLobbyAsync(lastJoinedLobbyId.Value));
+                        rejoinMenu.GetComponentInChildren<Button>().onClick.AddListener(() => _ = RejoinLobbyAsync(lastJoinedLobbyId.Value));
                     }
                 }
                 catch (LobbyServiceException e)

@@ -9,13 +9,15 @@ using UnityEngine;
 public class RecoilHandler
 {
     private CameraHandler camHandler;
+    private PlayerController playerController;
     private float2 toAddRecoil;
     private float2 recoil;
 
 
-    public void Init(CameraHandler camHandler)
+    public void Init(CameraHandler camHandler, PlayerController playerController)
     {
         this.camHandler = camHandler;
+        this.playerController = playerController;
     }
 
     /// <summary>
@@ -36,7 +38,7 @@ public class RecoilHandler
 
             float recoilRecovery = recoilX - recoil.x;
 
-            PlayerController.LocalInstance.transform.Rotate(Vector3.up * recoilRecovery);
+            playerController.transform.Rotate(Vector3.up * recoilRecovery);
 
             Vector3 toAddEuler = new Vector3(0, -recoilRecovery, 0f);
             camHandler.AddRotationToMain(toAddEuler);

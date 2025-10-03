@@ -90,6 +90,7 @@ public class GunManager : MonoBehaviour
     public void SwapGun(
         Transform gunParentTransform, int gunId, ref GunRefHolder gunRefHolder,
         out GunCoreStats coreStats,
+        out GunAudioStats audioStats,
         out GunShakeStats shakeStats,
         out GunSwayStats swayStats,
         out GunADSStats gunADSStats)
@@ -113,7 +114,7 @@ public class GunManager : MonoBehaviour
             gunRefHolder.SpawnAttachment(globalAttachmentsList[attachmentId]);
         }
 
-        currentGunStats[gunId].GetStatsCopy(out coreStats, out _, out shakeStats, out swayStats, out gunADSStats);
+        currentGunStats[gunId].GetStatsCopy(out coreStats, out audioStats, out _, out shakeStats, out swayStats, out gunADSStats);
     }
 
     public int GetNextGunId() 

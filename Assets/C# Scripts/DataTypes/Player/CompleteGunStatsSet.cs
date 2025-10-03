@@ -5,6 +5,7 @@
 public struct CompleteGunStatsSet
 {
     public GunCoreStats coreStats;
+    public GunAudioStats audioStats;
     public GunShakeStats shakeStats;
     public GunADSStats gunADSStats;
     public GunSwayStats swayStats;
@@ -14,9 +15,10 @@ public struct CompleteGunStatsSet
     /// <summary>
     /// copy all data into input parameter structs
     /// </summary>
-    public void GetStatsCopy(out GunCoreStats coreStats, out HeatSinkStats heatSinkStats, out GunShakeStats shakeStats, out GunSwayStats swayStats, out GunADSStats gunADSStats)
+    public void GetStatsCopy(out GunCoreStats coreStats, out GunAudioStats audioStats, out HeatSinkStats heatSinkStats, out GunShakeStats shakeStats, out GunSwayStats swayStats, out GunADSStats gunADSStats)
     {
         coreStats = this.coreStats;
+        audioStats = this.audioStats;
         swayStats = this.swayStats;
         heatSinkStats = this.heatSinkStats;
         shakeStats = this.shakeStats;

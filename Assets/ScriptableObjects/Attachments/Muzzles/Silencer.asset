@@ -17,6 +17,7 @@ MonoBehaviour:
   transformOffset:
     position: {x: 0, y: 0, z: 0}
     eulerRotation: {x: 0, y: 0, z: 0}
+    scale: {x: 1, y: 1, z: 1}
   stats:
     damage:
       value: 1
@@ -69,3 +70,6 @@ MonoBehaviour:
         min: 1.25
         max: 1.4
       applyMode: 3
+    shootAudioClip:
+      ignoreData: 1
+      data: {fileID: 0}

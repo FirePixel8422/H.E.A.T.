@@ -172,8 +172,8 @@ MonoBehaviour:
       roundsPerMinute: 350
       autoFire: 0
       inputBufferTime: 0.05
-      shootAudioClips:
-      - {fileID: 8300000, guid: 5ff5bd936a30a904da907f35c8dd382e, type: 3}
+    audioStats:
+      shootAudioClip: {fileID: 8300000, guid: 5ff5bd936a30a904da907f35c8dd382e, type: 3}
       minMaxPitch:
         min: 0.7
         max: 0.8
@@ -185,6 +185,10 @@ MonoBehaviour:
       overHeatMinMaxPitch:
         min: 1.25
         max: 1.5
+      onHitAudioClip: {fileID: 8300000, guid: 330f576ffcc8d94479441b2d2f42c8be, type: 3}
+      onHitMinMaxPitch:
+        min: 0.9
+        max: 1.1
     shakeStats:
       shakePitch:
         x: 75
