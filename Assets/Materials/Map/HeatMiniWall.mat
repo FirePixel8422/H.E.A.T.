@@ -23,12 +23,12 @@ Material:
   m_Name: HeatMiniWall
   m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   m_Parent: {fileID: 2100000, guid: 47cccafcd5d26854089eef05f1c6a30c, type: 2}
-  m_ModifiedSerializedProperties: 0
+  m_ModifiedSerializedProperties: 2
   m_ValidKeywords:
   - _EMISSION
   - _NORMALMAP
   m_InvalidKeywords: []
-  m_LightmapFlags: 4
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -41,19 +41,19 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: 063ef23e166ecc24ea2e905a35339c5d, type: 3}
+        m_Texture: {fileID: 2800000, guid: 689423ad6965ab44e92b3b695cb9420c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: 5202a8e8a4852ab49af111556347e428, type: 3}
+        m_Texture: {fileID: 2800000, guid: 52d90fe31c55cc64e9a22a5a37d2929e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
-        m_Texture: {fileID: 2800000, guid: 2965d67fc6a823a44bb21ae184f0d864, type: 3}
+        m_Texture: {fileID: 2800000, guid: cc250bfbcfcd4f74890c8d818878fa38, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 063ef23e166ecc24ea2e905a35339c5d, type: 3}
+        m_Texture: {fileID: 2800000, guid: 689423ad6965ab44e92b3b695cb9420c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -62,9 +62,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Metallic: 0.844
+    - _Metallic: 1
     - _Smoothness: 0
     m_Colors:
-    - _EmissionColor: {r: 5.992156, g: 1.443137, b: 0, a: 1}
+    - _EmissionColor: {r: 11.984313, g: 4.392157, b: 0, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
