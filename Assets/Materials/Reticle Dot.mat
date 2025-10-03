@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Reticle
+  m_Name: Reticle Dot
   m_Shader: {fileID: 4800000, guid: 5de89f0200e298b4d9ba53d262ce1a46, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -62,7 +62,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: f95432161fa78e843b937c1c05706eb5, type: 3}
+        m_Texture: {fileID: 2800000, guid: a71634a26036a3f4bb9bdbdb565ec1b8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
