@@ -2,8 +2,9 @@ using FirePixel.Networking;
 using System.Collections;
 using UnityEngine;
 using TMPro;
+using Unity.Netcode;
 
-public class ButtonFunctions : MonoBehaviour
+public class ButtonFunctions : NetworkBehaviour
 {
     public GameObject[] mainScreens;
     public Animator animator;
@@ -43,10 +44,9 @@ public class ButtonFunctions : MonoBehaviour
     }
     #endregion
     #region LobbyScreens
-    public void CreateRoom()
+    public async void CreateRoom()
     {
-        //LobbyMaker.Instance.CreateLobbyAsync();
-        //codeDisplay.text = LobbyManager.LobbyCode;
+        await LobbyMaker.Instance.CreateLobbyAsync();
 
         mainScreens[1].SetActive(false);
         mainScreens[2].SetActive(true);
@@ -104,5 +104,10 @@ public class ButtonFunctions : MonoBehaviour
 
         cameras[0].SetActive(false);
         cameras[1].SetActive(true);
+    }
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        codeDisplay.text = LobbyManager.LobbyCode;
     }
 }

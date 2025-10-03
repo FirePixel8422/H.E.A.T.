@@ -7,6 +7,16 @@ PresetManager:
   m_DefaultPresets:
   - first:
       m_NativeTypeID: 114
+      m_ManagedTypePPtr: {fileID: 11500000, guid: f13e65a519b0ff4478f798fc453ff21d,
+        type: 3}
+      m_ManagedTypeFallback: 
+    second:
+    - m_Preset: {fileID: 2655988077585873504, guid: 669b31ddd9a0cbd4c9405133cddf2289,
+        type: 2}
+      m_Filter: 
+      m_Disabled: 0
+  - first:
+      m_NativeTypeID: 114
       m_ManagedTypePPtr: {fileID: 11500000, guid: 663c0877b5e9a7b4fb81f26a9b388e11,
         type: 3}
       m_ManagedTypeFallback: 

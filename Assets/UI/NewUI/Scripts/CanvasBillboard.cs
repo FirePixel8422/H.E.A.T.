@@ -2,13 +2,7 @@ using UnityEngine;
 
 public class CanvasBillboard : MonoBehaviour
 {
-    private Camera mainCamera;
-
-    void Start()
-    {
-        // Get the main camera in the scene
-        mainCamera = Camera.main;
-    }
+    public Camera mainCamera;
 
     void LateUpdate()
     {
