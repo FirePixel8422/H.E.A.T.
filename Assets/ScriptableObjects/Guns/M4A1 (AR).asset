@@ -196,7 +196,7 @@ MonoBehaviour:
         valueMultiplier: 0.1
         sampleCount: 50
       stabilityLoss: 1
-      stabilityRecovery: 6
+      stabilityRecovery: 10
       roundsPerMinute: 600
       autoFire: 1
       inputBufferTime: 0
@@ -304,10 +304,10 @@ MonoBehaviour:
         sampleCount: 50
     heatSinkStats:
       heatSinkSize: 1
-      heatDecayDelay: 0.25
+      heatDecayDelay: 0.5
       heatDecayPower: 0.5
       overheatDecayDelay: 0.65
-      overheatDecayPower: 0.6
+      overheatDecayPower: 0.4
       heatDecayMultiplierCurve:
         curve:
           serializedVersion: 2
@@ -315,20 +315,20 @@ MonoBehaviour:
           - serializedVersion: 3
             time: 0
             value: 1
-            inSlope: -0.0042106807
-            outSlope: -0.0042106807
+            inSlope: -0.22375774
+            outSlope: -0.22375774
             tangentMode: 0
             weightedMode: 0
             inWeight: 0
-            outWeight: 1
+            outWeight: 0.067813754
           - serializedVersion: 3
             time: 1
-            value: 0.25
-            inSlope: -2.3229413
-            outSlope: -2.3229413
+            value: 0.1
+            inSlope: -2.0301332
+            outSlope: -2.0301332
             tangentMode: 0
             weightedMode: 0
-            inWeight: 0.04048592
+            inWeight: 0.05465597
             outWeight: 0
           m_PreInfinity: 2
           m_PostInfinity: 2

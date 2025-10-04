@@ -208,7 +208,7 @@ MonoBehaviour:
         valueMultiplier: 0.15
         sampleCount: 50
       stabilityLoss: 1
-      stabilityRecovery: 6
+      stabilityRecovery: 10
       roundsPerMinute: 1100
       autoFire: 1
       inputBufferTime: 0

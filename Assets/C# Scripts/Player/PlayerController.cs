@@ -133,6 +133,8 @@ public class PlayerController : NetworkBehaviour
 
         float sensitivityMultiplier = mouseSensitivity * camHandler.GetADSSensitivityMultiplier();
 
+        hudHandler.AddCrossHairInstability(Vector2.Distance(mouseInput, Vector2.zero) * sensitivityMultiplier);
+
         // Actual rotation
         camHandler.MainCamLocalEulerPitch += -mouseInput.y * sensitivityMultiplier;
         transform.Rotate(Vector3.up, mouseInput.x * sensitivityMultiplier);
@@ -154,6 +156,7 @@ public class PlayerController : NetworkBehaviour
         this.camHandler = camHandler;
         this.gunSwayHandler = gunSwayHandler;
 
+        hudHandler = GetComponent<PlayerHUDHandler>();
         rb = GetComponent<Rigidbody>();
         stateMachine = GetComponent<NetworkStateMachine>();
 
@@ -234,6 +237,8 @@ public class PlayerController : NetworkBehaviour
         float targetSpeedChangePower = IsGrounded ? steerPower : midAirSteerPower;
 
         rb.linearVelocity = VectorLogic.InstantMoveTowards(rb.linearVelocity, targetForwardVelocity, targetSpeedChangePower * Time.fixedDeltaTime);
+
+        hudHandler.AddCrossHairInstability(Vector3.Distance(targetForwardVelocity, Vector3.zero));
 
         // If player is falling
         if (rbVelocityY < 0)

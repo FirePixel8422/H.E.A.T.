@@ -11,9 +11,16 @@ public class PlayerHealthHandler : NetworkBehaviour, IDamagable
 
     private NetworkStateMachine stateMachine;
 
-    public Action OnDeathEvent { get; private set; }
-    public static Action<float, HitTypeResult> OnDamageRecieved { get; private set; }
-    public static Action<float, HitTypeResult> OnDamageDealt { get; private set; }
+#pragma warning disable UDR0001
+    /// <summary>
+    /// Called when local player takes damage
+    /// </summary>
+    public static Action<float, HitTypeResult> OnDamageRecieved;
+    /// <summary>
+    /// Called when local player deals damage to another player
+    /// </summary>
+    public static Action<float, HitTypeResult> OnDamageDealt;
+#pragma warning restore UDR0001
 
 
     public override void OnNetworkSpawn()
@@ -37,8 +44,8 @@ public class PlayerHealthHandler : NetworkBehaviour, IDamagable
         bool dead = RecieveDamage(damage);
 
         HitTypeResult hitType = CalculateHitType(headShot, dead);
-        
-        OnDamageDealt?.Invoke(damage, hitType);
+
+        OnDamageDealt?.Invoke(damage / maxHealth, hitType);
 
         if (dead)
         {
@@ -73,7 +80,7 @@ public class PlayerHealthHandler : NetworkBehaviour, IDamagable
 
         RecieveDamage(damage);
 
-        OnDamageRecieved?.Invoke(damage, hitType);
+        OnDamageRecieved?.Invoke(damage / maxHealth, hitType);
     }
 
     private bool RecieveDamage(float damage)
@@ -105,8 +112,6 @@ public class PlayerHealthHandler : NetworkBehaviour, IDamagable
     [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     private void OnDeath_ServerRPC(GameIdRPCTargets rpcTargets, ulong deadClientNetworkId)
     {
-        OnDeathEvent?.Invoke();
-
         OnDeath_ClientRPC(rpcTargets);
 
         NetworkObject.Despawn(gameObject);

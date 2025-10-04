@@ -434,7 +434,7 @@ public class GunCore : NetworkBehaviour
 
             Vector3 rayDirWithSpread = math.normalize(ray.direction + gunRight * spreadOffset.x + gunUp * spreadOffset.y);
 
-            // Shoot an invisble sphere to detect a hit
+            // Shoot an invisble sphere to detect potential a hit
             if (Physics.SphereCast(ray.origin, coreStats.bulletSize, rayDirWithSpread, out RaycastHit hit, math.INFINITY, playerColliderMask, QueryTriggerInteraction.Collide))
             {
                 if (hit.transform.TryGetComponent(out SmartHitBox targetHitBox))
@@ -446,6 +446,8 @@ public class GunCore : NetworkBehaviour
                     // On hitting any smart hitBox, play OnHit SFX
                     onHitSource.PlayOneShotClipWithPitch(audioStats.onHitAudioClip, EzRandom.Range(audioStats.onHitMinMaxPitch));
                 }
+
+                hudHandler.AddCrossHairInstability(math.distance(spreadOffset, float2.zero) * 500);
 
                 // Deal damage to hit player
                 DEBUG_damageThisShot += coreStats.GetDamageOutput(hit.distance, false);

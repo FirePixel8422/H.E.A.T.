@@ -8,4 +8,5 @@
 public static class GlobalGameSettings
 {
     public const int MaxPlayers = 2;
+    public const int HotBarSlotCount = 4;
 }
