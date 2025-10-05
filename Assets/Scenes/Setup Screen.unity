@@ -303,7 +303,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startScreenSceneName: Setup Screen
-  mainMenuSceneName: Main Menu
+  mainMenuSceneName: MainMenu
 --- !u!4 &652473534
 Transform:
   m_ObjectHideFlags: 0

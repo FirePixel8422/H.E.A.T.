@@ -15,8 +15,9 @@ public class ButtonFunctions : NetworkBehaviour
     public TMP_InputField codeInputfield;
     public TMP_Text codeDisplay;
 
-    [Header("Cameras")]
-    public GameObject[] cameras;
+    [Header("Camera Objects")]
+    public GameObject cineMachineCam;
+    public GameObject armoryPlayer;
 
     #region MainScreen
     public void GoToLobbyButton()
@@ -43,6 +44,8 @@ public class ButtonFunctions : NetworkBehaviour
         Application.Quit();
     }
     #endregion
+
+
     #region LobbyScreens
     public async void CreateRoom()
     {
@@ -98,12 +101,12 @@ public class ButtonFunctions : NetworkBehaviour
     }
     #endregion
 
-    IEnumerator WaitForArmoryAnim(float time)
+    private IEnumerator WaitForArmoryAnim(float time)
     {
         yield return new WaitForSeconds(time);
 
-        cameras[0].SetActive(false);
-        cameras[1].SetActive(true);
+        cineMachineCam.SetActive(false);
+        armoryPlayer.SetActive(true);
     }
     public override void OnNetworkSpawn()
     {

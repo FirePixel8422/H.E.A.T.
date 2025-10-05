@@ -74,6 +74,9 @@ public class PlayerController : NetworkBehaviour
     [Header("Normal Sensitivity (Non ADS)")]
     [SerializeField] private float mouseSensitivity = 1;
 
+    [Header("Allow this script to be used outside of network environment")]
+    [SerializeField] private bool overrideIsOwner;
+
     private GunSwayHandler gunSwayHandler;
     private CameraHandler camHandler;
     private PlayerHUDHandler hudHandler;
@@ -323,9 +326,9 @@ public class PlayerController : NetworkBehaviour
         base.OnDestroy();
     }
 
+    
 
 #if UNITY_EDITOR
-    [SerializeField] private bool overrideIsOwner;
 
     private void OnDrawGizmos()
     {

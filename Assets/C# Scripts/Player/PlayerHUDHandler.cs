@@ -54,6 +54,9 @@ public class PlayerHUDHandler : NetworkBehaviour
 
     #endregion
 
+    [Header("Allow this script to be used outside of network environment")]
+    [SerializeField] private bool overrideIsOwner;
+
 
     private float timeSinceLastHitMarker;
     private bool damageDealtThisFrame;
@@ -73,7 +76,11 @@ public class PlayerHUDHandler : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+#if UNITY_EDITOR
+        if (IsOwner || overrideIsOwner)
+#else
         if (IsOwner)
+#endif
         {
             crossHairColor = crossHairPlus.color;
 
@@ -261,7 +268,6 @@ public class PlayerHUDHandler : NetworkBehaviour
         {
             crossHairPlus.color = crossHairColor;
         }
-
 
         if (crossHairLines[0] != null)
         {

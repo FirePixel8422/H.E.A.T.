@@ -33,6 +33,7 @@ namespace FirePixel.Networking
         [SerializeField] private GameObject rejoinMenu;
 
         [SerializeField] private float lobbySearchInterval = 3;
+        [SerializeField] private bool instaLoadSceneOnHost = true;
 
         private CancellationTokenSource lobbySearchCts;
         private bool inSearchLobbyScreen = false;
@@ -180,10 +181,9 @@ namespace FirePixel.Networking
 
                 NetworkManager.Singleton.StartHost();
 
-                if (string.IsNullOrEmpty(nextSceneName) == false)
+                if (instaLoadSceneOnHost)
                 {
-                    // Load next scene through network, so all joining clients will also load it automatically
-                    SceneManager.LoadSceneOnNetwork_OnServer(nextSceneName);
+                    LoadNextScene();
                 }
 
                 return true;
@@ -195,6 +195,15 @@ namespace FirePixel.Networking
                 DebugLogger.Log(e.ToString());
 
                 return false;
+            }
+        }
+
+        public void LoadNextScene()
+        {
+            if (string.IsNullOrEmpty(nextSceneName) == false)
+            {
+                // Load next scene through network, so all joining clients will also load it automatically
+                SceneManager.LoadSceneOnNetwork_OnServer(nextSceneName);
             }
         }
 

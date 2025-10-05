@@ -327,4 +327,17 @@ public static class ExtensionMethods
     {
         target = value;
     }
+
+    /// <summary>
+    /// Randomly shuffles the content of the array in place using Fisher–Yates.
+    /// </summary>
+    public static void Shuffle<T>(this T[] targetArray)
+    {
+        int n = targetArray.Length;
+        for (int i = 0; i < n - 1; i++)
+        {
+            int j = UnityEngine.Random.Range(i, n);
+            (targetArray[i], targetArray[j]) = (targetArray[j], targetArray[i]);
+        }
+    }
 }

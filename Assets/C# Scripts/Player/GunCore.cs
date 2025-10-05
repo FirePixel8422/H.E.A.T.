@@ -1,8 +1,9 @@
 using FirePixel.Networking;
+using System;
+using System.Collections;
 using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,6 +16,7 @@ public class GunCore : NetworkBehaviour
     private GunRefHolder gunRefHolder;
     private PlayerController playerController;
     private PlayerHUDHandler hudHandler;
+    private Animator anim;
     private int gunLayer;
 
     [Header("Data Driven Gun Parts")]
@@ -42,6 +44,9 @@ public class GunCore : NetworkBehaviour
     [SerializeField] private AudioSource gunShotSource;
     [SerializeField] private AudioSource gunOverheatSource;
     [SerializeField] private AudioSource onHitSource;
+
+    [Header("Allow this script to be used outside of network environment")]
+    [SerializeField] private bool overrideIsOwner;
 
     private Camera mainCam;
 
@@ -147,9 +152,10 @@ public class GunCore : NetworkBehaviour
         playerController = GetComponent<PlayerController>();
         playerController.Init(camHandler, gunSwayHandler);
         hudHandler = GetComponent<PlayerHUDHandler>();
+        anim = GetComponent<Animator>();
 
         recoilHandler.Init(camHandler, playerController);
-        adsHandler.Init(camHandler, hudHandler);
+        adsHandler.Init(anim, camHandler, hudHandler);
         gunEmmisionHandler.Init();
         gunShakeHandler.Init();
         heatSinkHandler.Init();
@@ -237,9 +243,23 @@ public class GunCore : NetworkBehaviour
             out gunSwayHandler.stats,
             out adsHandler.stats);
 
-        adsHandler.OnSwapGun();
         gunSwayHandler.OnSwapGun(gunRefHolder.transform, adsHandler);
         gunEmmisionHandler.OnSwapGun(gunRefHolder.EmissionMatInstance);
+
+        // adsHandler.OnSwapGun is called too fast on players with overrideIsOwner on in non network scenes
+        if (overrideIsOwner)
+        {
+            StartCoroutine(InvokeDelayed(adsHandler.OnSwapGun, 0.01f));
+        }
+        else
+        {
+            adsHandler.OnSwapGun();
+        }
+    }
+    private IEnumerator InvokeDelayed(Action action, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        action?.Invoke();
     }
 
     #endregion
@@ -557,11 +577,4 @@ public class GunCore : NetworkBehaviour
 
         base.OnDestroy();
     }
-
-
-
-
-#if UNITY_EDITOR
-    [SerializeField] private bool overrideIsOwner;
-#endif
 }

@@ -7,12 +7,12 @@ public class ADSHandler
     [Header("Maps Scope Multpliers (Time, X1 X2 X4) to a FOV Multiplier (Value)")]
     [SerializeField] private NativeSampledAnimationCurve fovMultiplierCurve = NativeSampledAnimationCurve.Default;
 
-    [SerializeField] private Animator anim;
 
     public GunADSStats stats;
     public float ZoomedInPercent => zoomInTransitionValue / stats.zoomMultiplier;
 
 
+    private Animator anim;
     private CameraHandler camHandler;
     private PlayerHUDHandler hudHandler;
 
@@ -25,8 +25,9 @@ public class ADSHandler
     private int zoomAnimationHash;
 
 
-    public void Init(CameraHandler camHandler, PlayerHUDHandler hudHandler)
+    public void Init(Animator anim, CameraHandler camHandler, PlayerHUDHandler hudHandler)
     {
+        this.anim = anim;
         this.camHandler = camHandler;
         this.hudHandler = hudHandler;
         fovMultiplierCurve.Bake();
