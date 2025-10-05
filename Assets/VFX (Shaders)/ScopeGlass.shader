@@ -2,12 +2,13 @@
 {
     Properties
     {
-        _BaseColor("Base Color", Color) = (1,1,1,0) // fully transparent
+        _BaseColor("Base Color", Color) = (1,1,1,0)
     }
 
     SubShader
     {
-        Tags { 
+        Tags 
+        { 
             "RenderPipeline" = "UniversalPipeline" 
             "Queue" = "Transparent" 
             "RenderType" = "Transparent" 
@@ -61,7 +62,7 @@
 
             half4 frag(Varyings IN) : SV_Target
             {
-                return _BaseColor; // fully transparent color
+                return _BaseColor;
             }
 
             ENDHLSL
