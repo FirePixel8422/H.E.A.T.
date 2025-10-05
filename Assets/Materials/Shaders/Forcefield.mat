@@ -77,6 +77,7 @@ Material:
     - _CastShadows: 0
     - _Cull: 1
     - _DstBlend: 1
+    - _DstBlendAlpha: 1
     - _Fresnel: 0
     - _FresnelPower: 0
     - _InnerAlpha: 0
@@ -85,6 +86,7 @@ Material:
     - _ReceiveShadows: 1
     - _Scanlines: 1
     - _SrcBlend: 1
+    - _SrcBlendAlpha: 1
     - _Surface: 1
     - _UV: 5
     - _UVOffset: 0
