@@ -1,5 +1,6 @@
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 
 namespace FirePixel.Networking
@@ -14,6 +15,14 @@ namespace FirePixel.Networking
 
 
         public override void OnNetworkSpawn()
+        {
+            NetworkManager.SceneManager.OnLoadEventCompleted += (_, _, _, _) => TryRequestLocalPlayerSpawn();
+        }
+
+        /// <summary>
+        /// Send a request to the server to spawn a player, which it will if there are spawnpoints in the scene
+        /// </summary>
+        public void TryRequestLocalPlayerSpawn()
         {
             if (IsServer)
             {

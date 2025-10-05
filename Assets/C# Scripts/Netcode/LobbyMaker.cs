@@ -205,6 +205,8 @@ namespace FirePixel.Networking
                 // Load next scene through network, so all joining clients will also load it automatically
                 SceneManager.LoadSceneOnNetwork_OnServer(nextSceneName);
             }
+
+            DebugLogger.LogError("Error scene name is invalid", string.IsNullOrEmpty(nextSceneName));
         }
 
 

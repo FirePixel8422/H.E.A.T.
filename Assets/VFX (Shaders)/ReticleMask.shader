@@ -33,8 +33,13 @@ Shader "Custom/ReticleMask_URP_LitHDR"
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #pragma multi_compile_instancing
             #pragma multi_compile_fog
+            #pragma multi_compile_instancing
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
+            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHTS _ADDITIONAL_LIGHTS_VERTEX
+            #pragma multi_compile_fragment _ _LIGHT_LAYERS
+            #pragma multi_compile_fragment _ _RECEIVE_SHADOWS_OFF _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
+            #pragma multi_compile_fragment _ _SURFACE_TYPE_TRANSPARENT _ALPHATEST_ON _ALPHAPREMULTIPLY_ON _ALPHAMODULATE_ON _EMISSION
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
@@ -76,18 +81,16 @@ Shader "Custom/ReticleMask_URP_LitHDR"
 
             inline half Brightness(half3 c)
             {
-                return dot(c, half3(0.3333, 0.3333, 0.3333));
+                return dot(c, half3(0.3333,0.3333,0.3333));
             }
 
             float4 frag(Varyings IN) : SV_Target
             {
                 UNITY_SETUP_INSTANCE_ID(IN);
                 half4 texCol = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, IN.uv);
-
                 half3 baseColor = texCol.rgb * _BaseColor.rgb;
 
                 half alpha = (_UseTextureAlpha > 0.5) ? texCol.a * _BaseColor.a : Brightness(texCol.rgb) * _BaseColor.a;
-
                 clip(alpha - 0.001);
 
                 Light mainLight = GetMainLight();
@@ -103,5 +106,5 @@ Shader "Custom/ReticleMask_URP_LitHDR"
         }
     }
 
-    FallBack "Universal Render Pipeline/Lit"
+    FallBack Off
 }

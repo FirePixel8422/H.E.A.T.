@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 
 
@@ -16,6 +17,7 @@ public class SpawnPointHandler : MonoBehaviour
 
 
     [SerializeField] private Transform[] spawnPoints;
+    [SerializeField] private bool pinToGround;
 
 
     // Get playerCount Random SpawnsPoints in a random order of current scene
@@ -50,5 +52,45 @@ public class SpawnPointHandler : MonoBehaviour
         }
 
         return (true, positions, rotations);
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        foreach (Transform t in transform)
+        {
+            if (spawnPoints.Contains(t) == false)
+            {
+                Array.Resize(ref spawnPoints, spawnPoints.Length + 1);
+                spawnPoints[^1] = t;
+            }
+        }
+
+        int spawnPointCount = spawnPoints.Length;
+        for (int i = 0; i < spawnPointCount; i++)
+        {
+            if (spawnPoints[i] == null) continue;
+
+            spawnPoints[i].gameObject.name = "SpawnPoint " + (i + 1).ToString();
+
+            if (pinToGround)
+            {
+                if (Physics.SphereCast(spawnPoints[i].position + Vector3.up * 1f, 0.25f, Vector3.down, out RaycastHit hit))
+                {
+                    Vector3 pos = spawnPoints[i].position;
+                    pos.y = hit.point.y;
+
+                    spawnPoints[i].position = pos;
+                }
+            }
+
+            float smallCubeSize = 0.5f;
+
+            Gizmos.color = Color.white;
+            Gizmos.DrawWireCube(spawnPoints[i].position + Vector3.up * smallCubeSize, Vector3.one);
+            
+            Gizmos.color = new Color(0.25f, 1, 0.25f);
+            Gizmos.DrawWireCube(spawnPoints[i].position + spawnPoints[i].forward + Vector3.up * smallCubeSize, Vector3.one * smallCubeSize);
+        }
     }
 }

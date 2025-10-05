@@ -44,9 +44,9 @@ namespace FirePixel.Networking
             amountOfPlayersInLobby = textFields[2];
         }
 
-        public void JoinLobby()
+        public async void JoinLobby()
         {
-            LobbyMaker.Instance.JoinLobbyByIdAsync(lobbyId);
+            await LobbyMaker.Instance.JoinLobbyByIdAsync(lobbyId);
         }
     }
 }
