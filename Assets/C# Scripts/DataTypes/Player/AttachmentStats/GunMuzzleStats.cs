@@ -17,11 +17,10 @@ public class GunMuzzleStats : IGunAtachment
 
     [SerializeField] private SmartAttributeFloat maxEffectiveRange = new(1, ApplyMode.Skip);
 
-    [SerializeField] private FilterableContainer<AudioClip[]> shootAudioClips = new(false);
+    [SerializeField] private FilterableContainer<AudioClip> shootAudioClip = new(true);
     [SerializeField] private SmartAttributeMinMaxFloat minMaxPitch = new(new MinMaxFloat(1, 1), ApplyMode.Override);
     [SerializeField] private SmartAttributeMinMaxFloat minMaxPitchAtMaxHeat = new(new MinMaxFloat(1, 1), ApplyMode.Override);
 
-    [SerializeField] private FilterableContainer<AudioClip> shootAudioClip = new(true);
 
 
     public void ApplyToBaseStats(ref CompleteGunStatsSet gunStatsSet)

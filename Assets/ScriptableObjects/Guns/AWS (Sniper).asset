@@ -18,7 +18,7 @@ MonoBehaviour:
     coreStats:
       damage: 140
       headShotMultiplier: 2
-      maxEffectiveRange: 35
+      maxEffectiveRange: 60
       damageFallOffCurve:
         curve:
           serializedVersion: 2
@@ -151,7 +151,7 @@ MonoBehaviour:
         sampleCount: 3
       stabilityLoss: 1
       stabilityRecovery: 1
-      roundsPerMinute: 45
+      roundsPerMinute: 50
       autoFire: 0
       inputBufferTime: 0.15
     audioStats:
@@ -169,8 +169,16 @@ MonoBehaviour:
         max: 0.8
       onHitAudioClip: {fileID: 8300000, guid: 330f576ffcc8d94479441b2d2f42c8be, type: 3}
       onHitMinMaxPitch:
-        min: 0.9
+        min: 3
+        max: 3.5
+      onCritAudioClip: {fileID: 8300000, guid: 330f576ffcc8d94479441b2d2f42c8be, type: 3}
+      onCritMinMaxPitch:
+        min: 1
         max: 1.1
+      onKillAudioClip: {fileID: 8300000, guid: 5b2d6e7658842e1458a1884be4ff7210, type: 3}
+      onKillMinMaxPitch:
+        min: 1.25
+        max: 1.4
     shakeStats:
       shakePitch:
         x: 110

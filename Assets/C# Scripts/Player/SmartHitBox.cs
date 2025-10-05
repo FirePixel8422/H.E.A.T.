@@ -5,24 +5,26 @@
 public class SmartHitBox : SurfaceTypeIdentifier
 {
     [Header("IDamagable Object that this collider is part of\nLeave empty to auto find in parent")]
-    [SerializeField] private IDamagable targetObject;
+    [SerializeField] private IDamagable target;
+    public IDamagable Target => target;
+
     [SerializeField] private bool isHeadHitBox;
     public bool IsHeadHitBox => isHeadHitBox;
 
 
     private void Awake()
     {
-        if (targetObject == null)
+        if (target == null)
         {
-            targetObject = transform.GetComponentInParent<IDamagable>(true);
+            target = transform.GetComponentInParent<IDamagable>(true);
 
-            DebugLogger.LogError(gameObject + " has no targetObject for IDamagable", targetObject == null);
+            DebugLogger.LogError(gameObject + " has no targetObject for IDamagable", target == null);
         }
     }
 
 
-    public void DealDamageToTargetObject(float damage, bool headShot, Vector3 hitPoint, Vector3 hitDir)
+    public void DealDamageToTargetObject(float damage, bool headShot, Vector3 hitPoint, Vector3 hitDir, out HitTypeResult hitTypeResult)
     {
-        targetObject.DealDamage(damage, headShot, hitPoint, hitDir);
+        target.DealDamage(damage, headShot, hitPoint, hitDir, out hitTypeResult);
     }
 }

@@ -174,7 +174,6 @@ public class PlayerController : NetworkBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
-#if UNITY_EDITOR
     private void Awake()
     {
         if (overrideIsOwner)
@@ -190,7 +189,6 @@ public class PlayerController : NetworkBehaviour
             }
         }
     }
-#endif
 
     private bool registeredForUpdates = false;
     private void ManageUpdateCallbacks(bool register)

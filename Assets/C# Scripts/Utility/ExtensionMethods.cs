@@ -304,7 +304,7 @@ public static class ExtensionMethods
     }
 
     /// <summary>
-    /// Get PlayerGameId through ClintManager using OwnerClientId.
+    /// Get PlayerGameId through ClientManager using OwnerClientId.
     /// </summary>
     public static int GetOwnerClientGameId(this NetworkObject networkObj)
     {

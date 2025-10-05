@@ -826,7 +826,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 1
-  jumpForce: 3
+  jumpForce: 4.5
   fallGravityMultiplier: 5
   groundCheckRadius: 0.05
   mouseSensitivity: 0.1
@@ -878,6 +878,7 @@ MonoBehaviour:
     min: 35
     max: 150
   crossHairAnimationPower: 0.015
+  maxCrossHairOffset: 100
   crossHairStabilizeSpeed: 7.5
   hitMarkers:
   - {fileID: 3721984083211523294}
@@ -896,9 +897,10 @@ MonoBehaviour:
   hitMarkerOffsetMinMax:
     min: 50
     max: 100
-  hitMarkerAnimationPower: 0.05
-  hitMarkerDuration: 0.1
-  hitMarkerFadeTime: 0.1
+  hitMarkerAnimationPower: 10
+  maxHitMarkersOffset: 2.25
+  hitMarkerDuration: 0.25
+  hitMarkerFadeTime: 0.25
   hitMarkerStabilizeSpeed: 5
   crossHairColor: {r: 1, g: 1, b: 1, a: 1}
   hitMarkerColor: {r: 1, g: 1, b: 1, a: 1}
@@ -1855,7 +1857,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 951
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -2483,6 +2485,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: MatchManagement (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5287381020941622744, guid: c0eb4b36e7e97f24b8ef673c374d8424,
+        type: 3}
+      propertyPath: instaLoadSceneOnHost
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6343942968702181189, guid: c0eb4b36e7e97f24b8ef673c374d8424,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2532,6 +2539,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8116700478484987294, guid: c0eb4b36e7e97f24b8ef673c374d8424,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 4092382242
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8116700478484987294, guid: c0eb4b36e7e97f24b8ef673c374d8424, type: 3}

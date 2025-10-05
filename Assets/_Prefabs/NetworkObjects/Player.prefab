@@ -1650,7 +1650,6 @@ MonoBehaviour:
         m_RotationOrder: 4
       valueMultiplier: 1
       sampleCount: 125
-    anim: {fileID: 5199238681142820621}
     stats:
       zoomMultiplier: 0
       adsSensitivityMultiplier: 0
@@ -2083,6 +2082,7 @@ MonoBehaviour:
     min: 35
     max: 150
   crossHairAnimationPower: 0.015
+  maxCrossHairOffset: 100
   crossHairStabilizeSpeed: 7.5
   hitMarkers:
   - {fileID: 838124315075925127}
@@ -2101,9 +2101,10 @@ MonoBehaviour:
   hitMarkerOffsetMinMax:
     min: 50
     max: 100
-  hitMarkerAnimationPower: 0.05
-  hitMarkerDuration: 0.1
-  hitMarkerFadeTime: 0.1
+  hitMarkerAnimationPower: 10
+  maxHitMarkersOffset: 2.25
+  hitMarkerDuration: 0.25
+  hitMarkerFadeTime: 0.25
   hitMarkerStabilizeSpeed: 5
   crossHairColor: {r: 1, g: 1, b: 1, a: 1}
   hitMarkerColor: {r: 1, g: 1, b: 1, a: 1}
@@ -2130,6 +2131,7 @@ MonoBehaviour:
   slotOnCooldownColor: {r: 0, g: 0, b: 0, a: 0}
   selectedHotbarSlotId: 0
   secondaryWeaponEquipped: 0
+  overrideIsOwner: 0
   debugToHitDamage: 15
 --- !u!114 &7952861885439663320
 MonoBehaviour:
@@ -2631,9 +2633,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.4
-  m_Height: 1.6733516
+  m_Height: 1.8965575
   m_Direction: 1
-  m_Center: {x: 0, y: -0.16332267, z: 0}
+  m_Center: {x: 0, y: -0.05171916, z: 0}
 --- !u!114 &565309858643194221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3539,9 +3541,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.4
-  m_Height: 1.2416576
+  m_Height: 0.924747
   m_Direction: 1
-  m_Center: {x: 0, y: 0.006172867, z: 0}
+  m_Center: {x: 0, y: 0.1646277, z: 0}
 --- !u!114 &3746075179224828511
 MonoBehaviour:
   m_ObjectHideFlags: 0

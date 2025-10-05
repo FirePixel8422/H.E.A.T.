@@ -117,7 +117,6 @@ public class GunCore : NetworkBehaviour
         ManageUpdateCallbacks(true);
     }
 
-#if UNITY_EDITOR
     private void Awake()
     {
         if (overrideIsOwner)
@@ -126,7 +125,7 @@ public class GunCore : NetworkBehaviour
             ManageUpdateCallbacks(true);
         }
     }
-#endif
+
 
     private bool registeredForUpdates = false;
     private void ManageUpdateCallbacks(bool register)
@@ -282,8 +281,6 @@ public class GunCore : NetworkBehaviour
         // TEMP
 
 
-
-
         bool shotThisFrame = false;
         float adsPercentage = adsHandler.ZoomedInPercent;
         float deltaTime = Time.deltaTime;
@@ -417,29 +414,14 @@ public class GunCore : NetworkBehaviour
     {
         gunShakeHandler.AddShake(coreStats.ShootInterval, adsPercentage);
 
-        //float2 recoil = new float2(0, coreStats.GetHipFireRecoil(shootingIntensity));
         float2 recoil = coreStats.GetRecoil(adsPercentage);
         StartCoroutine(recoilHandler.AddRecoil(recoil, coreStats.ShootInterval));
 
+        float2 spreadOffset = RandomPointInCircle(coreStats.GetSpread(adsPercentage));
+
         CurrentHeatSink.AddHeat(coreStats.heatPerShot);
 
-        Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
-
-        // To Gun Local Space
-        Vector3 localOrigin = gunRefHolder.transform.InverseTransformPoint(ray.origin);
-        Vector3 localDir = gunRefHolder.transform.InverseTransformDirection(ray.direction);
-
-        // Offset
-        Vector3 targetOrigin = localOrigin + gunShakeHandler.ShakeTransform.localPosition + gunRefHolder.transform.localPosition;
-        Vector3 targetDir = gunShakeHandler.ShakeTransform.localRotation * gunRefHolder.transform.localRotation * localDir;
-
-        // Ads/Hip Lerp
-        localOrigin = Vector3.Lerp(localOrigin, targetOrigin, adsPercentage);
-        localDir = Vector3.Lerp(localDir, targetDir.normalized, adsPercentage);
-
-        // Assign
-        ray.origin = gunRefHolder.transform.TransformPoint(localOrigin);
-        ray.direction = gunRefHolder.transform.TransformDirection(localDir).normalized;
+        Ray ray = SetupRayCast(adsPercentage);
 
         Vector3 gunRight = gunRefHolder.transform.right;
         Vector3 gunUp = gunRefHolder.transform.up;
@@ -450,8 +432,6 @@ public class GunCore : NetworkBehaviour
 
         for (int i = 0; i < projectileCount; i++)
         {
-            float2 spreadOffset = RandomPointInCircle(coreStats.GetSpread(adsPercentage));
-
             Vector3 rayDirWithSpread = math.normalize(ray.direction + gunRight * spreadOffset.x + gunUp * spreadOffset.y);
 
             // Shoot an invisble sphere to detect potential a hit
@@ -461,10 +441,15 @@ public class GunCore : NetworkBehaviour
                 {
                     float damage = coreStats.GetDamageOutput(hit.distance, targetHitBox.IsHeadHitBox);
 
-                    targetHitBox.DealDamageToTargetObject(damage, targetHitBox.IsHeadHitBox, hit.point, ray.direction);
+                    targetHitBox.DealDamageToTargetObject(damage, targetHitBox.IsHeadHitBox, hit.point, ray.direction, out HitTypeResult hitTypeResult);
+
+                    hudHandler.OnDamageDealt(damage / targetHitBox.Target.MaxHealth, hitTypeResult);
+
+
+                    GetOnHitAudioData(hitTypeResult, out AudioClip onHitClip, out float pitch);
 
                     // On hitting any smart hitBox, play OnHit SFX
-                    onHitSource.PlayOneShotClipWithPitch(audioStats.onHitAudioClip, EzRandom.Range(audioStats.onHitMinMaxPitch));
+                    onHitSource.PlayOneShotClipWithPitch(onHitClip, pitch);
                 }
 
                 hudHandler.AddCrossHairInstability(math.distance(spreadOffset, float2.zero) * 500);
@@ -518,25 +503,74 @@ public class GunCore : NetworkBehaviour
         ShootEffects(bulletHoleMessages);
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    private void UpdateVisualHeatEmmision_ServerRPC(float percent)
-    {
-        UpdateVisualHeatEmmision_ClientRPC(percent);
-    }
-    [ClientRpc(RequireOwnership = false)]
-    private void UpdateVisualHeatEmmision_ClientRPC(float percent)
-    {
-        if (IsOwner) return;
 
-        gunEmmisionHandler.UpdateHeatEmission(percent);
-    }
+    #region Sub Calculation Methods (RandomSpread, Raycast Setup, GetAudioOnHitData)
 
+    /// <summary>
+    /// Random Spread
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private float2 RandomPointInCircle(float radius)
     {
         float angle = EzRandom.Range01() * math.PI * 2f;
         float dist = math.sqrt(EzRandom.Range01()) * radius;
         return new float2(math.cos(angle), math.sin(angle)) * dist;
     }
+
+    /// <summary>
+    /// Setup Raycast for shooting. Get WorldPoint based on mousePos and offset it by Weapon rotation and position lerped by adsPercentage. In full Ads no offset is applied (just recoil later)
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private Ray SetupRayCast(float adsPercentage)
+    {
+        Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
+
+        // To Gun Local Space
+        Vector3 localOrigin = gunRefHolder.transform.InverseTransformPoint(ray.origin);
+        Vector3 localDir = gunRefHolder.transform.InverseTransformDirection(ray.direction);
+
+        // Offset
+        Vector3 targetOrigin = localOrigin + gunShakeHandler.ShakeTransform.localPosition + gunRefHolder.transform.localPosition;
+        Vector3 targetDir = gunShakeHandler.ShakeTransform.localRotation * gunRefHolder.transform.localRotation * localDir;
+
+        // Ads/Hip Lerp
+        localOrigin = Vector3.Lerp(localOrigin, targetOrigin, adsPercentage);
+        localDir = Vector3.Lerp(localDir, targetDir.normalized, adsPercentage);
+
+        // Assign
+        ray.origin = gunRefHolder.transform.TransformPoint(localOrigin);
+        ray.direction = gunRefHolder.transform.TransformDirection(localDir).normalized;
+
+        return ray;
+    }
+
+    /// <summary>
+    /// Get Audio clip and pitch for onHit SFX based on headshot or kill value in <paramref name="hitTypeResult"/>
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void GetOnHitAudioData(HitTypeResult hitTypeResult, out AudioClip clip, out float pitch)
+    {
+        switch (hitTypeResult)
+        {
+            case HitTypeResult.Normal:
+                clip = audioStats.onHitAudioClip;
+                pitch = EzRandom.Range(audioStats.onHitMinMaxPitch);
+                break;
+
+            case HitTypeResult.HeadShot:
+                clip = audioStats.onCritAudioClip;
+                pitch = EzRandom.Range(audioStats.onCritMinMaxPitch);
+                break;
+
+            default:
+                clip = audioStats.onKillAudioClip;
+                pitch = EzRandom.Range(audioStats.onKillMinMaxPitch);
+                break;
+        }
+    }
+
+    #endregion
+
 
     [ServerRpc(RequireOwnership = false)]
     private void Shoot_ServerRPC(int fromClientGameId, BulletHoleMessage[] bulletHoleMessages)
@@ -567,6 +601,19 @@ public class GunCore : NetworkBehaviour
 
     #endregion
 
+
+    [ServerRpc(RequireOwnership = false)]
+    private void UpdateVisualHeatEmmision_ServerRPC(float percent)
+    {
+        UpdateVisualHeatEmmision_ClientRPC(percent);
+    }
+    [ClientRpc(RequireOwnership = false)]
+    private void UpdateVisualHeatEmmision_ClientRPC(float percent)
+    {
+        if (IsOwner) return;
+
+        gunEmmisionHandler.UpdateHeatEmission(percent);
+    }
 
     public override void OnDestroy()
     {

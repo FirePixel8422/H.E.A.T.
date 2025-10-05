@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class PlayerHUDHandler : NetworkBehaviour
 {
 
-    #region CrossHair and HitMarkers
+    #region CrossHair
 
     [Header("Crosshair")]
     [SerializeField] private Image crossHairPlus;
@@ -16,15 +16,22 @@ public class PlayerHUDHandler : NetworkBehaviour
     [SerializeField] private int2[] crossHairLineDirs = new int2[4];
     [SerializeField] private MinMaxFloat crossHairOffsetMinMax;
     [SerializeField] private float crossHairAnimationPower = 0.1f;
+    [SerializeField] private float maxCrossHairOffset = 100;
 
     [SerializeField] private float crossHairStabilizeSpeed = 5;
     private float crossHairOffset01;
+
+    #endregion
+
+
+    #region HitMarkers
 
     [Header("Hitmarkers")]
     [SerializeField] private Image[] hitMarkers = new Image[4];
     [SerializeField] private int2[] hitMarkerDirs = new int2[4];
     [SerializeField] private MinMaxFloat hitMarkerOffsetMinMax;
     [SerializeField] private float hitMarkerAnimationPower = 0.1f;
+    [SerializeField] private float maxHitMarkersOffset = 100;
 
     [SerializeField] private float hitMarkerDuration;
     [SerializeField] private float hitMarkerFadeTime;
@@ -89,16 +96,24 @@ public class PlayerHUDHandler : NetworkBehaviour
             // Mark hitmarkers for invisible
             timeSinceLastHitMarker = hitMarkerDuration + hitMarkerFadeTime;
             UpdateHitMarkers();
-
-#pragma warning disable UDR0004
-            PlayerHealthHandler.OnDamageDealt += OnDamageDealt;
-#pragma warning restore UDR0004
         }
-        else
+    }
+
+    private void Awake()
+    {
+#if UNITY_EDITOR
+        if (IsOwner || overrideIsOwner)
+#else
+        if (IsOwner)
+#endif
         {
-#pragma warning disable UDR0004
-            PlayerHealthHandler.OnDamageRecieved += OnDamageRecieved;
-#pragma warning restore UDR0004
+            crossHairColor = crossHairPlus.color;
+
+            UpdateScheduler.RegisterUpdate(OnUpdate);
+
+            // Mark hitmarkers for invisible
+            timeSinceLastHitMarker = hitMarkerDuration + hitMarkerFadeTime;
+            UpdateHitMarkers();
         }
     }
 
@@ -110,7 +125,7 @@ public class PlayerHUDHandler : NetworkBehaviour
         damageDealtThisFrame = true;
         timeSinceLastHitMarker = 0;
 
-        hitMarkerOffset01 += damagePercentage * hitMarkerAnimationPower;
+        hitMarkerOffset01 = math.clamp(hitMarkerOffset01 + damagePercentage * hitMarkerAnimationPower, 0, maxHitMarkersOffset);
 
         SetHitMarkersColor(hitType);
     }
@@ -166,7 +181,7 @@ public class PlayerHUDHandler : NetworkBehaviour
 
     public void AddCrossHairInstability(float amount)
     {
-        crossHairOffset01 += amount * crossHairAnimationPower;
+        crossHairOffset01 = math.clamp(crossHairOffset01 + amount * crossHairAnimationPower, 0, maxCrossHairOffset);
     }
 
     public void OnUpdate()
@@ -242,19 +257,6 @@ public class PlayerHUDHandler : NetworkBehaviour
     public override void OnDestroy()
     {
         UpdateScheduler.UnRegisterUpdate(OnUpdate);
-
-        if (IsOwner)
-        {
-#pragma warning disable UDR0004
-            PlayerHealthHandler.OnDamageDealt -= OnDamageDealt;
-#pragma warning restore UDR0004
-        }
-        else
-        {
-#pragma warning disable UDR0004
-            PlayerHealthHandler.OnDamageRecieved -= OnDamageRecieved;
-#pragma warning restore UDR0004
-        }
 
         base.OnDestroy();
     }
