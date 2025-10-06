@@ -24,7 +24,7 @@ public class ArenaGenerator : NetworkBehaviour
     {
         playerReadyCount += 1;
 
-        if (playerReadyCount == GlobalGameSettings.MaxPlayers)
+        if (playerReadyCount == GlobalGameData.MaxPlayers)
         {
             GenerateArena_ClientRPC(EzRandom.Seed());
         }

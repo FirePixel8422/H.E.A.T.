@@ -35,7 +35,7 @@ namespace FirePixel.Networking
 
         public override void OnNetworkSpawn()
         {
-            _savedFixedClientNames = new FixedString64Bytes[GlobalGameSettings.MaxPlayers];
+            _savedFixedClientNames = new FixedString64Bytes[GlobalGameData.MaxPlayers];
 
             RecieveLocalClientGameId();
         }

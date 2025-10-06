@@ -40,8 +40,8 @@ public class SpawnPointHandler : MonoBehaviour
         }
 
         // Trim or expand to match player limit
-        Array.Resize(ref positions, GlobalGameSettings.MaxPlayers);
-        Array.Resize(ref rotations, GlobalGameSettings.MaxPlayers);
+        Array.Resize(ref positions, GlobalGameData.MaxPlayers);
+        Array.Resize(ref rotations, GlobalGameData.MaxPlayers);
 
         // Optional: shuffle both arrays with the same random order
         for (int i = 0; i < positions.Length - 1; i++)

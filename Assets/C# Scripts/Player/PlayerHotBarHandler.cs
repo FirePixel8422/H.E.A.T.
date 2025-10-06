@@ -15,8 +15,8 @@ public class PlayerHotBarHandler : MonoBehaviour
     {
         hudHandler = GetComponent<PlayerHUDHandler>();
 
-        OnSwapToHotbarSlot = new Action[GlobalGameSettings.HotBarSlotCount];
-        for (int i = 0; i < GlobalGameSettings.HotBarSlotCount; i++)
+        OnSwapToHotbarSlot = new Action[GlobalGameData.HotBarSlotCount];
+        for (int i = 0; i < GlobalGameData.HotBarSlotCount; i++)
         {
             int slotId = i;
             OnSwapToHotbarSlot[i] += () => OnSwapToNewHotBarSlot(slotId);

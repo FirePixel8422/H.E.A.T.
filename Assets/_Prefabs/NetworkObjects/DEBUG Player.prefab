@@ -440,6 +440,14 @@ MonoBehaviour:
     onHitMinMaxPitch:
       min: 0
       max: 0
+    onCritAudioClip: {fileID: 0}
+    onCritMinMaxPitch:
+      min: 0
+      max: 0
+    onKillAudioClip: {fileID: 0}
+    onKillMinMaxPitch:
+      min: 0
+      max: 0
   currentGunId:
     value: 0
   camHandler:
@@ -877,8 +885,8 @@ MonoBehaviour:
   crossHairOffsetMinMax:
     min: 35
     max: 150
-  crossHairAnimationPower: 0.015
-  maxCrossHairOffset: 100
+  crossHairAnimationPower: 1.25
+  maxCrossHairOffset: 2.25
   crossHairStabilizeSpeed: 7.5
   hitMarkers:
   - {fileID: 3721984083211523294}

@@ -130,7 +130,7 @@ namespace FirePixel.Networking
         public async Task<bool> CreateLobbyAsync()
         {
             invisibleScreenCover?.SetActive(true);
-            int maxPlayers = GlobalGameSettings.MaxPlayers;
+            int maxPlayers = GlobalGameData.MaxPlayers;
 
             try
             {

@@ -14,6 +14,8 @@ namespace FirePixel.Networking
             DontDestroyOnLoad(gameObject);
         }
 
+        [SerializeField] private string mainMenuSceneName = "MainMenu";
+
 
         #region PlayerIdDataArray var get, set and sync methods
 
@@ -158,7 +160,7 @@ namespace FirePixel.Networking
 
         public override void OnNetworkSpawn()
         {
-            playerIdDataArray = new NetworkStruct<PlayerIdDataArray>(new PlayerIdDataArray(GlobalGameSettings.MaxPlayers));
+            playerIdDataArray = new NetworkStruct<PlayerIdDataArray>(new PlayerIdDataArray(GlobalGameData.MaxPlayers));
 
             if (IsServer)
             {
@@ -252,7 +254,7 @@ namespace FirePixel.Networking
             NetworkManager.OnClientDisconnectCallback -= OnClientDisconnected_OnClient;
 
             // When kicked from the server, load this scene
-            SceneManager.LoadScene("Main Menu");
+            SceneManager.LoadScene(mainMenuSceneName);
 
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -291,7 +293,7 @@ namespace FirePixel.Networking
 
             DebugLogger.Log("RejoinData.json deleted: " + deletionSucces);
 
-            SceneManager.LoadScene("Main Menu");
+            SceneManager.LoadScene(mainMenuSceneName);
 
             MessageHandler.Instance.SendTextLocal("You have been kicked from the server!");
         }

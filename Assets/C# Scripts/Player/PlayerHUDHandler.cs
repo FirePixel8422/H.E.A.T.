@@ -50,9 +50,9 @@ public class PlayerHUDHandler : NetworkBehaviour
     #region HotBar
 
     [Header("Hotbar:")]
-    [SerializeField] private HotBarSlot[] hotBarSlots = new HotBarSlot[GlobalGameSettings.HotBarSlotCount];
-    [SerializeField] private HotBarItem[] hotBarItems = new HotBarItem[GlobalGameSettings.HotBarSlotCount];
-    [SerializeField] private Sprite[] hotBarItemsSprites = new Sprite[GlobalGameSettings.HotBarSlotCount];
+    [SerializeField] private HotBarSlot[] hotBarSlots = new HotBarSlot[GlobalGameData.HotBarSlotCount];
+    [SerializeField] private HotBarItem[] hotBarItems = new HotBarItem[GlobalGameData.HotBarSlotCount];
+    [SerializeField] private Sprite[] hotBarItemsSprites = new Sprite[GlobalGameData.HotBarSlotCount];
 
     [SerializeField] private Color slotActiveColor, slotInactiveColor, slotOnCooldownColor; 
 
@@ -163,7 +163,7 @@ public class PlayerHUDHandler : NetworkBehaviour
         hotBarSlots[2].image.sprite = hotBarItemsSprites[2];
         hotBarSlots[3].image.sprite = hotBarItemsSprites[3];
 
-        for (int i = 0; i < GlobalGameSettings.HotBarSlotCount; i++)
+        for (int i = 0; i < GlobalGameData.HotBarSlotCount; i++)
         {
             if (hotBarItems[i].OnCooldown)
             {

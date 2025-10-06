@@ -1,5 +1,6 @@
 using FirePixel.Networking;
 using System.Runtime.CompilerServices;
+using Unity.Mathematics;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -37,7 +38,7 @@ public class PlayerController : NetworkBehaviour
     };
 
     /// <summary>
-    /// If midair: if sprintjumped: <see cref="sprintSpeed"/> if regular jump: <see cref="moveSpeed"/>, if crouchInput: <see cref="crouchSpeed"/>, if sprintInput: <see cref="sprintSpeed"/>, else: <see cref="moveSpeed"/>.
+    /// If midair: if sprintjumped: <see cref="sprintSpeed"/> if regular jump: <see cref="moveSpeed"/>, if crouchInput: <see cref="crouchSpeed"/>, if sprintInput and <see cref="IsSprintingAllowed"/>: is true: <see cref="sprintSpeed"/>, else: <see cref="moveSpeed"/>.
     /// </summary>
     private float GetTargetMoveSpeed()
     {
@@ -47,8 +48,10 @@ public class PlayerController : NetworkBehaviour
         if (crouchInput)
             return crouchSpeed;
 
-        if (sprintInput)
-            return sprintSpeed;
+        if (sprintInput && IsSprintingAllowed(GetForwardDirection()))
+        {
+            return math.lerp(sprintSpeed, moveSpeed, adsHandler.ZoomedInPercent);
+        }
 
         return moveSpeed;
     }
@@ -77,8 +80,9 @@ public class PlayerController : NetworkBehaviour
     [Header("Allow this script to be used outside of network environment")]
     [SerializeField] private bool overrideIsOwner;
 
-    private GunSwayHandler gunSwayHandler;
     private CameraHandler camHandler;
+    private GunSwayHandler gunSwayHandler;
+    private ADSHandler adsHandler;
     private PlayerHUDHandler hudHandler;
     private Rigidbody rb;
     private NetworkStateMachine stateMachine;
@@ -136,7 +140,7 @@ public class PlayerController : NetworkBehaviour
 
         float sensitivityMultiplier = mouseSensitivity * camHandler.GetADSSensitivityMultiplier();
 
-        hudHandler.AddCrossHairInstability(Vector2.Distance(mouseInput, Vector2.zero) * sensitivityMultiplier);
+        hudHandler.AddCrossHairInstability(Vector2.Distance(mouseInput, Vector2.zero) * sensitivityMultiplier * Time.deltaTime);
 
         // Actual rotation
         camHandler.MainCamLocalEulerPitch += -mouseInput.y * sensitivityMultiplier;
@@ -154,10 +158,11 @@ public class PlayerController : NetworkBehaviour
     private void OnEnable() => ManageUpdateCallbacks(true);
     private void OnDisable() => ManageUpdateCallbacks(false);
 
-    public void Init(CameraHandler camHandler, GunSwayHandler gunSwayHandler)
+    public void Init(CameraHandler camHandler, GunSwayHandler gunSwayHandler, ADSHandler adsHandler)
     {
         this.camHandler = camHandler;
         this.gunSwayHandler = gunSwayHandler;
+        this.adsHandler = adsHandler;
 
         hudHandler = GetComponent<PlayerHUDHandler>();
         rb = GetComponent<Rigidbody>();
@@ -217,29 +222,23 @@ public class PlayerController : NetworkBehaviour
     {
         if (rb == null) return;
 
+        float fixedDeltaTime = Time.fixedDeltaTime;
+
         // Update RigidBody velocity and send Transform Data to ServerRPC
         float rbVelocityY = rb.linearVelocity.y;
 
         Vector3 targetForwardVelocity = GetForwardDirection();
 
-        // If player is trying to sprint, check if they are allowed to sprint based on "sprintDirection" rules
-        if (sprintInput && IsSprintingAllowed(targetForwardVelocity))
-        {
-            targetForwardVelocity *= moveSpeed;
-            targetForwardVelocity.y = rbVelocityY;
-        }
-        // If player is not allowed to sprint (or not trying to) get targetMoveSpeed based on "GetTargetMoveSpeed"
-        else
-        {
-            targetForwardVelocity *= GetTargetMoveSpeed();
-            targetForwardVelocity.y = rbVelocityY;
-        }
+        // Get target movement speed through GetTargetMoveSpeed
+        targetForwardVelocity *= GetTargetMoveSpeed();
+        targetForwardVelocity.y = rbVelocityY;
+
 
         float targetSpeedChangePower = IsGrounded ? steerPower : midAirSteerPower;
 
-        rb.linearVelocity = VectorLogic.InstantMoveTowards(rb.linearVelocity, targetForwardVelocity, targetSpeedChangePower * Time.fixedDeltaTime);
+        rb.linearVelocity = VectorLogic.InstantMoveTowards(rb.linearVelocity, targetForwardVelocity, targetSpeedChangePower * fixedDeltaTime);
 
-        hudHandler.AddCrossHairInstability(Vector3.Distance(targetForwardVelocity, Vector3.zero));
+        hudHandler.AddCrossHairInstability(Vector3.Distance(targetForwardVelocity, Vector3.zero) * fixedDeltaTime);
 
         // If player is falling
         if (rbVelocityY < 0)
@@ -278,7 +277,7 @@ public class PlayerController : NetworkBehaviour
         // Calculate what direction we want to move in (Dot product)
         float forwardDot = Vector3.Dot(transform.forward, forwardDirection);
 
-        if (forwardDot < SprintDirectionDotCheck)
+        if (forwardDot > SprintDirectionDotCheck)
         {
             return true;
         }
@@ -298,13 +297,13 @@ public class PlayerController : NetworkBehaviour
 
     #region Send/Recieve Transform Data
 
-    [ServerRpc(RequireOwnership = false)]
+    [ServerRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     private void SendPlayerTransforms_ServerRPC(Vector3 pos, float pitch, float yaw)
     {
         RecievePlayerTransforms_ClientRPC(pos, pitch, yaw);
     }
 
-    [ClientRpc(RequireOwnership = false)]
+    [ClientRpc(RequireOwnership = false, Delivery = RpcDelivery.Reliable)]
     private void RecievePlayerTransforms_ClientRPC(Vector3 pos, float pitch, float yaw)
     {
         if (IsOwner) return;

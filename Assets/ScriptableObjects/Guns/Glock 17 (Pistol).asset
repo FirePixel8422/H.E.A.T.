@@ -16,7 +16,7 @@ MonoBehaviour:
     type: 3}
   baseStats:
     coreStats:
-      damage: 22.5
+      damage: 30
       headShotMultiplier: 1.5
       maxEffectiveRange: 25
       damageFallOffCurve:
@@ -173,7 +173,7 @@ MonoBehaviour:
       autoFire: 0
       inputBufferTime: 0.05
     audioStats:
-      shootAudioClip: {fileID: 8300000, guid: 5ff5bd936a30a904da907f35c8dd382e, type: 3}
+      shootAudioClip: {fileID: 8300000, guid: 5dbc74a65da58144aa0a20190bcd4909, type: 3}
       minMaxPitch:
         min: 0.7
         max: 0.8
