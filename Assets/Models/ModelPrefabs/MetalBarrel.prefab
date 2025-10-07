@@ -68,6 +68,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: MetalBarrel
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 2f9488749fd0c4040bd4f661e7af576f,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
