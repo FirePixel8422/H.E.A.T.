@@ -16,9 +16,9 @@ MonoBehaviour:
     type: 3}
   baseStats:
     coreStats:
-      damage: 30
+      damage: 25
       headShotMultiplier: 1.5
-      maxEffectiveRange: 25
+      maxEffectiveRange: 22.5
       damageFallOffCurve:
         curve:
           serializedVersion: 2

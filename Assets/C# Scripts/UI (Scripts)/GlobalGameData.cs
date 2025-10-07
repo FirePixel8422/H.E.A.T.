@@ -10,6 +10,8 @@ public static class GlobalGameData
     public const int MaxPlayers = 2;
     public const int HotBarSlotCount = 4;
 
-    public static readonly int PlayerLayer = LayerMask.NameToLayer("PlayerHitBox");
-    public static readonly int GunLayer = LayerMask.NameToLayer("Gun");
+    public const int PlayerHitBoxLayerId = 8;
+    public const int PlayerHitBoxLayerMask = 1 << PlayerHitBoxLayerId;
+    public const int GunLayerId = 6;
+    public const int GunLayerMask = 1 / GunLayerId;
 }

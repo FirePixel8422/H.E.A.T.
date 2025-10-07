@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-public class GunCore : NetworkBehaviour
+public class GunHandler : NetworkBehaviour
 {
     [SerializeField] private Transform gunHolder;
     [SerializeField] private LayerMask playerColliderMask;
@@ -17,7 +17,6 @@ public class GunCore : NetworkBehaviour
     private PlayerController playerController;
     private PlayerHUDHandler hudHandler;
     private Animator anim;
-    private int gunLayer;
 
     [Header("Data Driven Gun Parts")]
     [SerializeField] private GunCoreStats coreStats;
@@ -149,7 +148,8 @@ public class GunCore : NetworkBehaviour
         ManageUpdateCallbacks(true);
 
         playerController = GetComponent<PlayerController>();
-        playerController.Init(camHandler, gunSwayHandler);
+        playerController.Init(camHandler, gunSwayHandler, adsHandler);
+
         hudHandler = GetComponent<PlayerHUDHandler>();
         anim = GetComponent<Animator>();
 
@@ -167,8 +167,7 @@ public class GunCore : NetworkBehaviour
         if (IsOwner)
         {
 #endif
-            gunLayer = LayerMask.NameToLayer("Gun");
-            gunHolder.gameObject.layer = gunLayer;
+            gunHolder.gameObject.layer = GlobalGameData.GunLayerId;
 
             SwapGun(0);
 
@@ -188,10 +187,10 @@ public class GunCore : NetworkBehaviour
         SetupNewGunData(gunId);
 
         // set gun to always in front layer ("Gun")
-        gunRefHolder.gameObject.layer = gunLayer;
+        gunRefHolder.gameObject.layer = GlobalGameData.GunLayerId;
         foreach (Transform child in gunRefHolder.transform.GetAllChildren())
         {
-            child.gameObject.layer = gunLayer;
+            child.gameObject.layer = GlobalGameData.GunLayerId;
         }
 
         heatSinkHandler.OnSwapGun(CurrentGunId);
@@ -452,7 +451,7 @@ public class GunCore : NetworkBehaviour
                     onHitSource.PlayOneShotClipWithPitch(onHitClip, pitch);
                 }
 
-                hudHandler.AddCrossHairInstability(math.distance(spreadOffset, float2.zero) * 500);
+                hudHandler.AddCrossHairInstability(math.distance(spreadOffset, float2.zero) * 10);
 
                 // Deal damage to hit player
                 DEBUG_damageThisShot += coreStats.GetDamageOutput(hit.distance, false);
