@@ -107,6 +107,8 @@ public class ButtonFunctions : NetworkBehaviour
 
         cineMachineCam.SetActive(false);
         armoryPlayer.SetActive(true);
+
+        Cursor.lockState = CursorLockMode.Locked;
     }
     public override void OnNetworkSpawn()
     {

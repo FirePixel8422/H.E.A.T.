@@ -14,18 +14,23 @@ public class EnterArmory : MonoBehaviour
 
     [Header("Camera")]
     public GameObject[] cameras;
+
+    [Header("Player")]
+    public GameObject armoryPlayer;
     void Update()
     {
         if (!armoryIsOpen)
         {
             if (Physics.CheckSphere(transform.position, interactionDistance, playerLayer))
             {
-                Debug.Log("Can Open Armory");
                 eToInteract.SetActive(true);
                 if (Input.GetKeyDown(KeyCode.E))
                 {
+                    armoryIsOpen = true;
+
                     armoryCanvas.SetActive(true);
                     eToInteract.SetActive(false);
+                    armoryPlayer.SetActive(false);
 
                     cameras[0].SetActive(false);
                     cameras[1].SetActive(true);
@@ -43,7 +48,11 @@ public class EnterArmory : MonoBehaviour
     }
     public void GoBackFromArmory()
     {
+        armoryIsOpen = false;
+
         armoryCanvas.SetActive(false);
+        armoryPlayer.SetActive(true);
+
         foreach (GameObject gun in armoryBehavior.previewGuns)
         {
             gun.SetActive(false);
