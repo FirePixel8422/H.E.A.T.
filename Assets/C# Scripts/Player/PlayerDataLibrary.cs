@@ -11,7 +11,7 @@ public class PlayerDataLibrary : NetworkBehaviour
     public PlayerHotBarHandler hotBarHandler;
     public PlayerHUDHandler hudHandler;
     public RagDollController ragDollController;
-    public UtilityHandler utilityHandler;
+    //public UtilityHandler utilityHandler;
 
 
     private void Start()
@@ -20,7 +20,7 @@ public class PlayerDataLibrary : NetworkBehaviour
         healthHandler = GetComponent<PlayerHealthHandler>();
         hotBarHandler = GetComponent<PlayerHotBarHandler>();
         hudHandler = GetComponent<PlayerHUDHandler>();
-        utilityHandler = GetComponent<UtilityHandler>();
+        //utilityHandler = GetComponent<UtilityHandler>();
 
         ragDollController = GetComponentInChildren<RagDollController>(true);
     }
