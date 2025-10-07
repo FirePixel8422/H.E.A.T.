@@ -80,8 +80,8 @@ MonoBehaviour:
       valueMultiplier: 1
       sampleCount: 25
     flashPower: 0
-  rayCount: 3
-  hit: 01
+  rayCount: 4
+  hit: 00
 --- !u!135 &5278280116539712668
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -101,7 +101,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.125
+  m_Radius: 0.1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &6447654925028163589
 Rigidbody:

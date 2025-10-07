@@ -6,6 +6,12 @@ using UnityEngine;
 public class Throwable : MonoBehaviour
 {
     [SerializeField] private ThrowableStats stats;
+
+    [Header("How much rays to shoot for the hit detection of the effect explosion\n" +
+        "Uses rayCount X rayCount total rays")]
+    [Range(1, 10)]
+    [SerializeField] private int rayCount = 1;
+
     private Collider coll;
 
 
@@ -17,19 +23,21 @@ public class Throwable : MonoBehaviour
         Invoke(nameof(Activate), stats.activationDelay - lagCompensation);
     }
 
-    public void Activate()
+    private void Activate()
     {
         Collider[] affectedPlayerColliders = Physics.OverlapSphere(transform.position, stats.outerRadius, GlobalGameData.PlayerHitBoxLayerMask, QueryTriggerInteraction.Collide);
         int affectedPlayerCount = affectedPlayerColliders.Length;
 
         if (affectedPlayerCount == 0) return;
 
+        // Hashset to filter duplicate targets (eg: for the player their body and head hitbox)
         HashSet<IDamagable> damagedTargets = new HashSet<IDamagable>(affectedPlayerCount);
 
-        hit = GrenadeRaycaster.CheckHit(coll, stats.outerRadius, affectedPlayerColliders, rayCount);
+        hit = GrenadeRaycaster.CheckHits(coll, stats.outerRadius, affectedPlayerColliders, rayCount);
 
         for (int i = 0; i < affectedPlayerColliders.Length; i++)
         {
+            // Skip if smartHitBox's linked IDamageable Target is already added to the HashSet
             if (hit[i] && affectedPlayerColliders[i].TryGetComponent(out SmartHitBox smartHitBox))
             {
                 if (damagedTargets.Contains(smartHitBox.Target) == false)
@@ -47,16 +55,19 @@ public class Throwable : MonoBehaviour
         }
     }
 
-
     private void OnCollisionEnter(Collision collision)
     {
-
+        if (stats.activateOnImpact)
+        {
+            CancelInvoke();
+            Activate();
+        }
     }
 
 
 #if UNITY_EDITOR
-    [Range(1, 10)]
-    [SerializeField] private int rayCount = 1;
+
+    [Header("DEBUG")]
     [SerializeField] private bool[] hit;
 
 
@@ -80,7 +91,7 @@ public class Throwable : MonoBehaviour
 
             if (affectedPlayerColliders.Length > 0)
             {
-                hit = GrenadeRaycaster.CheckHit(coll, stats.outerRadius, affectedPlayerColliders, rayCount);
+                hit = GrenadeRaycaster.CheckHits(coll, stats.outerRadius, affectedPlayerColliders, rayCount);
             }
         }
     }

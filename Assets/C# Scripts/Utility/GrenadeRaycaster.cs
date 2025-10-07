@@ -1,4 +1,5 @@
 ﻿using Unity.Burst;
+using Unity.Mathematics;
 using UnityEngine;
 
 
@@ -8,7 +9,7 @@ public static class GrenadeRaycaster
 {
 
     [BurstCompile]
-    public static bool[] CheckHit(Collider grenade, float effectRadius, Collider[] targets, int rayCount = 1)
+    public static bool[] CheckHits(Collider grenade, float effectRadius, Collider[] targets, int rayCount = 1)
     {
 #if UNITY_EDITOR
         if (targets == null || targets.Length == 0)
@@ -29,20 +30,18 @@ public static class GrenadeRaycaster
         Bounds targetBounds = new Bounds();
         Vector3 targetCenter = Vector3.zero;
         Quaternion lookAtRotation = Quaternion.identity;
-        Vector3[] axes = new Vector3[5];
+        Vector3 horizontalAxis = Vector3.zero;
+        Vector3 verticalAxis = Vector3.zero;
         Vector3 delta = Vector3.zero;
         Vector3 rayDir = Vector3.zero;
         float distance = 0f;
         Vector3 grenadePoint = Vector3.zero;
         Vector3 targetPoint = Vector3.zero;
         bool hitTarget;
-        float offsetPercentage = 0f;
+        float offsetXPercentage, offsetYPercentage = 0f;
+        float len;
 
-        // Precompute offsets
-        float[] offsets = new float[rayCount];
-        for (int i = 0; i < rayCount; i++)
-            offsets[i] = 1f / rayCount * (i + 1);
-
+        // For every target
         for (int t = 0; t < targets.Length; t++)
         {
             target = targets[t];
@@ -51,11 +50,8 @@ public static class GrenadeRaycaster
 
             lookAtRotation = Quaternion.LookRotation(targetCenter - grenadeCenter, grenade.transform.up);
 
-            axes[0] = lookAtRotation * Vector3.forward;
-            axes[1] = lookAtRotation * Vector3.right;
-            axes[2] = lookAtRotation * Vector3.up;
-            axes[3] = -axes[1];
-            axes[4] = -axes[2];
+            horizontalAxis = lookAtRotation * Vector3.left;
+            verticalAxis = lookAtRotation * Vector3.down;
 
             hitTarget = false;
 
@@ -64,52 +60,49 @@ public static class GrenadeRaycaster
             rayDir = delta.normalized;
             distance = delta.magnitude;
 
-            if (Physics.Raycast(grenadeCenter, rayDir, out RaycastHit hit, distance))
-            {
-                if (hit.collider == target)
-                {
-                    hitTarget = true;
-#if !UNITY_EDITOR
-                break; // no need to check other axes for this target
-#else
-                    Debug.DrawRay(grenadeCenter, rayDir * distance, Color.blue);
-#endif
-                }
-            }
 
-            // Directional Offset Raycasts
-            foreach (Vector3 dir in axes)
+            // For Horizontal offset
+            for (int x = 0; x < rayCount; x++)
             {
-                for (int i = 0; i < rayCount; i++)
+                // For Vertical offset
+                for (int y = 0; y < rayCount; y++)
                 {
-                    offsetPercentage = offsets[i];
+                    offsetXPercentage = SpreadValue(x, rayCount);
+                    offsetYPercentage = SpreadValue(y, rayCount);
 
-                    grenadePoint = grenadeCenter + Vector3.Scale(dir, grenadeBounds.extents) * offsetPercentage;
-                    targetPoint = targetCenter + Vector3.Scale(dir, targetBounds.extents) * offsetPercentage;
+                    // Clamp to circle radius
+                    len = math.sqrt(offsetXPercentage * offsetXPercentage + offsetYPercentage * offsetYPercentage);
+                    if (len > 1f)
+                    {
+                        offsetXPercentage /= len;
+                        offsetYPercentage /= len;
+                    }
+
+                    grenadePoint = grenadeCenter +
+                        Vector3.Scale(horizontalAxis, grenadeBounds.extents) * offsetXPercentage +
+                        Vector3.Scale(verticalAxis, grenadeBounds.extents) * offsetYPercentage;
+
+                    targetPoint = targetCenter +
+                        Vector3.Scale(horizontalAxis, targetBounds.extents) * offsetXPercentage +
+                        Vector3.Scale(verticalAxis, targetBounds.extents) * offsetYPercentage;
 
                     delta = targetPoint - grenadePoint;
                     rayDir = delta.normalized;
                     distance = delta.magnitude;
 
-                    if (Physics.Raycast(grenadePoint, rayDir, out hit, distance))
+                    Debug.DrawRay(grenadePoint, rayDir * distance, Color.grey);
+
+                    if (Physics.Raycast(grenadePoint, rayDir, out RaycastHit hit, distance * 1.1f))
                     {
                         if (hit.collider == target)
                         {
                             hitTarget = true;
 #if !UNITY_EDITOR
-                            break; // no need to check other axes for this target
+                break; // stop early
 #else
                             Debug.DrawRay(grenadePoint, rayDir * distance, Color.blue);
-                        }
-                        else
-                        {
-                            Debug.DrawRay(grenadePoint, rayDir * distance, Color.grey);
-                        }
-                    }
-                    else
-                    {
-                        Debug.DrawRay(grenadePoint, rayDir * distance, Color.grey);
 #endif
+                        }
                     }
                 }
             }
@@ -120,4 +113,11 @@ public static class GrenadeRaycaster
         return results;
     }
 
+    private static float SpreadValue(int index, int count)
+    {
+        if (count <= 1)
+            return 0f;
+
+        return Mathf.Lerp(-1f, 1f, (float)index / (count - 1));
+    }
 }
