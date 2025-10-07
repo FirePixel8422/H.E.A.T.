@@ -43,7 +43,7 @@ public class PlayerController : NetworkBehaviour
     private float GetTargetMoveSpeed()
     {
         if (IsGrounded == false)
-            return sprintJumped ? sprintSpeed * airSprintMultiplier : moveSpeed;
+            return sprintJumped && IsSprintingAllowed(GetForwardDirection()) ? sprintSpeed * airSprintMultiplier : moveSpeed;
 
         if (crouchInput)
             return crouchSpeed;

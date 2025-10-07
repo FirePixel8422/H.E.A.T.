@@ -8,6 +8,7 @@ public class PlayerDataLibrary : NetworkBehaviour
 
     public GunHandler gunHandler;
     public PlayerHealthHandler healthHandler;
+    public PlayerController controller;
     public PlayerHotBarHandler hotBarHandler;
     public PlayerHUDHandler hudHandler;
     public RagDollController ragDollController;
@@ -18,6 +19,7 @@ public class PlayerDataLibrary : NetworkBehaviour
     {
         gunHandler = GetComponent<GunHandler>();
         healthHandler = GetComponent<PlayerHealthHandler>();
+        controller = GetComponent<PlayerController>();
         hotBarHandler = GetComponent<PlayerHotBarHandler>();
         hudHandler = GetComponent<PlayerHUDHandler>();
         //utilityHandler = GetComponent<UtilityHandler>();

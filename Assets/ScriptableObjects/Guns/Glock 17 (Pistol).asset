@@ -111,7 +111,7 @@ MonoBehaviour:
         y: 7.5
       adsRecoilMultiplier:
         x: 7
-        y: 12.5
+        y: 17.5
       hipRecoilForce:
         x: 25
         y: 75

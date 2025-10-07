@@ -147,7 +147,7 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
-        valueMultiplier: 0.125
+        valueMultiplier: 0.175
         sampleCount: 3
       stabilityLoss: 1
       stabilityRecovery: 1
