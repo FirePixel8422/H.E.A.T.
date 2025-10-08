@@ -47,6 +47,23 @@ public class GunManager : MonoBehaviour
         CalculateGunStats();
     }
 
+    public IGunAtachment[] GetCurrentGunAttachments()
+    {
+        IGunAtachment[] attachments = new IGunAtachment[5];
+
+        for (int i = 0; i < 5; i++)
+        {
+            int attachmentId = attachmentIdsList[currentGunId].Value[i];
+
+            if (attachmentId != -1)
+            {
+                attachments[i] = globalAttachmentsList[attachmentId].Stats;
+            }
+        }
+
+        return attachments;
+    }
+
     public void CalculateGunStats()
     {
         int gunCount = baseGuns.Length;
@@ -102,7 +119,6 @@ public class GunManager : MonoBehaviour
         }
 
         gunRefHolder = Instantiate(baseGuns[gunId].GunPrefab, gunParentTransform);
-        gunRefHolder.OnSwapGun();
 
         for (int i = 0; i < 5; i++)
         {
@@ -112,6 +128,8 @@ public class GunManager : MonoBehaviour
                         
             gunRefHolder.SpawnAttachment(globalAttachmentsList[attachmentId]);
         }
+        // Initilialize gun After spawning attachments
+        gunRefHolder.Init();
 
         currentGunStats[gunId].GetStatsCopy(out coreStats, out audioStats, out _, out shakeStats, out swayStats, out gunADSStats);
     }

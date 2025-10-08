@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b0b7c3e06db8a14b87487cb5b20ad5f, type: 3}
   m_Name: AWS (Sniper)
   m_EditorClassIdentifier: 
-  gunPrefab: {fileID: 5484704871031037484, guid: bf17c0c6f9acb144c974d140ad6db550,
+  gunPrefab: {fileID: -2591486245370474641, guid: 8ba3dacfee2d77e449d82cf973d27154,
     type: 3}
   baseStats:
     coreStats:
       damage: 140
       headShotMultiplier: 2
-      maxEffectiveRange: 60
+      maxEffectiveRange: 1
       damageFallOffCurve:
         curve:
           serializedVersion: 2
@@ -26,29 +26,20 @@ MonoBehaviour:
           - serializedVersion: 3
             time: 0
             value: 1
-            inSlope: 0.00000023841855
-            outSlope: 0.00000023841855
-            tangentMode: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
             weightedMode: 0
             inWeight: 0
-            outWeight: 1
-          - serializedVersion: 3
-            time: 0.33
-            value: 1
-            inSlope: -0.00000023841858
-            outSlope: -0.00000023841858
-            tangentMode: 0
-            weightedMode: 0
-            inWeight: 1
-            outWeight: 0.33333334
+            outWeight: 0
           - serializedVersion: 3
             time: 1
-            value: 0.25
-            inSlope: -2.4150937
-            outSlope: -2.4150937
-            tangentMode: 0
+            value: 1
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 34
             weightedMode: 0
-            inWeight: 0.08843061
+            inWeight: 0
             outWeight: 0
           m_PreInfinity: 2
           m_PostInfinity: 2
@@ -181,11 +172,11 @@ MonoBehaviour:
         max: 1.4
     shakeStats:
       shakePitch:
-        x: 110
-        y: 35
+        x: 55
+        y: 5
       shakeYaw:
-        x: 15
-        y: 10
+        x: 7.5
+        y: 3
       shakeBuildUp:
         x: 50
         y: 40
@@ -193,24 +184,24 @@ MonoBehaviour:
         x: 6
         y: 3
       pullBackDistance:
-        x: 1
+        x: 0.5
         y: 0.85
       pullBackBuildUp:
-        x: 25
-        y: 12
+        x: 4
+        y: 0
       pullBackDecay:
-        x: 10
+        x: 5
         y: 6
       pullBackPitchKick:
-        x: -85
-        y: -30
+        x: -30
+        y: 0
     gunADSStats:
       zoomMultiplier: 4
       adsSensitivityMultiplier: 0.75
       zoomInTime: 0.25
       zoomOutTime: 0.2
-      normalAnimationName: BrokenPistol_Hip
-      zoomAnimationName: BrokenPistol_ADS
+      normalAnimationName: Smimper_Hip
+      zoomAnimationName: Smimper_ADS
       animLayer: 2
     swayStats:
       movementAmplitude:
@@ -222,21 +213,22 @@ MonoBehaviour:
         y: 0.00025
       idleFrequency: 2.5
       posSwayMouse:
-        x: 0.00015
-        y: 0.00005
+        x: 0.015
+        y: 0.0025
       eulerSwayMouse:
-        x: 0.00015
-        y: 0.00005
+        x: 0.015
+        y: 0.0025
       posSwayMove:
-        x: 0.005
-        y: 0.0005
+        x: 0.5
+        y: 0.025
       eulerSwayMove:
-        x: 0.0005
+        x: 0.05
         y: 0
+      swayMultiplier: 0.01
       ignoreYForSwayMove: 1
       offsetSmooth: 8
       swayRecoverSmooth: 12
-      gunYOffset: -0.06
+      gunYOffset: 0
       spreadMultplierCurve:
         curve:
           serializedVersion: 2
@@ -297,4 +289,5 @@ MonoBehaviour:
           m_RotationOrder: 4
         valueMultiplier: 1
         sampleCount: 75
-  baseAttachments: []
+  baseAttachments:
+  - {fileID: 11400000, guid: ec65a497549736149b120946b299325f, type: 2}

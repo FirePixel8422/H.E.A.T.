@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 114348346
+  GlobalObjectIdHash: 2635783685
   InScenePlacedSourceGlobalObjectIdHash: 2635783685
   DeferredDespawnTick: 0
   Ownership: 1
@@ -79,6 +79,7 @@ MonoBehaviour:
   invisibleScreenCover: {fileID: 0}
   rejoinMenu: {fileID: 0}
   lobbySearchInterval: 3
+  instaLoadSceneOnHost: 1
 --- !u!114 &840134738611709233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,6 +111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  mainMenuSceneName: MainMenu
   playerIdDataArray:
     value:
       networkIds: 
@@ -148,6 +150,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 01652b5aac7c3704fa89ca7229c4fb56, type: 2}
   - {fileID: 11400000, guid: 3b12978bb28168442b564b0246add77e, type: 2}
   - {fileID: 11400000, guid: 418e04dfa63fd9345bc3ae0af4be0014, type: 2}
+  - {fileID: 11400000, guid: ec65a497549736149b120946b299325f, type: 2}
   baseGuns:
   - {fileID: 11400000, guid: 345d4e08f6ffca9408ae925d7c9c85a0, type: 2}
   - {fileID: 11400000, guid: 27f968b9b70baf2479d2c0044169a853, type: 2}

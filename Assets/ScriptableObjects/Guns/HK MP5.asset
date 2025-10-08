@@ -325,9 +325,9 @@ MonoBehaviour:
     heatSinkStats:
       heatSinkSize: 1
       heatDecayDelay: 0.33
-      heatDecayPower: 0.5
+      heatDecayPower: 0.65
       overheatDecayDelay: 1
-      overheatDecayPower: 0.65
+      overheatDecayPower: 0.5
       heatDecayMultiplierCurve:
         curve:
           serializedVersion: 2

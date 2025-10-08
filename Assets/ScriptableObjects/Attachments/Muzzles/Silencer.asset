@@ -57,9 +57,9 @@ MonoBehaviour:
     maxEffectiveRange:
       value: 1
       applyMode: 0
-    shootAudioClips:
+    shootAudioClip:
       ignoreData: 1
-      data: []
+      data: {fileID: 0}
     minMaxPitch:
       value:
         min: 0.55
@@ -70,6 +70,3 @@ MonoBehaviour:
         min: 1.25
         max: 1.4
       applyMode: 3
-    shootAudioClip:
-      ignoreData: 1
-      data: {fileID: 0}

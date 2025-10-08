@@ -14,7 +14,10 @@ public class CameraHandler
 
 
     [SerializeField] private float baseFOV;
-    private float currentFOV;
+    public float BaseFOV => baseFOV;
+
+    [SerializeField] private float currentFOV;
+
 
     private float sensitivityMultiplier = 1;
 

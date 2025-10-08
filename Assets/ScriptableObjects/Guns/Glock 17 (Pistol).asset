@@ -169,7 +169,7 @@ MonoBehaviour:
         sampleCount: 50
       stabilityLoss: 1
       stabilityRecovery: 10
-      roundsPerMinute: 350
+      roundsPerMinute: 400
       autoFire: 0
       inputBufferTime: 0.05
     audioStats:
@@ -224,6 +224,7 @@ MonoBehaviour:
         y: -30
     gunADSStats:
       zoomMultiplier: 1
+      scopeCamZoomMultiplier: 1
       adsSensitivityMultiplier: 1
       zoomInTime: 0.175
       zoomOutTime: 0.125
@@ -251,6 +252,7 @@ MonoBehaviour:
       eulerSwayMove:
         x: 0.0005
         y: 0
+      swayMultiplier: 1
       ignoreYForSwayMove: 1
       offsetSmooth: 8
       swayRecoverSmooth: 12
@@ -285,9 +287,9 @@ MonoBehaviour:
     heatSinkStats:
       heatSinkSize: 1
       heatDecayDelay: 0.5
-      heatDecayPower: 0.225
+      heatDecayPower: 0.8
       overheatDecayDelay: 0.65
-      overheatDecayPower: 0.2
+      overheatDecayPower: 0.65
       heatDecayMultiplierCurve:
         curve:
           serializedVersion: 2
@@ -316,4 +318,4 @@ MonoBehaviour:
         valueMultiplier: 1
         sampleCount: 75
   baseAttachments:
-  - {fileID: 11400000, guid: 418e04dfa63fd9345bc3ae0af4be0014, type: 2}
+  - {fileID: 11400000, guid: ec65a497549736149b120946b299325f, type: 2}

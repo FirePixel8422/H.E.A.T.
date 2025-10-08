@@ -4,15 +4,19 @@
 
 public class GunRefHolder : MonoBehaviour
 {
-    [Header("Part of the gun that glows based on heat")]
-    [SerializeField] private Renderer emissionRendererObj;
+    public Camera ScopeCamera;
 
-    public Material EmissionMatInstance { get; private set; }
+    //[Header("Part of the gun that glows based on heat")]
+    //[SerializeField] private Renderer emissionRendererObj;
+
+    //public Material EmissionMatInstance { get; private set; }
 
 
-    public void OnSwapGun()
+    public void Init()
     {
-        EmissionMatInstance = emissionRendererObj.material;
+        //EmissionMatInstance = emissionRendererObj.material;
+
+        ScopeCamera = GetComponentInChildren<Camera>(true);
     }
 
     /// <summary>

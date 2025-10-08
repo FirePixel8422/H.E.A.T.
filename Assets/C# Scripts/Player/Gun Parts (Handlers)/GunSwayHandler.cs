@@ -2,8 +2,9 @@
 using UnityEngine;
 
 
+
 [System.Serializable]
-public class GunSwayHandler
+public unsafe class GunSwayHandler
 {
     [SerializeField] private Transform gunTransform;
     private ADSHandler adsHandler;
@@ -17,7 +18,7 @@ public class GunSwayHandler
     private float bobTimer;
 
 
-    public void OnSwapGun(Transform gunTransform, ADSHandler adsHandler)
+    public unsafe void OnSwapGun(Transform gunTransform, ADSHandler adsHandler)
     {
         this.gunTransform = gunTransform;
         this.adsHandler = adsHandler;
@@ -66,10 +67,10 @@ public class GunSwayHandler
 
         #region Sway Effect
 
-        float posSwayMouse = math.lerp(stats.posSwayMouse.x, stats.posSwayMouse.y, zoomPercent);
-        float eulerSwayMouse = math.lerp(stats.eulerSwayMouse.x, stats.eulerSwayMouse.y, zoomPercent);
-        float posSwayMove = math.lerp(stats.posSwayMove.x, stats.posSwayMove.y, zoomPercent);
-        float eulerSwayMove = math.lerp(stats.eulerSwayMove.x, stats.eulerSwayMove.y, zoomPercent);
+        float posSwayMouse = math.lerp(stats.posSwayMouse.x, stats.posSwayMouse.y, zoomPercent) * stats.swayMultiplier;
+        float eulerSwayMouse = math.lerp(stats.eulerSwayMouse.x, stats.eulerSwayMouse.y, zoomPercent) * stats.swayMultiplier;
+        float posSwayMove = math.lerp(stats.posSwayMove.x, stats.posSwayMove.y, zoomPercent) * stats.swayMultiplier;
+        float eulerSwayMove = math.lerp(stats.eulerSwayMove.x, stats.eulerSwayMove.y, zoomPercent) * stats.swayMultiplier;
 
         // Lerp previous sway back to 0 and add new mouseInput to sway
         swayPosOffset = Vector3.Lerp(swayPosOffset, Vector3.zero, stats.swayRecoverSmooth * deltaTime);

@@ -33,7 +33,7 @@ public class Throwable : MonoBehaviour
         // Hashset to filter duplicate targets (eg: for the player their body and head hitbox)
         HashSet<IDamagable> damagedTargets = new HashSet<IDamagable>(affectedPlayerCount);
 
-        hit = GrenadeRaycaster.CheckHits(coll, stats.outerRadius, affectedPlayerColliders, rayCount);
+        bool[] hit = GrenadeRaycaster.CheckHits(coll, stats.outerRadius, affectedPlayerColliders, rayCount);
 
         for (int i = 0; i < affectedPlayerColliders.Length; i++)
         {

@@ -252,6 +252,7 @@ MonoBehaviour:
         y: -30
     gunADSStats:
       zoomMultiplier: 1.5
+      scopeCamZoomMultiplier: 1
       adsSensitivityMultiplier: 0.85
       zoomInTime: 0.175
       zoomOutTime: 0.125
@@ -279,6 +280,7 @@ MonoBehaviour:
       eulerSwayMove:
         x: 0.0005
         y: 0
+      swayMultiplier: 1
       ignoreYForSwayMove: 1
       offsetSmooth: 8
       swayRecoverSmooth: 12

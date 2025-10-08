@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using UnityEditor;
+using UnityEngine;
 
 
 
@@ -33,6 +34,15 @@ public static class DebugLogger
         if (logCondition)
         {
             Debug.LogError(message);
+        }
+    }
+
+    [System.Diagnostics.Conditional(ScriptingDefineSymbol)]
+    public static void Throw(object message, bool throwCondition = true)
+    {
+        if (throwCondition)
+        {
+            throw new System.Exception(message.ToString());
         }
     }
 }

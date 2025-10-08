@@ -7,6 +7,11 @@ public class ADSHandler
     [Header("Maps Scope Multpliers (Time, X1 X2 X4) to a FOV Multiplier (Value)")]
     [SerializeField] private NativeSampledAnimationCurve fovMultiplierCurve = NativeSampledAnimationCurve.Default;
 
+    /// <summary>
+    /// Fov multiplier at max zoomed in ADS
+    /// </summary>
+    public float ADSFovMultiplier => fovMultiplierCurve.Evaluate(stats.zoomMultiplier);
+
 
     public GunADSStats stats;
     public float ZoomedInPercent => zoomInTransitionValue / stats.zoomMultiplier;

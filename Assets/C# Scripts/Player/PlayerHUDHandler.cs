@@ -6,8 +6,7 @@ using UnityEngine.UI;
 
 public class PlayerHUDHandler : NetworkBehaviour
 {
-
-    #region CrossHair
+    #region CrossHair Variables
 
     [Header("Crosshair")]
     [SerializeField] private Image crossHairPlus;
@@ -24,7 +23,7 @@ public class PlayerHUDHandler : NetworkBehaviour
     #endregion
 
 
-    #region HitMarkers
+    #region HitMarkers Variables
 
     [Header("Hitmarkers")]
     [SerializeField] private Image[] hitMarkers = new Image[4];
@@ -47,14 +46,14 @@ public class PlayerHUDHandler : NetworkBehaviour
     #endregion
 
 
-    #region HotBar
+    #region HotBar Variables
 
     [Header("Hotbar:")]
     [SerializeField] private HotBarSlot[] hotBarSlots = new HotBarSlot[GlobalGameData.HotBarSlotCount];
     [SerializeField] private HotBarItem[] hotBarItems = new HotBarItem[GlobalGameData.HotBarSlotCount];
     [SerializeField] private Sprite[] hotBarItemsSprites = new Sprite[GlobalGameData.HotBarSlotCount];
 
-    [SerializeField] private Color slotActiveColor, slotInactiveColor, slotOnCooldownColor; 
+    [SerializeField] private Color slotActiveColor, slotInactiveColor, slotOnCooldownColor;
 
     [SerializeField] private int selectedHotbarSlotId;
     [SerializeField] private bool secondaryWeaponEquipped;
@@ -125,64 +124,16 @@ public class PlayerHUDHandler : NetworkBehaviour
         damageDealtThisFrame = true;
         timeSinceLastHitMarker = 0;
 
-        hitMarkerOffset01 = math.clamp(hitMarkerOffset01 + damagePercentage * hitMarkerAnimationPower, 0, maxHitMarkersOffset);
-
+        AddHitMarkersOffset(damagePercentage);
         SetHitMarkersColor(hitType);
     }
     public void OnDamageRecieved(float damagePercentage, HitTypeResult hitType)
     {
-        
+
     }
 
     #endregion
 
-
-    public void SwapToHotBarSlot(int slotId)
-    {
-        selectedHotbarSlotId = slotId;
-
-        if (slotId == 2)
-        {
-            secondaryWeaponEquipped = true;
-        }
-        else
-        {
-            secondaryWeaponEquipped = false;
-        }
-
-        UpdateHotBarUI();
-    }
-
-    private void UpdateHotBarUI()
-    {
-        int primaryWeaponSlotId = secondaryWeaponEquipped ? 1 : 0;
-        int secondaryWeaponSlotId = secondaryWeaponEquipped ? 0 : 1;
-
-        hotBarSlots[0].image.sprite = hotBarItemsSprites[primaryWeaponSlotId];
-        hotBarSlots[1].image.sprite = hotBarItemsSprites[secondaryWeaponSlotId];
-        hotBarSlots[2].image.sprite = hotBarItemsSprites[2];
-        hotBarSlots[3].image.sprite = hotBarItemsSprites[3];
-
-        for (int i = 0; i < GlobalGameData.HotBarSlotCount; i++)
-        {
-            if (hotBarItems[i].OnCooldown)
-            {
-                hotBarSlots[i].image.fillAmount = hotBarItems[i].CoolDownCompletionPercent01;
-                hotBarSlots[i].image.color = slotOnCooldownColor;
-            }
-            else
-            {
-                Color targetColor = selectedHotbarSlotId == i ? slotActiveColor : slotInactiveColor;
-                hotBarSlots[i].image.color = targetColor;
-            }
-        }
-    }
-
-
-    public void AddCrossHairInstability(float amount)
-    {
-        crossHairOffset01 = math.clamp(crossHairOffset01 + amount * crossHairAnimationPower, 0, maxCrossHairOffset);
-    }
 
     public void OnUpdate()
     {
@@ -193,6 +144,7 @@ public class PlayerHUDHandler : NetworkBehaviour
 
         UpdateCrossHair();
         UpdateHitMarkers();
+        UpdateHotBarCooldowns();
 
         if (damageDealtThisFrame == false)
         {
@@ -214,6 +166,74 @@ public class PlayerHUDHandler : NetworkBehaviour
             OnDamageDealt(debugToHitDamage, HitTypeResult.HeadShotKill);
         }
 #endif
+    }
+
+
+    #region Swap to/Use HotBar + Update Hotbar Logic
+
+    public void SwapToHotBarSlot(int slotId)
+    {
+        selectedHotbarSlotId = slotId;
+
+        if (slotId == 2)
+        {
+            secondaryWeaponEquipped = true;
+        }
+        else
+        {
+            secondaryWeaponEquipped = false;
+        }
+
+        UpdateHotBarSprites();
+    }
+
+    public void SetHotBarItemCooldown(int slotId, float cooldown)
+    {
+        hotBarItems[slotId].SetCooldown(cooldown);
+    }
+
+    private void UpdateHotBarSprites()
+    {
+        int primaryWeaponSlotId = secondaryWeaponEquipped ? 1 : 0;
+        int secondaryWeaponSlotId = secondaryWeaponEquipped ? 0 : 1;
+
+        hotBarSlots[0].image.sprite = hotBarItemsSprites[primaryWeaponSlotId];
+        hotBarSlots[1].image.sprite = hotBarItemsSprites[secondaryWeaponSlotId];
+        hotBarSlots[2].image.sprite = hotBarItemsSprites[2];
+        hotBarSlots[3].image.sprite = hotBarItemsSprites[3];
+    }
+
+    private void UpdateHotBarCooldowns()
+    {
+        DebugLogger.Throw("Hotbar data missing", hotBarSlots.Length == 0 || hotBarSlots[0].image == null || hotBarItems.Length == 0 || hotBarItems[0].sprite == null);
+
+        for (int i = 0; i < GlobalGameData.HotBarSlotCount; i++)
+        {
+            if (hotBarItems[i].OnCooldown)
+            {
+                hotBarItems[i].UpdateCooldown(Time.deltaTime);
+
+                hotBarSlots[i].image.fillAmount = hotBarItems[i].CoolDownCompletionPercent01;
+                hotBarSlots[i].image.color = slotOnCooldownColor;
+            }
+            else
+            {
+                Color targetColor = selectedHotbarSlotId == i ? slotActiveColor : slotInactiveColor;
+                hotBarSlots[i].image.color = targetColor;
+            }
+        }
+    }
+
+    #endregion
+
+
+    public void AddCrossHairInstability(float amount)
+    {
+        crossHairOffset01 = math.clamp(crossHairOffset01 + amount * crossHairAnimationPower, 0, maxCrossHairOffset);
+    }
+    public void AddHitMarkersOffset(float amount)
+    {
+        hitMarkerOffset01 = math.clamp(hitMarkerOffset01 + amount * hitMarkerAnimationPower, 0, maxHitMarkersOffset);
     }
 
 

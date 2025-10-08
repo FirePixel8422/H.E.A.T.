@@ -6,6 +6,9 @@ public struct GunADSStats
 {
     [Header("X1, X2, X4, etc")]
     public float zoomMultiplier;
+    [Header("For sniper scope")]
+    public float scopeCamZoomMultiplier;
+
     [Header("Sensitivity multiplier while zoomed in (No Live Update)")]
     public float adsSensitivityMultiplier;
 
@@ -28,6 +31,7 @@ public struct GunADSStats
     public static GunADSStats Default => new GunADSStats()
     {
         zoomMultiplier = 1.0f,
+        scopeCamZoomMultiplier = 1,
         adsSensitivityMultiplier = 1.0f,
 
         zoomInTime = 0.5f,
