@@ -16,7 +16,8 @@ public class ButtonFunctions : NetworkBehaviour
     public TMP_Text codeDisplay;
 
     [Header("Camera Objects")]
-    public GameObject cineMachineCam;
+    public GameObject mainCamera;
+    public GameObject cinemachineCamera;
     public GameObject armoryPlayer;
 
     #region MainScreen
@@ -105,7 +106,9 @@ public class ButtonFunctions : NetworkBehaviour
     {
         yield return new WaitForSeconds(time);
 
-        cineMachineCam.SetActive(false);
+        cinemachineCamera.transform.localEulerAngles = new Vector3(0, 180, 0);
+
+        mainCamera.SetActive(false);
         armoryPlayer.SetActive(true);
 
         Cursor.lockState = CursorLockMode.Locked;

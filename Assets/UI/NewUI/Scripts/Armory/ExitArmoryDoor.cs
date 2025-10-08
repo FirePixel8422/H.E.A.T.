@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class ExitArmoryDoor : MonoBehaviour
@@ -6,6 +7,7 @@ public class ExitArmoryDoor : MonoBehaviour
     private bool pressedButton;
     public float interactionDistance;
     public LayerMask playerLayer;
+    public float waitforfadetime;
 
     [Header("UI")]
     public GameObject eToExit;
@@ -13,7 +15,7 @@ public class ExitArmoryDoor : MonoBehaviour
     [Header("Camera")]
     public GameObject cineMachineCam;
     public GameObject armoryPlayer;
-    void Update()
+    private void Update()
     {
         if (!pressedButton)
         {
