@@ -2207,6 +2207,74 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -1608043565902201136, guid: 9a71adbd86602484cb96677d77f4f434, type: 3}
+--- !u!1001 &990942199
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1699299898942126386, guid: af7f36012df1cb1459e8adcdced45440,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -46.37477
+      objectReference: {fileID: 0}
+    - target: {fileID: 1699299898942126386, guid: af7f36012df1cb1459e8adcdced45440,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.819
+      objectReference: {fileID: 0}
+    - target: {fileID: 1699299898942126386, guid: af7f36012df1cb1459e8adcdced45440,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 13.92067
+      objectReference: {fileID: 0}
+    - target: {fileID: 1699299898942126386, guid: af7f36012df1cb1459e8adcdced45440,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1699299898942126386, guid: af7f36012df1cb1459e8adcdced45440,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1699299898942126386, guid: af7f36012df1cb1459e8adcdced45440,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1699299898942126386, guid: af7f36012df1cb1459e8adcdced45440,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1699299898942126386, guid: af7f36012df1cb1459e8adcdced45440,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1699299898942126386, guid: af7f36012df1cb1459e8adcdced45440,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1699299898942126386, guid: af7f36012df1cb1459e8adcdced45440,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2080364981307384712, guid: af7f36012df1cb1459e8adcdced45440,
+        type: 3}
+      propertyPath: m_Name
+      value: FlyingCamera
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: af7f36012df1cb1459e8adcdced45440, type: 3}
 --- !u!1001 &1016045512
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4915,3 +4983,4 @@ SceneRoots:
   - {fileID: 1314186019}
   - {fileID: 1455015341}
   - {fileID: 877306210}
+  - {fileID: 990942199}
