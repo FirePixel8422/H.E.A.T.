@@ -7,13 +7,15 @@ public class ExitArmoryDoor : MonoBehaviour
     private bool pressedButton;
     public float interactionDistance;
     public LayerMask playerLayer;
-    public float waitforfadetime;
+    public float waitForAnimTime;
 
     [Header("UI")]
     public GameObject eToExit;
 
     [Header("Camera")]
-    public GameObject cineMachineCam;
+    public GameObject mainCamera;
+    public GameObject exitCinemachineCam;
+    public GameObject cinemachineCam;
     public GameObject armoryPlayer;
     private void Update()
     {
@@ -25,7 +27,10 @@ public class ExitArmoryDoor : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     armoryPlayer.SetActive(false);
-                    cineMachineCam.SetActive(true);
+                    cinemachineCam.SetActive(false);
+                    mainCamera.SetActive(true);
+                    exitCinemachineCam.SetActive(true);
+                    StartCoroutine(WaitForAnim(waitForAnimTime));
 
                     animator.SetInteger("UI", 2);
 
@@ -37,5 +42,11 @@ public class ExitArmoryDoor : MonoBehaviour
                 eToExit.SetActive(false);
             }
         }
+    }
+    IEnumerator WaitForAnim(float time)
+    {
+        yield return new WaitForSeconds(time);
+        cinemachineCam.SetActive(true);
+        exitCinemachineCam.SetActive(false);
     }
 }

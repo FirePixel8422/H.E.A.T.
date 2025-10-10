@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using Unity.Netcode;
+using Unity.Cinemachine;
 
 public class ButtonFunctions : NetworkBehaviour
 {
@@ -17,7 +18,7 @@ public class ButtonFunctions : NetworkBehaviour
 
     [Header("Camera Objects")]
     public GameObject mainCamera;
-    public GameObject cinemachineCamera;
+    public GameObject cinemachinecam;
     public GameObject armoryPlayer;
 
     #region MainScreen
@@ -106,7 +107,7 @@ public class ButtonFunctions : NetworkBehaviour
     {
         yield return new WaitForSeconds(time);
 
-        cinemachineCamera.transform.localEulerAngles = new Vector3(0, 180, 0);
+        mainCamera.transform.Rotate(0f, -180f, 0f);
 
         mainCamera.SetActive(false);
         armoryPlayer.SetActive(true);
