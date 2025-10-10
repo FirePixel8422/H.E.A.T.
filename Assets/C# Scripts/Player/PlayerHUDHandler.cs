@@ -211,7 +211,7 @@ public class PlayerHUDHandler : NetworkBehaviour
         {
             if (hotBarItems[i].OnCooldown)
             {
-                hotBarItems[i].UpdateCooldown(Time.deltaTime);
+                //hotBarItems[i].UpdateCooldown(Time.deltaTime);
 
                 hotBarSlots[i].image.fillAmount = hotBarItems[i].CoolDownCompletionPercent01;
                 hotBarSlots[i].image.color = slotOnCooldownColor;
