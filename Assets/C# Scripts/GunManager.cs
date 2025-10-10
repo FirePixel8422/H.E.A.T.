@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class GunManager : MonoBehaviour
@@ -89,7 +90,7 @@ public class GunManager : MonoBehaviour
         }
     }
 
-    public void SetupHeatSinks(out GunHeatSink[] heatSinks, UnityEngine.UI.Image heatBar, Animator anim)
+    public void SetupHeatSinks(out GunHeatSink[] heatSinks, Image heatBar, Animator anim)
     {
         heatSinks = new GunHeatSink[GunCount];
         for (int i = 0; i < GunCount; i++)

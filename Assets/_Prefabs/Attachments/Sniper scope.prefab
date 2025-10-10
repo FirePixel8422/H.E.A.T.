@@ -99,7 +99,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5929729360145931808}
   - component: {fileID: 4351653306076961256}
-  - component: {fileID: 3574036856315579736}
   - component: {fileID: 3444197695786509254}
   m_Layer: 7
   m_Name: Scope Camera
@@ -174,14 +173,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &3574036856315579736
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4450566471577711302}
-  m_Enabled: 1
 --- !u!114 &3444197695786509254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -237,7 +228,6 @@ GameObject:
   - component: {fileID: 4460941794378758318}
   - component: {fileID: 7661283219302744912}
   - component: {fileID: 6103191002703484689}
-  - component: {fileID: 8712625653443613584}
   m_Layer: 0
   m_Name: Render Texture
   m_TagString: Untagged
@@ -316,28 +306,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &8712625653443613584
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5011604642570528658}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1001 &768050431176159790
 PrefabInstance:
   m_ObjectHideFlags: 0

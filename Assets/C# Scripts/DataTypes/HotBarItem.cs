@@ -18,18 +18,13 @@ public class HotBarItem
     /// </summary>
     public float CoolDownCompletionPercent01 => lastCoolDownTime == 0 ? 1 : lastCoolDownTime / cooldownLeft;
 
-
-    public void Use()
-    {
-
-    }
     public void SetCooldown(float cooldown)
     {
         cooldownLeft = cooldown;
         lastCoolDownTime = cooldown;
         wentOnCooldownThisFrame = true;
     }
-    public void DecreaseCooldown(float deltaTime)
+    public void UpdateCooldown(float deltaTime)
     {
         if (wentOnCooldownThisFrame)
         {

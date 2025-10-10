@@ -1,4 +1,3 @@
-using UnityEngine;
 
 
 
@@ -9,6 +8,7 @@ public static class GlobalGameData
 {
     public const int MaxPlayers = 2;
     public const int HotBarSlotCount = 4;
+    public const int UpgradeCount = 4;
 
     public const int PlayerHitBoxLayerId = 8;
     public const int PlayerHitBoxLayerMask = 1 << PlayerHitBoxLayerId;
