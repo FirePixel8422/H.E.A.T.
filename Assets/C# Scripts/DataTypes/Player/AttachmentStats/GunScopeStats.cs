@@ -17,4 +17,9 @@ public class GunScopeStats : IGunAtachment
         zoomMultiplier.ApplyToStat(ref gunStatsSet.gunADSStats.zoomMultiplier);
         gunYOffset.ApplyToStat(ref gunStatsSet.swayStats.gunYOffset);
     }
+
+    public void ApplyToGunObject(GunRefHolder gunRef)
+    {
+        return;
+    }
 }

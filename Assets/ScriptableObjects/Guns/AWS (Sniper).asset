@@ -182,21 +182,22 @@ MonoBehaviour:
         y: 40
       shakeDecay:
         x: 6
-        y: 3
+        y: 8
       pullBackDistance:
         x: 0.5
-        y: 0.85
+        y: 0.05
       pullBackBuildUp:
         x: 4
-        y: 0
+        y: 12
       pullBackDecay:
         x: 5
-        y: 6
+        y: 12
       pullBackPitchKick:
         x: -30
         y: 0
     gunADSStats:
       zoomMultiplier: 4
+      scopeCamZoomMultiplier: 1
       adsSensitivityMultiplier: 0.75
       zoomInTime: 0.25
       zoomOutTime: 0.2

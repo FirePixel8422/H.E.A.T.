@@ -4,7 +4,14 @@
 
 public class GunRefHolder : MonoBehaviour
 {
-    public Camera ScopeCamera;
+    public Camera ScopeCamera { get; set; }
+
+    [SerializeField] private Transform muzzleFlashPoint;
+    public TransformOffset MuzzleTransformOffset;
+
+    public Vector3 MuzzleFlashPosition => muzzleFlashPoint.position;
+    public Vector3 MuzzleFlashScale => muzzleFlashPoint.localScale;
+
 
     //[Header("Part of the gun that glows based on heat")]
     //[SerializeField] private Renderer emissionRendererObj;
@@ -28,6 +35,11 @@ public class GunRefHolder : MonoBehaviour
 
         attachmentObj.transform.SetLocalPositionAndRotation(attachment.TransformOffset.position, attachment.TransformOffset.Rotation);
         attachmentObj.transform.localScale = attachment.TransformOffset.scale;
+
+        attachment.Stats.ApplyToGunObject(this);
+
+        muzzleFlashPoint.SetLocalPositionAndRotation(muzzleFlashPoint.localPosition + MuzzleTransformOffset.position, muzzleFlashPoint.localRotation * MuzzleTransformOffset.Rotation);
+        muzzleFlashPoint.localScale = Vector3.Scale(muzzleFlashPoint.localScale, MuzzleTransformOffset.scale);
     }
 
     /// <summary>
@@ -36,5 +48,12 @@ public class GunRefHolder : MonoBehaviour
     public void DestroyGun()
     {
         Destroy(gameObject);
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireCube(MuzzleFlashPosition, MuzzleFlashScale * 0.025f);
+        Gizmos.DrawWireCube(MuzzleFlashPosition + transform.forward * 0.025f, MuzzleFlashScale * 0.01f);
     }
 }

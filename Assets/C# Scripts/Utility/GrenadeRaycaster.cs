@@ -4,11 +4,9 @@ using UnityEngine;
 
 
 
-[BurstCompile]
 public static class GrenadeRaycaster
 {
 
-    [BurstCompile]
     public static bool[] CheckHits(Collider grenade, float effectRadius, Collider[] targets, int rayCount = 1)
     {
 #if UNITY_EDITOR

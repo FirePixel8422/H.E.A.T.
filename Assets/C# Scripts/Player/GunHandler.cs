@@ -322,7 +322,7 @@ public class GunHandler : NetworkBehaviour
 
     private void OnFixedUpdate()
     {
-        float heatPercent = CurrentHeatSink.HeatPercentage;
+        //float heatPercent = CurrentHeatSink.HeatPercentage;
 
         //gunEmmisionHandler.UpdateHeatEmission(heatPercent);
         //UpdateVisualHeatEmmision_ServerRPC(heatPercent);
@@ -420,6 +420,8 @@ public class GunHandler : NetworkBehaviour
 
         float2 recoil = coreStats.GetRecoil(adsPercentage);
         StartCoroutine(recoilHandler.AddRecoil(recoil, coreStats.ShootInterval));
+
+        NetworkVFXPool.Instance.GetMuzzleFlashObj(gunRefHolder.MuzzleFlashPosition, gunRefHolder.transform.rotation, gunRefHolder.MuzzleFlashScale);
 
         float2 spreadOffset = RandomPointInCircle(coreStats.GetSpread(adsPercentage));
 

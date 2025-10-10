@@ -8,4 +8,5 @@ public interface IGunAtachment
     public AttachmentType Type { get; set; }
 
     public void ApplyToBaseStats(ref CompleteGunStatsSet gunStatsSet);
+    public void ApplyToGunObject(GunRefHolder gunRef);
 }

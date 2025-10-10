@@ -21,6 +21,8 @@ public class GunMuzzleStats : IGunAtachment
     [SerializeField] private SmartAttributeMinMaxFloat minMaxPitch = new(new MinMaxFloat(1, 1), ApplyMode.Override);
     [SerializeField] private SmartAttributeMinMaxFloat minMaxPitchAtMaxHeat = new(new MinMaxFloat(1, 1), ApplyMode.Override);
 
+    [SerializeField] private FilterableContainer<TransformOffset> muzzleFlashTransformOffset = new(TransformOffset.Default, true);
+
 
 
     public void ApplyToBaseStats(ref CompleteGunStatsSet gunStatsSet)
@@ -35,5 +37,10 @@ public class GunMuzzleStats : IGunAtachment
         shootAudioClip.ApplyToStat(ref gunStatsSet.audioStats.shootAudioClip);
         minMaxPitch.ApplyToStat(ref gunStatsSet.audioStats.minMaxPitch);
         minMaxPitchAtMaxHeat.ApplyToStat(ref gunStatsSet.audioStats.minMaxPitchAtMaxHeat);
+    }
+
+    public void ApplyToGunObject(GunRefHolder gunRef)
+    {
+        muzzleFlashTransformOffset.ApplyToStat(ref gunRef.MuzzleTransformOffset);
     }
 }

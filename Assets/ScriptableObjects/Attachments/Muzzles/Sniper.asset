@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0d94e3b2bb173934f8c37345aa566496, type: 3}
-  m_Name: Silencer
+  m_Name: Sniper
   m_EditorClassIdentifier: Assembly-CSharp::GunMuzzleSO
   attachmentPrefab: {fileID: 1579069039258499710, guid: 517e002aa9b1455478b4508647ec034a,
     type: 3}
@@ -73,6 +73,6 @@ MonoBehaviour:
     muzzleFlashTransformOffset:
       ignoreData: 0
       data:
-        position: {x: 0, y: 0, z: 0.18}
+        position: {x: 0, y: 0, z: 0}
         eulerRotation: {x: 0, y: 0, z: 0}
-        scale: {x: 0.5, y: 0.5, z: 0.5}
+        scale: {x: 5, y: 5, z: 5}

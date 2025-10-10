@@ -15,4 +15,9 @@ public class GunStockStats : IGunAtachment
     {
         zoomMultiplier.ApplyToStat(ref gunStatsSet.gunADSStats.zoomMultiplier);
     }
+
+    public void ApplyToGunObject(GunRefHolder gunRef)
+    {
+        return;
+    }
 }
